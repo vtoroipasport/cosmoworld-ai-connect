@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Plus, MessageSquare, Video, Mic, Users, Send, Paperclip, Smile } from 'lucide-react';
@@ -52,6 +51,99 @@ const Messenger = () => {
       messages: [
         { id: 1, text: 'Отличная работа команда!', time: '11:45', sender: 'other', senderName: 'Иван' },
         { id: 2, text: 'Да, релиз прошёл успешно!', time: '11:46', sender: 'me' }
+      ]
+    },
+    {
+      id: 4,
+      name: 'Мария Смирнова',
+      lastMessage: 'Увидимся завтра на встрече 👋',
+      time: '10:22',
+      unread: 0,
+      online: true,
+      avatar: '👩‍🎨',
+      messages: [
+        { id: 1, text: 'Привет! Напомни время встречи?', time: '10:20', sender: 'me' },
+        { id: 2, text: 'Увидимся завтра на встрече 👋', time: '10:22', sender: 'other' }
+      ]
+    },
+    {
+      id: 5,
+      name: 'Семья',
+      lastMessage: 'Мама: Не забудьте про ужин в воскресенье',
+      time: '09:15',
+      unread: 3,
+      online: false,
+      avatar: '👨‍👩‍👧‍👦',
+      isGroup: true,
+      messages: [
+        { id: 1, text: 'Не забудьте про ужин в воскресенье', time: '09:15', sender: 'other', senderName: 'Мама' },
+        { id: 2, text: 'Конечно, будем!', time: '09:16', sender: 'me' }
+      ]
+    },
+    {
+      id: 6,
+      name: 'Алексей Волков',
+      lastMessage: 'Отправил документы на почту',
+      time: '08:45',
+      unread: 0,
+      online: false,
+      avatar: '👨‍💻',
+      messages: [
+        { id: 1, text: 'Нужны документы по проекту', time: '08:40', sender: 'me' },
+        { id: 2, text: 'Отправил документы на почту', time: '08:45', sender: 'other' }
+      ]
+    },
+    {
+      id: 7,
+      name: 'CosmoRide Водители',
+      lastMessage: 'Сергей: Новый бонус за 5-звёздочные поездки!',
+      time: '07:30',
+      unread: 12,
+      online: true,
+      avatar: '🚗',
+      isGroup: true,
+      messages: [
+        { id: 1, text: 'Новый бонус за 5-звёздочные поездки!', time: '07:30', sender: 'other', senderName: 'Сергей' },
+        { id: 2, text: 'Отличные новости!', time: '07:32', sender: 'me' }
+      ]
+    },
+    {
+      id: 8,
+      name: 'Елена Кузнецова',
+      lastMessage: 'Спасибо за помощь! 😊',
+      time: 'Вчера',
+      unread: 0,
+      online: false,
+      avatar: '👩‍⚕️',
+      messages: [
+        { id: 1, text: 'Можешь помочь с задачей?', time: '16:20', sender: 'other' },
+        { id: 2, text: 'Спасибо за помощь! 😊', time: '16:45', sender: 'other' }
+      ]
+    },
+    {
+      id: 9,
+      name: 'Cosmo Pay Новости',
+      lastMessage: 'Новая функция: мгновенные переводы!',
+      time: 'Вчера',
+      unread: 1,
+      online: true,
+      avatar: '💰',
+      messages: [
+        { id: 1, text: 'Новая функция: мгновенные переводы!', time: '14:00', sender: 'other' },
+        { id: 2, text: 'Классно!', time: '14:05', sender: 'me' }
+      ]
+    },
+    {
+      id: 10,
+      name: 'Игорь Петров',
+      lastMessage: 'Созвонимся завтра?',
+      time: 'Вчера',
+      unread: 0,
+      online: true,
+      avatar: '👨‍🔧',
+      messages: [
+        { id: 1, text: 'Привет! Как проект?', time: '13:30', sender: 'other' },
+        { id: 2, text: 'Созвонимся завтра?', time: '13:45', sender: 'other' }
       ]
     }
   ]);

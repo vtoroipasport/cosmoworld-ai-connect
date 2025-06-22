@@ -12,6 +12,7 @@ import Taxi from "./pages/Taxi";
 import Food from "./pages/Food";
 import Groups from "./pages/Groups";
 import Jobs from "./pages/Jobs";
+import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/food" element={<Food />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/marketplace" element={<Marketplace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

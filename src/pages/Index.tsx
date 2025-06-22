@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -51,6 +51,13 @@ const Index = () => {
       description: 'Поиск вакансий',
       gradient: 'from-emerald-500 to-teal-500',
       path: '/jobs'
+    },
+    {
+      icon: Store,
+      title: 'Маркетплейс',
+      description: 'Покупки и продажи',
+      gradient: 'from-orange-500 to-red-500',
+      path: '/marketplace'
     },
     {
       icon: Users,
@@ -158,10 +165,10 @@ const Index = () => {
             Отправить Cosmo токены
           </Button>
           <Button
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-            onClick={() => navigate('/jobs')}
+            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+            onClick={() => navigate('/marketplace')}
           >
-            Найти работу рядом
+            Найти товары на маркетплейсе
           </Button>
         </div>
       </div>
