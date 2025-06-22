@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Filter, Heart, Star, ShoppingCart, Mic, Eye, MessageSquare, Plus } from 'lucide-react';
@@ -34,6 +35,7 @@ const Marketplace = () => {
       reviews: 1250,
       location: 'Москва',
       condition: 'Новое',
+      category: 'Электроника',
       shipping: 'Бесплатная доставка',
       views: 2341,
       watchers: 89,
@@ -50,6 +52,7 @@ const Marketplace = () => {
       reviews: 856,
       location: 'СПб',
       condition: 'Новое',
+      category: 'Электроника',
       shipping: 'Быстрая доставка',
       views: 1567,
       watchers: 45,
@@ -66,6 +69,7 @@ const Marketplace = () => {
       reviews: 423,
       location: 'Казань',
       condition: 'Б/у отличное',
+      category: 'Одежда',
       shipping: 'Доставка 2-3 дня',
       views: 891,
       watchers: 23,
@@ -82,6 +86,7 @@ const Marketplace = () => {
       reviews: 334,
       location: 'Екатеринбург',
       condition: 'Новое',
+      category: 'Электроника',
       shipping: 'Установка включена',
       views: 1234,
       watchers: 67,
@@ -97,6 +102,7 @@ const Marketplace = () => {
       reviews: 189,
       location: 'Новосибирск',
       condition: 'Б/у хорошее',
+      category: 'Одежда',
       shipping: 'Доставка курьером',
       views: 567,
       watchers: 12,
@@ -114,6 +120,7 @@ const Marketplace = () => {
       reviews: 723,
       location: 'Москва',
       condition: 'Б/у отличное',
+      category: 'Электроника',
       shipping: 'Самовывоз/доставка',
       views: 3456,
       watchers: 156,

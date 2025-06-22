@@ -4,6 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Mic, MicOff, Volume2 } from 'lucide-react';
 
+// Extend Window interface for Speech Recognition
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+    SpeechRecognition: any;
+  }
+}
+
 interface VoiceAssistantProps {
   onCommand?: (command: string) => void;
   prompt?: string;
@@ -41,7 +49,7 @@ const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", c
 
   const startListening = () => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       const recognition = new SpeechRecognition();
       
       recognition.lang = 'ru-RU';
@@ -53,7 +61,7 @@ const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", c
         console.log('Cosmo AI: Начинаю слушать...');
       };
 
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
         const command = event.results[0][0].transcript.toLowerCase();
         setTranscript(command);
         console.log('Распознанная команда:', command);
@@ -74,7 +82,7 @@ const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", c
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: any) => {
         console.error('Ошибка распознавания речи:', event.error);
         setIsListening(false);
       };
