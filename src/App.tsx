@@ -11,6 +11,7 @@ import Housing from "./pages/Housing";
 import Taxi from "./pages/Taxi";
 import Food from "./pages/Food";
 import Groups from "./pages/Groups";
+import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/taxi" element={<Taxi />} />
           <Route path="/food" element={<Food />} />
           <Route path="/groups" element={<Groups />} />
+          <Route path="/jobs" element={<Jobs />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -19,7 +20,7 @@ const Index = () => {
     {
       icon: DollarSign,
       title: 'Cosmo Pay',
-      description: 'Токен платежи',
+      description: 'Голосовые платежи',
       gradient: 'from-yellow-400 to-orange-500',
       path: '/payments'
     },
@@ -33,7 +34,7 @@ const Index = () => {
     {
       icon: CarTaxiFront,
       title: 'Такси',
-      description: 'Голосовой заказ',
+      description: 'С картой водителей',
       gradient: 'from-purple-500 to-pink-500',
       path: '/taxi'
     },
@@ -45,9 +46,16 @@ const Index = () => {
       path: '/food'
     },
     {
+      icon: Briefcase,
+      title: 'Работа',
+      description: 'Поиск вакансий',
+      gradient: 'from-emerald-500 to-teal-500',
+      path: '/jobs'
+    },
+    {
       icon: Users,
       title: 'Группы',
-      description: 'До 50 участников',
+      description: 'До 10М участников',
       gradient: 'from-indigo-500 to-purple-600',
       path: '/groups'
     }
@@ -55,8 +63,7 @@ const Index = () => {
 
   const handleVoiceCommand = () => {
     setIsListening(!isListening);
-    // Здесь будет интеграция с голосовым ИИ
-    console.log('Cosmo AI voice command activated');
+    console.log('Cosmo AI voice command activated (powered by Grok AI)');
   };
 
   return (
@@ -149,6 +156,12 @@ const Index = () => {
             onClick={() => navigate('/payments')}
           >
             Отправить Cosmo токены
+          </Button>
+          <Button
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+            onClick={() => navigate('/jobs')}
+          >
+            Найти работу рядом
           </Button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Plus, Search } from 'lucide-react';
+import { ArrowLeft, Users, Plus, Search, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,44 +14,57 @@ const Groups = () => {
     {
       id: 1,
       name: 'CosmoLife Разработчики',
-      members: 45,
+      members: 8945,
       lastMessage: 'Новое обновление готово!',
       time: '10:30',
       unread: 12,
       avatar: '💻',
-      verified: true
+      verified: true,
+      isSuper: true
     },
     {
       id: 2,
       name: 'Crypto Трейдеры',
-      members: 38,
+      members: 3847,
       lastMessage: 'COSMO растет! 🚀',
       time: '09:15',
       unread: 3,
       avatar: '📈',
-      verified: false
+      verified: false,
+      isSuper: false
     },
     {
       id: 3,
       name: 'Московские таксисты',
-      members: 50,
+      members: 9876,
       lastMessage: 'Пробки на Садовом кольце',
       time: '08:45',
       unread: 0,
       avatar: '🚕',
-      verified: true
+      verified: true,
+      isSuper: true
     },
     {
       id: 4,
       name: 'Foodie Community',
-      members: 32,
+      members: 1234,
       lastMessage: 'Кто пробовал новое кафе?',
       time: 'Вчера',
       unread: 7,
       avatar: '🍕',
-      verified: false
+      verified: false,
+      isSuper: false
     }
   ];
+
+  const formatMemberCount = (count: number) => {
+    if (count >= 1000000) {
+      return `${(count / 1000000).toFixed(1)}M`;
+    } else if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
+    return count.toString();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -109,12 +122,21 @@ const Groups = () => {
               <Plus className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-white font-semibold mb-2">Создать группу</h3>
-            <p className="text-purple-300 text-sm mb-4">
-              Объединяйте до 50 участников для общения
+            <p className="text-purple-300 text-sm mb-2">
+              Обычные группы: до 10,000 участников
             </p>
-            <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
-              Создать
-            </Button>
+            <p className="text-purple-300 text-sm mb-4">
+              Супергруппы: до 10 миллионов участников
+            </p>
+            <div className="flex space-x-2">
+              <Button className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
+                Обычная
+              </Button>
+              <Button className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white">
+                <Crown className="w-4 h-4 mr-1" />
+                Супер
+              </Button>
+            </div>
           </div>
         </Card>
       </div>
@@ -138,6 +160,11 @@ const Groups = () => {
                       <span className="text-white text-xs">✓</span>
                     </div>
                   )}
+                  {group.isSuper && (
+                    <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <Crown className="w-3 h-3 text-white" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
@@ -154,7 +181,10 @@ const Groups = () => {
                   </div>
                   <div className="flex items-center mt-1">
                     <Users className="w-3 h-3 text-gray-400 mr-1" />
-                    <span className="text-gray-400 text-xs">{group.members} участников</span>
+                    <span className="text-gray-400 text-xs">
+                      {formatMemberCount(group.members)} участников
+                      {group.isSuper && <span className="text-yellow-400 ml-1">• Супергруппа</span>}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -174,7 +204,10 @@ const Groups = () => {
               </div>
               <div className="flex-1">
                 <h4 className="text-white font-medium">Аренда Москва</h4>
-                <p className="text-gray-400 text-sm">1,234 участника</p>
+                <div className="flex items-center">
+                  <p className="text-gray-400 text-sm">1.2K участников</p>
+                  <Crown className="w-3 h-3 text-yellow-400 ml-2" />
+                </div>
               </div>
               <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
                 Вступить
