@@ -1,21 +1,28 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Filter, Heart, Star, ShoppingCart, Mic, Eye, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Search, Filter, Heart, Star, ShoppingCart, Mic, Eye, MessageSquare, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import CreateProductModal from '@/components/CreateProductModal';
+import PurchaseModal from '@/components/PurchaseModal';
+import VoiceAssistant from '@/components/VoiceAssistant';
 
 const Marketplace = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
-  const [isListening, setIsListening] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [watchlist, setWatchlist] = useState<number[]>([]);
 
   const categories = ['Все', 'Электроника', 'Одежда', 'Дом и сад', 'Спорт', 'Автомобили', 'Книги'];
 
-  const products = [
+  const [products, setProducts] = useState([
     {
       id: 1,
       title: 'iPhone 15 Pro Max 256GB',
@@ -112,35 +119,92 @@ const Marketplace = () => {
       watchers: 156,
       buyItNow: true
     }
-  ];
+  ]);
 
-  const handleVoiceSearch = () => {
-    setIsListening(!isListening);
-    console.log('Cosmo AI voice search activated:', isListening ? 'stopped' : 'started');
+  const handleVoiceCommand = (command: string) => {
+    console.log('Обработка голосовой команды:', command);
     
-    if (!isListening) {
-      setTimeout(() => {
-        setSearchQuery('iPhone 15 Pro');
-        setIsListening(false);
-      }, 2000);
+    if (command.includes('поиск') || command.includes('найти')) {
+      const searchTerms = ['iphone', 'телефон', 'компьютер', 'одежда', 'обувь', 'игры'];
+      const foundTerm = searchTerms.find(term => command.includes(term));
+      if (foundTerm) {
+        setSearchQuery(foundTerm);
+        toast({
+          title: "Голосовой поиск",
+          description: `Ищу товары по запросу: ${foundTerm}`,
+        });
+      }
+    } else if (command.includes('создать') || command.includes('продать')) {
+      setShowCreateModal(true);
+      toast({
+        title: "Создание объявления",
+        description: "Открываю форму для создания объявления",
+      });
+    } else if (command.includes('купить') || command.includes('заказать')) {
+      toast({
+        title: "Покупка",
+        description: "Выберите товар для покупки",
+      });
     }
   };
 
   const handleAddToWatchlist = (productId: number) => {
-    console.log('Added to watchlist:', productId);
+    if (watchlist.includes(productId)) {
+      setWatchlist(watchlist.filter(id => id !== productId));
+      toast({
+        title: "Удалено из избранного",
+        description: "Товар удален из списка наблюдения",
+      });
+    } else {
+      setWatchlist([...watchlist, productId]);
+      toast({
+        title: "Добавлено в избранное",
+        description: "Товар добавлен в список наблюдения",
+      });
+    }
   };
 
-  const handleBuyNow = (productId: number) => {
-    console.log('Buy now:', productId);
+  const handleBuyNow = (product: any) => {
+    setSelectedProduct(product);
+    setShowPurchaseModal(true);
   };
 
-  const handlePlaceBid = (productId: number) => {
-    console.log('Place bid:', productId);
+  const handlePlaceBid = (product: any) => {
+    setSelectedProduct(product);
+    setShowPurchaseModal(true);
   };
 
   const handleContactSeller = (productId: number) => {
-    console.log('Contact seller:', productId);
+    toast({
+      title: "Связь с продавцом",
+      description: "Открываю чат с продавцом",
+    });
+    navigate('/messenger');
   };
+
+  const handleCreateProduct = (newProduct: any) => {
+    setProducts([newProduct, ...products]);
+    toast({
+      title: "Объявление создано",
+      description: "Ваш товар добавлен на маркетплейс",
+    });
+  };
+
+  const handlePurchase = (details: any) => {
+    console.log('Детали покупки:', details);
+    toast({
+      title: details.bidAmount && selectedProduct?.isAuction ? "Ставка размещена" : "Покупка оформлена",
+      description: details.bidAmount && selectedProduct?.isAuction 
+        ? `Ваша ставка ${details.bidAmount} COSMO принята`
+        : `Покупка на сумму ${details.total} COSMO оформлена`,
+    });
+  };
+
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === 'Все' || product.category === selectedCategory;
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -190,16 +254,6 @@ const Marketplace = () => {
                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
             </div>
-            <Button
-              onClick={handleVoiceSearch}
-              className={`transition-all duration-300 ${
-                isListening
-                  ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-110'
-              }`}
-            >
-              <Mic className="w-4 h-4" />
-            </Button>
           </div>
           
           {/* Categories */}
@@ -222,21 +276,19 @@ const Marketplace = () => {
         </Card>
       </div>
 
-      {/* Voice Search Feedback */}
-      {isListening && (
-        <div className="max-w-md mx-auto px-4 pb-4">
-          <Card className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-purple-500/30 backdrop-blur-sm">
-            <div className="p-3 text-center">
-              <p className="text-purple-300 text-sm">Слушаю запрос на поиск товаров...</p>
-            </div>
-          </Card>
-        </div>
-      )}
+      {/* Voice Assistant */}
+      <div className="max-w-md mx-auto px-4 pb-4">
+        <VoiceAssistant
+          onCommand={handleVoiceCommand}
+          prompt="Скажите что найти или продать"
+          context="Поиск товаров, создание объявлений"
+        />
+      </div>
 
       {/* Products Grid */}
       <div className="max-w-md mx-auto px-4 pb-6">
         <div className="space-y-4">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Card
               key={product.id}
               className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300"
@@ -265,9 +317,11 @@ const Marketplace = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleAddToWatchlist(product.id)}
-                    className="text-white hover:bg-white/10"
+                    className={`text-white hover:bg-white/10 ${
+                      watchlist.includes(product.id) ? 'text-red-400' : ''
+                    }`}
                   >
-                    <Heart className="w-4 h-4" />
+                    <Heart className={`w-4 h-4 ${watchlist.includes(product.id) ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
 
@@ -295,7 +349,7 @@ const Marketplace = () => {
                 <div className="flex space-x-2">
                   {product.buyItNow ? (
                     <Button
-                      onClick={() => handleBuyNow(product.id)}
+                      onClick={() => handleBuyNow(product)}
                       className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-sm py-2"
                     >
                       <ShoppingCart className="w-4 h-4 mr-1" />
@@ -303,7 +357,7 @@ const Marketplace = () => {
                     </Button>
                   ) : (
                     <Button
-                      onClick={() => handlePlaceBid(product.id)}
+                      onClick={() => handlePlaceBid(product)}
                       className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-sm py-2"
                     >
                       Сделать ставку
@@ -327,8 +381,10 @@ const Marketplace = () => {
       <div className="max-w-md mx-auto px-4 pb-6">
         <div className="grid grid-cols-2 gap-3">
           <Button
+            onClick={() => setShowCreateModal(true)}
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3"
           >
+            <Plus className="w-4 h-4 mr-2" />
             Продать товар
           </Button>
           <Button
@@ -338,6 +394,20 @@ const Marketplace = () => {
           </Button>
         </div>
       </div>
+
+      {/* Modals */}
+      <CreateProductModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreate={handleCreateProduct}
+      />
+
+      <PurchaseModal
+        isOpen={showPurchaseModal}
+        onClose={() => setShowPurchaseModal(false)}
+        product={selectedProduct}
+        onPurchase={handlePurchase}
+      />
     </div>
   );
 };

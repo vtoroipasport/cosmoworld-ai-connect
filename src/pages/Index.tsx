@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import VoiceAssistant from '@/components/VoiceAssistant';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const navigate = useNavigate();
-  const [isListening, setIsListening] = useState(false);
+  const { toast } = useToast();
 
   const features = [
     {
@@ -68,9 +70,58 @@ const Index = () => {
     }
   ];
 
-  const handleVoiceCommand = () => {
-    setIsListening(!isListening);
-    console.log('Cosmo AI voice command activated (powered by Grok AI)');
+  const handleVoiceCommand = (command: string) => {
+    console.log('Главная страница - голосовая команда:', command);
+
+    if (command.includes('мессенджер') || command.includes('чат') || command.includes('сообщение')) {
+      navigate('/messenger');
+      toast({
+        title: "Переходим в мессенджер",
+        description: "Открываю чаты и сообщения",
+      });
+    } else if (command.includes('платеж') || command.includes('оплата') || command.includes('деньги')) {
+      navigate('/payments');
+      toast({
+        title: "Открываю Cosmo Pay",
+        description: "Готов к отправке платежей",
+      });
+    } else if (command.includes('такси') || command.includes('поездка')) {
+      navigate('/taxi');
+      toast({
+        title: "Вызываю такси",
+        description: "Открываю карту для заказа поездки",
+      });
+    } else if (command.includes('еда') || command.includes('заказ') || command.includes('ресторан')) {
+      navigate('/food');
+      toast({
+        title: "Заказ еды",
+        description: "Открываю сервис доставки",
+      });
+    } else if (command.includes('работа') || command.includes('вакансия')) {
+      navigate('/jobs');
+      toast({
+        title: "Поиск работы",
+        description: "Открываю доску вакансий",
+      });
+    } else if (command.includes('маркетплейс') || command.includes('покупка') || command.includes('товар')) {
+      navigate('/marketplace');
+      toast({
+        title: "Открываю маркетплейс",
+        description: "Готов к покупкам и продажам",
+      });
+    } else if (command.includes('группа') || command.includes('сообщество')) {
+      navigate('/groups');
+      toast({
+        title: "Открываю группы",
+        description: "Переходим к сообществам",
+      });
+    } else if (command.includes('жилье') || command.includes('аренда')) {
+      navigate('/housing');
+      toast({
+        title: "Поиск жилья",
+        description: "Открываю сервис аренды",
+      });
+    }
   };
 
   return (
@@ -101,26 +152,11 @@ const Index = () => {
 
       {/* Voice Assistant */}
       <div className="max-w-md mx-auto px-4 py-6">
-        <Card className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-purple-500/30 backdrop-blur-sm">
-          <div className="p-6 text-center">
-            <div className="mb-4">
-              <Button
-                onClick={handleVoiceCommand}
-                className={`w-16 h-16 rounded-full transition-all duration-300 ${
-                  isListening
-                    ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-110'
-                }`}
-              >
-                <Mic className="w-8 h-8 text-white" />
-              </Button>
-            </div>
-            <h2 className="text-white text-lg font-semibold mb-2">Cosmo AI</h2>
-            <p className="text-purple-300 text-sm">
-              {isListening ? 'Слушаю вас...' : 'Нажмите для голосовой команды'}
-            </p>
-          </div>
-        </Card>
+        <VoiceAssistant
+          onCommand={handleVoiceCommand}
+          prompt="Скажите куда перейти или что сделать"
+          context="Навигация по приложению"
+        />
       </div>
 
       {/* Features Grid */}

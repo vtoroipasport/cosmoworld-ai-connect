@@ -5,12 +5,17 @@ import { ArrowLeft, Users, Plus, Search, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import CreateGroupModal from '@/components/CreateGroupModal';
+import VoiceAssistant from '@/components/VoiceAssistant';
 
 const Groups = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const groups = [
+  const [groups, setGroups] = useState([
     {
       id: 1,
       name: 'CosmoLife Разработчики',
@@ -55,16 +60,54 @@ const Groups = () => {
       verified: false,
       isSuper: false
     }
-  ];
+  ]);
+
+  const handleVoiceCommand = (command: string) => {
+    console.log('Обработка голосовой команды в группах:', command);
+    
+    if (command.includes('создать группу') || command.includes('новая группа')) {
+      setShowCreateModal(true);
+      toast({
+        title: "Создание группы",
+        description: "Открываю форму для создания новой группы",
+      });
+    } else if (command.includes('супергруппа') || command.includes('премиум')) {
+      setShowCreateModal(true);
+      toast({
+        title: "Создание супергруппы",
+        description: "Открываю форму для создания премиум группы",
+      });
+    } else if (command.includes('поиск') || command.includes('найти группу')) {
+      const groupTypes = ['разработчики', 'крипто', 'такси', 'еда', 'спорт'];
+      const foundType = groupTypes.find(type => command.includes(type));
+      if (foundType) {
+        setSearchQuery(foundType);
+      }
+    }
+  };
+
+  const handleCreateGroup = (newGroup: any) => {
+    setGroups([newGroup, ...groups]);
+    toast({
+      title: newGroup.isSuper ? "Супергруппа создана!" : "Группа создана!",
+      description: newGroup.isSuper 
+        ? `Премиум группа "${newGroup.name}" готова к использованию`
+        : `Группа "${newGroup.name}" успешно создана`,
+    });
+  };
 
   const formatMemberCount = (count: number) => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
     } else if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}K`;
+      return `${(count / 1000).toFixed(0)}K`;
     }
     return count.toString();
   };
+
+  const filteredGroups = groups.filter(group =>
+    group.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -93,6 +136,7 @@ const Groups = () => {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => setShowCreateModal(true)}
               className="text-white hover:bg-white/10"
             >
               <Plus className="w-5 h-5" />
@@ -114,6 +158,15 @@ const Groups = () => {
         </div>
       </div>
 
+      {/* Voice Assistant */}
+      <div className="max-w-md mx-auto px-4 pb-4">
+        <VoiceAssistant
+          onCommand={handleVoiceCommand}
+          prompt="Скажите 'создать группу' или найдите нужную"
+          context="Управление группами и сообществами"
+        />
+      </div>
+
       {/* Create Group CTA */}
       <div className="max-w-md mx-auto px-4 pb-6">
         <Card className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-indigo-500/30 backdrop-blur-sm">
@@ -129,10 +182,17 @@ const Groups = () => {
               Супергруппы: до 10 миллионов участников
             </p>
             <div className="flex space-x-2">
-              <Button className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
+              <Button 
+                onClick={() => setShowCreateModal(true)}
+                className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              >
+                <Users className="w-4 h-4 mr-1" />
                 Обычная
               </Button>
-              <Button className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white">
+              <Button 
+                onClick={() => setShowCreateModal(true)}
+                className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white"
+              >
                 <Crown className="w-4 h-4 mr-1" />
                 Супер
               </Button>
@@ -145,10 +205,11 @@ const Groups = () => {
       <div className="max-w-md mx-auto px-4 pb-6">
         <h3 className="text-white text-lg font-semibold mb-4">Мои группы</h3>
         <div className="space-y-3">
-          {groups.map((group) => (
+          {filteredGroups.map((group) => (
             <Card
               key={group.id}
               className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+              onClick={() => navigate('/messenger')}
             >
               <div className="p-4 flex items-center space-x-3">
                 <div className="relative">
@@ -209,7 +270,14 @@ const Groups = () => {
                   <Crown className="w-3 h-3 text-yellow-400 ml-2" />
                 </div>
               </div>
-              <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
+              <Button 
+                size="sm" 
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                onClick={() => toast({
+                  title: "Присоединились к группе",
+                  description: "Добро пожаловать в группу Аренда Москва!",
+                })}
+              >
                 Вступить
               </Button>
             </div>
@@ -223,13 +291,26 @@ const Groups = () => {
                 <h4 className="text-white font-medium">CosmoRide Водители</h4>
                 <p className="text-gray-400 text-sm">856 участников</p>
               </div>
-              <Button size="sm" className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white">
+              <Button 
+                size="sm" 
+                className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white"
+                onClick={() => toast({
+                  title: "Присоединились к группе",
+                  description: "Добро пожаловать в группу CosmoRide Водители!",
+                })}
+              >
                 Вступить
               </Button>
             </div>
           </Card>
         </div>
       </div>
+
+      <CreateGroupModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreate={handleCreateGroup}
+      />
     </div>
   );
 };
