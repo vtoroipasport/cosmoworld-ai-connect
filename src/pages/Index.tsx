@@ -5,11 +5,19 @@ import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, M
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import VoiceAssistant from '@/components/VoiceAssistant';
+import ProfileMenu from '@/components/ProfileMenu';
+import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [paymentModal, setPaymentModal] = useState({
+    isOpen: false,
+    amount: 0,
+    recipient: '',
+    description: ''
+  });
 
   const features = [
     {
@@ -73,55 +81,89 @@ const Index = () => {
   const handleVoiceCommand = (command: string) => {
     console.log('Главная страница - голосовая команда:', command);
 
-    if (command.includes('мессенджер') || command.includes('чат') || command.includes('сообщение')) {
+    const lowerCommand = command.toLowerCase();
+
+    if (lowerCommand.includes('мессенджер') || lowerCommand.includes('чат') || lowerCommand.includes('сообщение')) {
       navigate('/messenger');
       toast({
         title: "Переходим в мессенджер",
         description: "Открываю чаты и сообщения",
       });
-    } else if (command.includes('платеж') || command.includes('оплата') || command.includes('деньги')) {
+    } else if (lowerCommand.includes('платеж') || lowerCommand.includes('оплата') || lowerCommand.includes('деньги')) {
       navigate('/payments');
       toast({
         title: "Открываю Cosmo Pay",
         description: "Готов к отправке платежей",
       });
-    } else if (command.includes('такси') || command.includes('поездка')) {
+    } else if (lowerCommand.includes('такси') || lowerCommand.includes('поездка')) {
       navigate('/taxi');
       toast({
         title: "Вызываю такси",
         description: "Открываю карту для заказа поездки",
       });
-    } else if (command.includes('еда') || command.includes('заказ') || command.includes('ресторан')) {
+    } else if (lowerCommand.includes('еда') || lowerCommand.includes('заказ') || lowerCommand.includes('ресторан')) {
       navigate('/food');
       toast({
         title: "Заказ еды",
         description: "Открываю сервис доставки",
       });
-    } else if (command.includes('работа') || command.includes('вакансия')) {
+    } else if (lowerCommand.includes('работа') || lowerCommand.includes('вакансия')) {
       navigate('/jobs');
       toast({
         title: "Поиск работы",
         description: "Открываю доску вакансий",
       });
-    } else if (command.includes('маркетплейс') || command.includes('покупка') || command.includes('товар')) {
+    } else if (lowerCommand.includes('маркетплейс') || lowerCommand.includes('покупка') || lowerCommand.includes('товар')) {
       navigate('/marketplace');
       toast({
         title: "Открываю маркетплейс",
         description: "Готов к покупкам и продажам",
       });
-    } else if (command.includes('группа') || command.includes('сообщество')) {
+    } else if (lowerCommand.includes('группа') || lowerCommand.includes('сообщество')) {
       navigate('/groups');
       toast({
         title: "Открываю группы",
         description: "Переходим к сообществам",
       });
-    } else if (command.includes('жилье') || command.includes('аренда')) {
+    } else if (lowerCommand.includes('жилье') || lowerCommand.includes('аренда')) {
       navigate('/housing');
       toast({
         title: "Поиск жилья",
         description: "Открываю сервис аренды",
       });
+    } else if (lowerCommand.includes('профиль') || lowerCommand.includes('кошелек')) {
+      toast({
+        title: "Открываю профиль",
+        description: "Управление кошельком и настройками",
+      });
     }
+  };
+
+  const handleQuickPayment = (amount: number, description: string) => {
+    const wallet = localStorage.getItem('cosmo_wallet');
+    if (!wallet) {
+      toast({
+        title: "Нужен кошелек",
+        description: "Создайте кошелек в профиле для совершения платежей",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setPaymentModal({
+      isOpen: true,
+      amount,
+      recipient: '0x1234567890abcdef1234567890abcdef12345678',
+      description
+    });
+  };
+
+  const handlePaymentConfirm = () => {
+    toast({
+      title: "Платеж выполнен",
+      description: `Успешно отправлено ${paymentModal.amount} COSMO`,
+    });
+    setPaymentModal({ ...paymentModal, isOpen: false });
   };
 
   return (
@@ -146,6 +188,7 @@ const Index = () => {
             >
               <Bell className="w-5 h-5" />
             </Button>
+            <ProfileMenu />
           </div>
         </div>
       </div>
@@ -155,7 +198,7 @@ const Index = () => {
         <VoiceAssistant
           onCommand={handleVoiceCommand}
           prompt="Скажите куда перейти или что сделать"
-          context="Навигация по приложению"
+          context="Навигация по приложению с ИИ"
         />
       </div>
 
@@ -196,9 +239,9 @@ const Index = () => {
           </Button>
           <Button
             className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
-            onClick={() => navigate('/payments')}
+            onClick={() => handleQuickPayment(10, 'Быстрый платеж')}
           >
-            Отправить Cosmo токены
+            Отправить 10 COSMO
           </Button>
           <Button
             className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
@@ -208,6 +251,16 @@ const Index = () => {
           </Button>
         </div>
       </div>
+
+      {/* Payment Confirmation Modal */}
+      <PaymentConfirmationModal
+        isOpen={paymentModal.isOpen}
+        onClose={() => setPaymentModal({ ...paymentModal, isOpen: false })}
+        amount={paymentModal.amount}
+        recipient={paymentModal.recipient}
+        description={paymentModal.description}
+        onConfirm={handlePaymentConfirm}
+      />
     </div>
   );
 };

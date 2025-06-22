@@ -1,16 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic, MicOff, Volume2 } from 'lucide-react';
-
-// Extend Window interface for Speech Recognition
-declare global {
-  interface Window {
-    webkitSpeechRecognition: any;
-    SpeechRecognition: any;
-  }
-}
+import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface VoiceAssistantProps {
   onCommand?: (command: string) => void;
@@ -18,100 +11,178 @@ interface VoiceAssistantProps {
   context?: string;
 }
 
-const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", context = "" }: VoiceAssistantProps) => {
+const VoiceAssistant = ({ 
+  onCommand, 
+  prompt = "Скажите команду", 
+  context = "" 
+}: VoiceAssistantProps) => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [response, setResponse] = useState('');
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const { toast } = useToast();
 
-  const responses = {
-    'привет': 'Привет! Я Cosmo AI, ваш голосовой помощник. Чем могу помочь?',
-    'помощь': 'Я могу помочь вам с навигацией по приложению, поиском товаров, отправкой платежей и многим другим.',
-    'поиск': 'Что вы хотите найти? Я могу найти товары, услуги, людей или информацию.',
-    'платеж': 'Хотите отправить платеж? Скажите сумму и получателя.',
-    'такси': 'Вызвать такси? Скажите адрес назначения.',
-    'еда': 'Хотите заказать еду? Какую кухню предпочитаете?',
-    'группа': 'Хотите создать группу или найти существующую?',
-    'работа': 'Ищете работу или исполнителей? Укажите специализацию.',
-    'маркетплейс': 'Что хотите купить или продать на маркетплейсе?'
-  };
-
-  const speak = (text: string) => {
-    if ('speechSynthesis' in window) {
-      setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ru-RU';
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.onend = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const startListening = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      const recognition = new SpeechRecognition();
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          sampleRate: 16000,
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+        }
+      });
       
-      recognition.lang = 'ru-RU';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        console.log('Cosmo AI: Начинаю слушать...');
-      };
-
-      recognition.onresult = (event: any) => {
-        const command = event.results[0][0].transcript.toLowerCase();
-        setTranscript(command);
-        console.log('Распознанная команда:', command);
-        
-        // Поиск подходящего ответа
-        let response = 'Извините, не понял команду. Попробуйте еще раз.';
-        for (const [key, value] of Object.entries(responses)) {
-          if (command.includes(key)) {
-            response = value;
-            break;
-          }
-        }
-
-        speak(response);
-        
-        if (onCommand) {
-          onCommand(command);
+      mediaRecorderRef.current = new MediaRecorder(stream, {
+        mimeType: 'audio/webm'
+      });
+      
+      audioChunksRef.current = [];
+      
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
         }
       };
-
-      recognition.onerror = (event: any) => {
-        console.error('Ошибка распознавания речи:', event.error);
-        setIsListening(false);
+      
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        await processAudio(audioBlob);
+        
+        // Останавливаем все треки
+        stream.getTracks().forEach(track => track.stop());
       };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.start();
-    } else {
-      console.log('Распознавание речи не поддерживается');
-      // Симуляция для демонстрации
+      
+      mediaRecorderRef.current.start();
       setIsListening(true);
-      setTimeout(() => {
-        setIsListening(false);
-        const mockCommand = 'поиск товаров';
-        setTranscript(mockCommand);
-        speak('Хорошо, начинаю поиск товаров для вас.');
-        if (onCommand) onCommand(mockCommand);
-      }, 2000);
+      console.log('Cosmo AI: Начинаю запись...');
+      
+    } catch (error) {
+      console.error('Ошибка доступа к микрофону:', error);
+      toast({
+        title: "Ошибка микрофона",
+        description: "Не удалось получить доступ к микрофону",
+        variant: "destructive"
+      });
     }
   };
 
-  const stopListening = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isListening) {
+      mediaRecorderRef.current.stop();
+      setIsListening(false);
+      setIsProcessing(true);
     }
-    setIsListening(false);
+  };
+
+  const processAudio = async (audioBlob: Blob) => {
+    try {
+      // Конвертируем аудио в base64
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < uint8Array.length; i++) {
+        binary += String.fromCharCode(uint8Array[i]);
+      }
+      const base64Audio = btoa(binary);
+
+      // Отправляем на сервер для обработки
+      const response = await fetch(`https://nzrrycacclufrrdvazut.supabase.co/functions/v1/cosmo-voice-assistant`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          audio: base64Audio,
+          action: 'chat'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка сервера');
+      }
+
+      const result = await response.json();
+      
+      setTranscript(result.text || 'Не удалось распознать речь');
+      setResponse(result.text || '');
+      
+      // Воспроизводим аудио ответ
+      if (result.audio) {
+        await playAudioResponse(result.audio);
+      }
+      
+      // Вызываем callback
+      if (onCommand && result.text) {
+        onCommand(result.text);
+      }
+      
+    } catch (error) {
+      console.error('Ошибка обработки аудио:', error);
+      toast({
+        title: "Ошибка обработки",
+        description: "Не удалось обработать голосовую команду",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const playAudioResponse = async (base64Audio: string) => {
+    try {
+      setIsSpeaking(true);
+      
+      // Декодируем base64 в аудио
+      const binaryString = atob(base64Audio);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      
+      const audioBlob = new Blob([bytes], { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      await audio.play();
+      
+    } catch (error) {
+      console.error('Ошибка воспроизведения аудио:', error);
+      setIsSpeaking(false);
+    }
+  };
+
+  const stopSpeaking = () => {
+    // Останавливаем все аудио элементы
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
     setIsSpeaking(false);
+  };
+
+  const handleButtonClick = () => {
+    if (isSpeaking) {
+      stopSpeaking();
+    } else if (isListening) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
   };
 
   return (
@@ -119,16 +190,21 @@ const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", c
       <div className="p-4 text-center">
         <div className="mb-4">
           <Button
-            onClick={isListening ? stopListening : startListening}
+            onClick={handleButtonClick}
+            disabled={isProcessing}
             className={`w-16 h-16 rounded-full transition-all duration-300 ${
-              isListening
-                ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
+              isProcessing
+                ? 'bg-gradient-to-r from-yellow-500 to-orange-500 animate-pulse'
                 : isSpeaking
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 animate-pulse'
+                : isListening
+                ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
                 : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-110'
             }`}
           >
-            {isSpeaking ? (
+            {isProcessing ? (
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : isSpeaking ? (
               <Volume2 className="w-8 h-8 text-white" />
             ) : isListening ? (
               <Mic className="w-8 h-8 text-white" />
@@ -137,19 +213,33 @@ const VoiceAssistant = ({ onCommand, prompt = "Скажите команду", c
             )}
           </Button>
         </div>
+        
         <h3 className="text-white text-lg font-semibold mb-2">Cosmo AI</h3>
+        
         <p className="text-purple-300 text-sm mb-2">
-          {isSpeaking
+          {isProcessing
+            ? 'Обрабатываю запрос...'
+            : isSpeaking
             ? 'Говорю...'
             : isListening
             ? 'Слушаю вас...'
             : prompt}
         </p>
+        
         {transcript && (
-          <p className="text-green-400 text-xs">
-            Последняя команда: "{transcript}"
-          </p>
+          <div className="mt-3 p-2 bg-black/20 rounded">
+            <p className="text-green-400 text-xs mb-1">Вы сказали:</p>
+            <p className="text-white text-sm">"{transcript}"</p>
+          </div>
         )}
+        
+        {response && response !== transcript && (
+          <div className="mt-2 p-2 bg-black/20 rounded">
+            <p className="text-blue-400 text-xs mb-1">Cosmo AI ответил:</p>
+            <p className="text-white text-sm">"{response}"</p>
+          </div>
+        )}
+        
         {context && (
           <p className="text-gray-400 text-xs mt-2">{context}</p>
         )}
