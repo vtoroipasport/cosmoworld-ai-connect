@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, Clock, Mic, TaxiFront } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Mic, CarTaxiFront } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -159,7 +158,7 @@ const Taxi = () => {
           className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4"
           disabled={!fromLocation || !toLocation}
         >
-          <TaxiFront className="w-5 h-5 mr-2" />
+          <CarTaxiFront className="w-5 h-5 mr-2" />
           Заказать такси
         </Button>
       </div>
@@ -171,7 +170,7 @@ const Taxi = () => {
           <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <div className="p-3 flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                <TaxiFront className="w-4 h-4 text-white" />
+                <CarTaxiFront className="w-4 h-4 text-white" />
               </div>
               <div className="flex-1">
                 <p className="text-white text-sm">Дом → Офис</p>

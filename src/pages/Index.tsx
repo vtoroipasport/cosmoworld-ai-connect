@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, TaxiFront, ShoppingCart, Mic, Bell } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -32,7 +31,7 @@ const Index = () => {
       path: '/housing'
     },
     {
-      icon: TaxiFront,
+      icon: CarTaxiFront,
       title: 'Такси',
       description: 'Голосовой заказ',
       gradient: 'from-purple-500 to-pink-500',
