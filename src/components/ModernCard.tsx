@@ -9,6 +9,7 @@ interface ModernCardProps {
   variant?: 'glass' | 'neon' | 'holographic';
   glow?: boolean;
   onClick?: () => void;
+  style?: React.CSSProperties;
 }
 
 const ModernCard = ({ 
@@ -16,7 +17,8 @@ const ModernCard = ({
   className, 
   variant = 'glass', 
   glow = false,
-  onClick 
+  onClick,
+  style 
 }: ModernCardProps) => {
   const baseClasses = "relative overflow-hidden transition-all duration-500 cursor-pointer group";
   
@@ -38,6 +40,7 @@ const ModernCard = ({
         className
       )}
       onClick={onClick}
+      style={style}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-neon-blue/10 via-transparent to-neon-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="relative z-10">
