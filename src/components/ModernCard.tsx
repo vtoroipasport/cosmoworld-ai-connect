@@ -19,18 +19,18 @@ const ModernCard = ({
   style 
 }: ModernCardProps) => {
   const variantClasses = {
-    default: "bg-white border-gray-200 hover:border-gray-300",
-    glass: "bg-white/80 backdrop-blur-sm border-gray-200/50",
-    neon: "bg-white border-blue-200 hover:border-blue-300",
-    holographic: "bg-gradient-to-br from-white to-gray-50 border-gray-200"
+    default: "bg-white border-gray-300 hover:border-gray-400",
+    glass: "bg-white/90 backdrop-blur-sm border-gray-300/60",
+    neon: "bg-white border-blue-300 hover:border-blue-400",
+    holographic: "bg-gradient-to-br from-white to-gray-100 border-gray-300"
   };
 
   return (
     <Card 
       className={cn(
-        "relative overflow-hidden transition-all duration-300 cursor-pointer group",
+        "relative overflow-hidden transition-all duration-200 cursor-pointer group",
         "modern-shadow hover:modern-shadow-lg",
-        "hover:scale-[1.02] hover:-translate-y-1",
+        "hover:scale-[1.01] hover:-translate-y-0.5",
         variantClasses[variant],
         className
       )}

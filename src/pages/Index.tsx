@@ -171,24 +171,24 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
       {/* Header */}
-      <div className="glass-card border-b border-gray-200 sticky top-0 z-50">
+      <div className="glass-card border-b border-gray-300 sticky top-0 z-50">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl flex items-center justify-center">
               <div className="w-6 h-6 bg-white rounded-md"></div>
             </div>
             <div>
               <h1 className="text-gray-900 font-bold text-xl">CosmoLife</h1>
-              <p className="text-gray-500 text-sm">Все сервисы в одном приложении</p>
+              <p className="text-gray-600 text-sm">Все сервисы в одном приложении</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="text-gray-600 hover:bg-gray-200 rounded-lg"
             >
               <Bell className="w-5 h-5" />
             </Button>
@@ -208,7 +208,7 @@ const Index = () => {
 
       {/* Features Grid */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-900 text-lg font-semibold mb-6">Сервисы</h2>
+        <h2 className="text-gray-800 text-lg font-semibold mb-6">Сервисы</h2>
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -223,8 +223,8 @@ const Index = () => {
                   <div className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mx-auto mb-3`}>
                     <Icon className={`w-6 h-6 ${feature.color}`} />
                   </div>
-                  <h3 className="text-gray-900 font-medium text-sm mb-1">{feature.title}</h3>
-                  <p className="text-gray-500 text-xs">{feature.description}</p>
+                  <h3 className="text-gray-800 font-medium text-sm mb-1">{feature.title}</h3>
+                  <p className="text-gray-600 text-xs">{feature.description}</p>
                 </div>
               </ModernCard>
             );
@@ -234,34 +234,34 @@ const Index = () => {
 
       {/* Quick Actions */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-900 text-lg font-semibold mb-6">Быстрые действия</h2>
+        <h2 className="text-gray-800 text-lg font-semibold mb-6">Быстрые действия</h2>
         <div className="space-y-3">
           <NeonButton
             variant="primary"
             size="lg"
-            className="w-full justify-start"
+            className="w-full"
             onClick={() => navigate('/messenger')}
           >
-            <MessageSquare className="w-5 h-5 mr-3" />
-            Написать сообщение
+            <MessageSquare className="w-5 h-5" />
+            <span className="flex-1 text-left">Написать сообщение</span>
           </NeonButton>
           <NeonButton
             variant="secondary"
             size="lg"
-            className="w-full justify-start"
+            className="w-full"
             onClick={() => handleQuickPayment(100, 'Быстрый платеж')}
           >
-            <DollarSign className="w-5 h-5 mr-3" />
-            Перевести 100 COSMO
+            <DollarSign className="w-5 h-5" />
+            <span className="flex-1 text-left">Перевести 100 COSMO</span>
           </NeonButton>
           <NeonButton
             variant="outline"
             size="lg"
-            className="w-full justify-start"
+            className="w-full"
             onClick={() => navigate('/marketplace')}
           >
-            <Store className="w-5 h-5 mr-3" />
-            Открыть магазин
+            <Store className="w-5 h-5" />
+            <span className="flex-1 text-left">Открыть магазин</span>
           </NeonButton>
         </div>
       </div>

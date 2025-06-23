@@ -21,25 +21,26 @@ const NeonButton = ({
   disabled = false
 }: NeonButtonProps) => {
   const variantClasses = {
-    primary: "bg-gray-900 text-white hover:bg-gray-800 border-gray-900",
-    secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-200",
-    outline: "bg-transparent text-gray-900 hover:bg-gray-50 border-gray-300"
+    primary: "bg-gray-800 text-white hover:bg-gray-700 border-gray-800",
+    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 border-gray-300",
+    outline: "bg-transparent text-gray-700 hover:bg-gray-100 border-gray-400"
   };
 
   const sizeClasses = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-3 text-sm",
-    lg: "px-8 py-4 text-base",
-    xl: "px-10 py-5 text-lg"
+    sm: "px-4 py-2 text-sm h-9",
+    md: "px-6 py-3 text-sm h-10",
+    lg: "px-8 py-3 text-base h-11",
+    xl: "px-10 py-4 text-lg h-12"
   };
 
   return (
     <Button 
       className={cn(
         "relative overflow-hidden font-medium transition-all duration-200",
-        "border rounded-lg",
-        "hover:scale-[1.02] hover:-translate-y-0.5",
+        "border rounded-lg flex items-center justify-center",
+        "hover:scale-[1.01] hover:-translate-y-0.5",
         "modern-shadow hover:modern-shadow-lg",
+        "whitespace-nowrap",
         variantClasses[variant],
         sizeClasses[size],
         disabled && "opacity-50 cursor-not-allowed hover:scale-100 hover:translate-y-0",
@@ -48,7 +49,7 @@ const NeonButton = ({
       onClick={onClick}
       disabled={disabled}
     >
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 flex items-center gap-3">{children}</span>
     </Button>
   );
 };
