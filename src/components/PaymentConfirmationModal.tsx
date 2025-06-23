@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Card } from '@/components/ui/card';
 import { Wallet, AlertTriangle, CheckCircle, Clock, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import NeonButton from './NeonButton';
@@ -62,16 +61,13 @@ const PaymentConfirmationModal = ({
   if (isCompleted) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-gradient-to-br from-black via-green-900/50 to-black border border-neon-green/50 text-white max-w-md backdrop-blur-xl">
+        <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-md modern-shadow-lg">
           <div className="text-center py-8">
             <div className="relative mx-auto mb-6">
-              <CheckCircle className="w-20 h-20 text-neon-green mx-auto animate-pulse-glow" />
-              <div className="absolute inset-0 w-20 h-20 text-neon-green mx-auto animate-ping opacity-50">
-                <CheckCircle className="w-20 h-20" />
-              </div>
+              <CheckCircle className="w-20 h-20 text-green-500 mx-auto animate-scale-in" />
             </div>
-            <h3 className="text-2xl font-bold mb-3 font-orbitron text-gradient">Платеж выполнен!</h3>
-            <p className="text-neon-green font-light">Транзакция успешно завершена</p>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">Платеж выполнен!</h3>
+            <p className="text-green-600 font-medium">Транзакция успешно завершена</p>
           </div>
         </DialogContent>
       </Dialog>
@@ -80,61 +76,60 @@ const PaymentConfirmationModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-br from-black via-purple-900/50 to-black border border-neon-purple/50 text-white max-w-md backdrop-blur-xl">
+      <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-md modern-shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-center flex items-center justify-center space-x-3 text-xl font-orbitron">
-            <Wallet className="w-7 h-7 text-neon-purple animate-pulse" />
-            <span className="text-gradient">Подтверждение платежа</span>
+          <DialogTitle className="text-center flex items-center justify-center space-x-3 text-xl font-bold">
+            <Wallet className="w-7 h-7 text-blue-600" />
+            <span className="text-gray-900">Подтверждение платежа</span>
           </DialogTitle>
         </DialogHeader>
         
         {isProcessing ? (
           <div className="text-center py-8">
             <div className="relative mx-auto mb-6">
-              <Clock className="w-20 h-20 text-neon-purple mx-auto animate-spin" />
-              <div className="absolute inset-0 w-20 h-20 bg-neon-purple/20 rounded-full blur-xl animate-pulse"></div>
+              <Clock className="w-20 h-20 text-blue-600 mx-auto animate-spin" />
             </div>
-            <h3 className="text-2xl font-bold mb-3 font-orbitron text-gradient">Обработка платежа...</h3>
-            <p className="text-neon-purple font-light">Пожалуйста, подождите</p>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">Обработка платежа...</h3>
+            <p className="text-blue-600 font-medium">Пожалуйста, подождите</p>
           </div>
         ) : (
           <div className="space-y-6">
-            <ModernCard variant="glass" className="p-6">
+            <ModernCard className="p-6 bg-gray-50">
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-light">Сумма:</span>
-                  <span className="font-bold text-2xl text-gradient font-orbitron">{amount} COSMO</span>
+                  <span className="text-gray-600 font-medium">Сумма:</span>
+                  <span className="font-bold text-2xl text-gray-900">{amount} COSMO</span>
                 </div>
                 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-light">Получатель:</span>
-                  <span className="font-mono text-sm text-neon-blue">{recipient.slice(0, 10)}...{recipient.slice(-6)}</span>
+                  <span className="text-gray-600 font-medium">Получатель:</span>
+                  <span className="font-mono text-sm text-blue-600">{recipient.slice(0, 10)}...{recipient.slice(-6)}</span>
                 </div>
                 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-light">Описание:</span>
-                  <span className="text-sm text-white">{description}</span>
+                  <span className="text-gray-600 font-medium">Описание:</span>
+                  <span className="text-sm text-gray-900">{description}</span>
                 </div>
                 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-light">Комиссия:</span>
-                  <span className="text-sm text-neon-orange">0.001 COSMO</span>
+                  <span className="text-gray-600 font-medium">Комиссия:</span>
+                  <span className="text-sm text-orange-600">0.001 COSMO</span>
                 </div>
                 
-                <hr className="border-neon-purple/30" />
+                <hr className="border-gray-200" />
                 
                 <div className="flex justify-between items-center text-lg font-bold">
-                  <span className="text-gradient font-orbitron">Итого:</span>
-                  <span className="text-gradient font-orbitron">{(amount + 0.001).toFixed(3)} COSMO</span>
+                  <span className="text-gray-900">Итого:</span>
+                  <span className="text-gray-900">{(amount + 0.001).toFixed(3)} COSMO</span>
                 </div>
               </div>
             </ModernCard>
 
-            <ModernCard variant="neon" className="p-4">
+            <ModernCard className="p-4 bg-orange-50 border-orange-200">
               <div className="flex items-start space-x-3">
-                <AlertTriangle className="w-6 h-6 text-neon-orange mt-0.5 animate-pulse" />
+                <AlertTriangle className="w-6 h-6 text-orange-600 mt-0.5" />
                 <div>
-                  <p className="text-sm text-gray-300 font-light">
+                  <p className="text-sm text-gray-700">
                     Убедитесь, что адрес получателя указан верно. Транзакции в блокчейне необратимы.
                   </p>
                 </div>
@@ -154,7 +149,7 @@ const PaymentConfirmationModal = ({
                 className="flex-1"
                 onClick={handleConfirm}
               >
-                <Zap className="w-4 h-4 mr-2" />
+                <Zap className="w-4 h-4" />
                 Подтвердить
               </NeonButton>
             </div>

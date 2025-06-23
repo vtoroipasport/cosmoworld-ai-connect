@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ModernCard from '@/components/ModernCard';
+import NeonButton from '@/components/NeonButton';
 
 const Housing = () => {
   const navigate = useNavigate();
@@ -47,72 +48,73 @@ const Housing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-10">
-        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="glass-card border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100 rounded-lg"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-white font-bold text-xl">Аренда жилья</h1>
+            <h1 className="text-gray-900 font-bold text-xl">Аренда жилья</h1>
           </div>
         </div>
       </div>
 
       {/* Search */}
-      <div className="max-w-md mx-auto px-4 py-4">
+      <div className="max-w-md mx-auto px-6 py-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             placeholder="Поиск по городу или району..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+            className="pl-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
           />
         </div>
       </div>
 
       {/* Cosmo AI Booking Info */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <Card className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-purple-500/30 backdrop-blur-sm">
-          <div className="p-4">
-            <h3 className="text-white font-semibold mb-2">🤖 Умное бронирование с Cosmo AI</h3>
-            <p className="text-purple-300 text-sm">
+      <div className="max-w-md mx-auto px-6 pb-6">
+        <ModernCard className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <div className="p-6">
+            <h3 className="text-gray-900 font-semibold mb-2">🤖 Умное бронирование с Cosmo AI</h3>
+            <p className="text-gray-700 text-sm">
               После оплаты токенами Cosmo, ИИ автоматически сгенерирует код для электронного замка и отправит его за 3 часа до заезда.
             </p>
           </div>
-        </Card>
+        </ModernCard>
       </div>
 
       {/* Properties List */}
-      <div className="max-w-md mx-auto px-4 pb-6">
+      <div className="max-w-md mx-auto px-6 pb-6">
         <div className="space-y-4">
-          {properties.map((property) => (
-            <Card
+          {properties.map((property, index) => (
+            <ModernCard
               key={property.id}
-              className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+              className="animate-fade-in"
+              style={{animationDelay: `${index * 100}ms`}}
             >
-              <div className="p-4">
-                <div className="flex items-start space-x-3 mb-3">
-                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center text-2xl">
+              <div className="p-6">
+                <div className="flex items-start space-x-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl">
                     {property.image}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-semibold mb-1">{property.title}</h3>
-                    <div className="flex items-center text-gray-300 text-sm mb-1">
+                    <h3 className="text-gray-900 font-semibold mb-1">{property.title}</h3>
+                    <div className="flex items-center text-gray-600 text-sm mb-1">
                       <MapPin className="w-3 h-3 mr-1" />
                       {property.location}
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-yellow-400">⭐ {property.rating}</span>
+                      <span className="text-yellow-500">⭐ {property.rating}</span>
                       {property.smartLock && (
-                        <span className="text-purple-400 text-xs bg-purple-500/20 px-2 py-1 rounded">
+                        <span className="text-purple-600 text-xs bg-purple-100 px-2 py-1 rounded-full">
                           🔒 Умный замок
                         </span>
                       )}
@@ -120,11 +122,11 @@ const Housing = () => {
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-2 mb-3">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {property.features.map((feature, index) => (
                     <span
                       key={index}
-                      className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded"
+                      className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
                     >
                       {feature}
                     </span>
@@ -133,46 +135,42 @@ const Housing = () => {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-white text-lg font-bold">{property.price} COSMO</span>
-                    <span className="text-gray-400 text-sm ml-1">/ сутки</span>
+                    <span className="text-gray-900 text-lg font-bold">{property.price} COSMO</span>
+                    <span className="text-gray-500 text-sm ml-1">/ сутки</span>
                   </div>
-                  <Button
-                    className={`${
-                      property.available
-                        ? 'bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700'
-                        : 'bg-gray-600 cursor-not-allowed'
-                    } text-white`}
+                  <NeonButton
+                    variant={property.available ? "primary" : "secondary"}
                     disabled={!property.available}
                   >
                     {property.available ? 'Забронировать' : 'Занято'}
-                  </Button>
+                  </NeonButton>
                 </div>
 
                 {property.available && (
-                  <div className="mt-3 flex items-center text-green-400 text-sm">
+                  <div className="mt-3 flex items-center text-green-600 text-sm">
                     <Clock className="w-3 h-3 mr-1" />
                     Мгновенное подтверждение через Cosmo AI
                   </div>
                 )}
               </div>
-            </Card>
+            </ModernCard>
           ))}
         </div>
       </div>
 
       {/* Host Registration CTA */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <Card className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 border-green-500/30 backdrop-blur-sm">
-          <div className="p-4 text-center">
-            <h3 className="text-white font-semibold mb-2">Стать хозяином</h3>
-            <p className="text-green-300 text-sm mb-4">
+      <div className="max-w-md mx-auto px-6 pb-8">
+        <ModernCard className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <div className="p-6 text-center">
+            <h3 className="text-gray-900 font-semibold mb-2">Стать хозяином</h3>
+            <p className="text-gray-700 text-sm mb-4">
               Зарабатывайте Cosmo токены, сдавая свою недвижимость
             </p>
-            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
+            <NeonButton variant="primary">
               Добавить объект
-            </Button>
+            </NeonButton>
           </div>
-        </Card>
+        </ModernCard>
       </div>
     </div>
   );
