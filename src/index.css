@@ -1,3 +1,5 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,19 +39,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,6 +93,30 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-orbitron;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent;
+  }
+  
+  .glass-morphism {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .neon-glow {
+    @apply shadow-[0_0_20px_rgba(0,245,255,0.5),0_0_40px_rgba(0,245,255,0.3),0_0_60px_rgba(0,245,255,0.1)];
+  }
+  
+  .holographic {
+    background: linear-gradient(45deg, 
+      rgba(0,245,255,0.1) 0%, 
+      rgba(191,64,191,0.1) 25%, 
+      rgba(255,20,147,0.1) 50%, 
+      rgba(57,255,20,0.1) 75%, 
+      rgba(255,102,0,0.1) 100%);
+    background-size: 400% 400%;
   }
 }

@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Wallet, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Wallet, AlertTriangle, CheckCircle, Clock, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import NeonButton from './NeonButton';
+import ModernCard from './ModernCard';
 
 interface PaymentConfirmationModalProps {
   isOpen: boolean;
@@ -61,11 +62,16 @@ const PaymentConfirmationModal = ({
   if (isCompleted) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-green-500/30 text-white max-w-md">
+        <DialogContent className="bg-gradient-to-br from-black via-green-900/50 to-black border border-neon-green/50 text-white max-w-md backdrop-blur-xl">
           <div className="text-center py-8">
-            <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">Платеж выполнен!</h3>
-            <p className="text-green-300">Транзакция успешно завершена</p>
+            <div className="relative mx-auto mb-6">
+              <CheckCircle className="w-20 h-20 text-neon-green mx-auto animate-pulse-glow" />
+              <div className="absolute inset-0 w-20 h-20 text-neon-green mx-auto animate-ping opacity-50">
+                <CheckCircle className="w-20 h-20" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold mb-3 font-orbitron text-gradient">Платеж выполнен!</h3>
+            <p className="text-neon-green font-light">Транзакция успешно завершена</p>
           </div>
         </DialogContent>
       </Dialog>
@@ -74,76 +80,83 @@ const PaymentConfirmationModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border-purple-500/30 text-white max-w-md">
+      <DialogContent className="bg-gradient-to-br from-black via-purple-900/50 to-black border border-neon-purple/50 text-white max-w-md backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="text-center flex items-center justify-center space-x-2">
-            <Wallet className="w-6 h-6 text-purple-400" />
-            <span>Подтверждение платежа</span>
+          <DialogTitle className="text-center flex items-center justify-center space-x-3 text-xl font-orbitron">
+            <Wallet className="w-7 h-7 text-neon-purple animate-pulse" />
+            <span className="text-gradient">Подтверждение платежа</span>
           </DialogTitle>
         </DialogHeader>
         
         {isProcessing ? (
           <div className="text-center py-8">
-            <Clock className="w-16 h-16 text-purple-400 mx-auto mb-4 animate-spin" />
-            <h3 className="text-xl font-bold mb-2">Обработка платежа...</h3>
-            <p className="text-purple-300">Пожалуйста, подождите</p>
+            <div className="relative mx-auto mb-6">
+              <Clock className="w-20 h-20 text-neon-purple mx-auto animate-spin" />
+              <div className="absolute inset-0 w-20 h-20 bg-neon-purple/20 rounded-full blur-xl animate-pulse"></div>
+            </div>
+            <h3 className="text-2xl font-bold mb-3 font-orbitron text-gradient">Обработка платежа...</h3>
+            <p className="text-neon-purple font-light">Пожалуйста, подождите</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-4">
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-purple-300">Сумма:</span>
-                  <span className="font-bold text-xl">{amount} COSMO</span>
+          <div className="space-y-6">
+            <ModernCard variant="glass" className="p-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300 font-light">Сумма:</span>
+                  <span className="font-bold text-2xl text-gradient font-orbitron">{amount} COSMO</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-purple-300">Получатель:</span>
-                  <span className="font-mono text-sm">{recipient.slice(0, 10)}...{recipient.slice(-6)}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300 font-light">Получатель:</span>
+                  <span className="font-mono text-sm text-neon-blue">{recipient.slice(0, 10)}...{recipient.slice(-6)}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-purple-300">Описание:</span>
-                  <span className="text-sm">{description}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300 font-light">Описание:</span>
+                  <span className="text-sm text-white">{description}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-purple-300">Комиссия:</span>
-                  <span className="text-sm">0.001 COSMO</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300 font-light">Комиссия:</span>
+                  <span className="text-sm text-neon-orange">0.001 COSMO</span>
                 </div>
                 
-                <hr className="border-white/20" />
+                <hr className="border-neon-purple/30" />
                 
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Итого:</span>
-                  <span>{(amount + 0.001).toFixed(3)} COSMO</span>
+                <div className="flex justify-between items-center text-lg font-bold">
+                  <span className="text-gradient font-orbitron">Итого:</span>
+                  <span className="text-gradient font-orbitron">{(amount + 0.001).toFixed(3)} COSMO</span>
                 </div>
               </div>
-            </Card>
+            </ModernCard>
 
-            <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 flex items-start space-x-3">
-              <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5" />
-              <div>
-                <p className="text-sm text-yellow-300">
-                  Убедитесь, что адрес получателя указан верно. Транзакции в блокчейне необратимы.
-                </p>
+            <ModernCard variant="neon" className="p-4">
+              <div className="flex items-start space-x-3">
+                <AlertTriangle className="w-6 h-6 text-neon-orange mt-0.5 animate-pulse" />
+                <div>
+                  <p className="text-sm text-gray-300 font-light">
+                    Убедитесь, что адрес получателя указан верно. Транзакции в блокчейне необратимы.
+                  </p>
+                </div>
               </div>
-            </div>
+            </ModernCard>
 
-            <div className="flex space-x-3">
-              <Button 
-                variant="outline" 
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+            <div className="flex space-x-4">
+              <NeonButton 
+                variant="secondary"
+                className="flex-1"
                 onClick={handleReject}
               >
                 Отклонить
-              </Button>
-              <Button 
-                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              </NeonButton>
+              <NeonButton 
+                variant="primary"
+                className="flex-1"
                 onClick={handleConfirm}
               >
+                <Zap className="w-4 h-4 mr-2" />
                 Подтвердить
-              </Button>
+              </NeonButton>
             </div>
           </div>
         )}

@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store, Sparkles, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import VoiceAssistant from '@/components/VoiceAssistant';
 import ProfileMenu from '@/components/ProfileMenu';
 import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
+import ModernCard from '@/components/ModernCard';
+import NeonButton from '@/components/NeonButton';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -24,57 +25,65 @@ const Index = () => {
       icon: MessageSquare,
       title: 'Мессенджер',
       description: 'Чаты, голос, видео',
-      gradient: 'from-blue-500 to-purple-600',
-      path: '/messenger'
+      gradient: 'from-neon-blue to-neon-purple',
+      path: '/messenger',
+      variant: 'glass' as const
     },
     {
       icon: DollarSign,
       title: 'Cosmo Pay',
       description: 'Голосовые платежи',
-      gradient: 'from-yellow-400 to-orange-500',
-      path: '/payments'
+      gradient: 'from-neon-orange to-neon-pink',
+      path: '/payments',
+      variant: 'neon' as const
     },
     {
       icon: MapPin,
       title: 'Аренда жилья',
       description: 'Умное бронирование',
-      gradient: 'from-green-400 to-blue-500',
-      path: '/housing'
+      gradient: 'from-neon-green to-neon-blue',
+      path: '/housing',
+      variant: 'holographic' as const
     },
     {
       icon: CarTaxiFront,
       title: 'Такси',
       description: 'С картой водителей',
-      gradient: 'from-purple-500 to-pink-500',
-      path: '/taxi'
+      gradient: 'from-neon-purple to-neon-pink',
+      path: '/taxi',
+      variant: 'glass' as const
     },
     {
       icon: ShoppingCart,
       title: 'Доставка еды',
       description: 'ИИ рекомендации',
-      gradient: 'from-red-400 to-pink-500',
-      path: '/food'
+      gradient: 'from-neon-pink to-neon-orange',
+      path: '/food',
+      variant: 'neon' as const
     },
     {
       icon: Briefcase,
       title: 'Работа',
       description: 'Поиск вакансий',
-      gradient: 'from-emerald-500 to-teal-500',
-      path: '/jobs'
+      gradient: 'from-neon-green to-neon-blue',
+      path: '/jobs',
+      variant: 'holographic' as const
     },
     {
       icon: Store,
       title: 'Маркетплейс',
       description: 'Покупки и продажи',
-      gradient: 'from-orange-500 to-red-500',
-      path: '/marketplace'
+      gradient: 'from-neon-orange to-neon-purple',
+      path: '/marketplace',
+      variant: 'glass' as const
     },
     {
       icon: Users,
       title: 'Группы',
       description: 'До 10М участников',
-      gradient: 'from-indigo-500 to-purple-600',
-      path: '/groups'
+      gradient: 'from-neon-blue to-neon-green',
+      path: '/groups',
+      variant: 'neon' as const
     }
   ];
 
@@ -167,24 +176,40 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-purple-900 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-blue/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-neon-pink/20 rounded-full blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,245,255,0.3) 1px, transparent 0)`,
+        backgroundSize: '50px 50px'
+      }}></div>
+
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">C</span>
+      <div className="glass-morphism border-b border-neon-blue/30 relative z-10">
+        <div className="max-w-md mx-auto px-6 py-6 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-r from-neon-blue to-neon-purple rounded-full flex items-center justify-center animate-pulse-glow">
+                <span className="text-white font-bold text-xl font-orbitron">C</span>
+              </div>
+              <div className="absolute inset-0 w-12 h-12 bg-gradient-to-r from-neon-blue to-neon-purple rounded-full animate-ping opacity-75"></div>
             </div>
             <div>
-              <h1 className="text-white font-bold text-xl">CosmoLife</h1>
-              <p className="text-purple-300 text-sm">Powered by Cosmo AI</p>
+              <h1 className="text-white font-bold text-2xl font-orbitron animate-neon-flicker text-gradient">CosmoLife</h1>
+              <p className="text-neon-blue text-sm font-light">Powered by Cosmo AI</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/10"
+              className="text-neon-blue hover:bg-neon-blue/20 hover:text-white border border-neon-blue/50 hover:border-neon-blue"
             >
               <Bell className="w-5 h-5" />
             </Button>
@@ -194,7 +219,7 @@ const Index = () => {
       </div>
 
       {/* Voice Assistant */}
-      <div className="max-w-md mx-auto px-4 py-6">
+      <div className="max-w-md mx-auto px-6 py-8 relative z-10">
         <VoiceAssistant
           onCommand={handleVoiceCommand}
           prompt="Скажите куда перейти или что сделать"
@@ -203,52 +228,71 @@ const Index = () => {
       </div>
 
       {/* Features Grid */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Сервисы</h3>
+      <div className="max-w-md mx-auto px-6 pb-8 relative z-10">
+        <div className="flex items-center space-x-3 mb-6">
+          <Sparkles className="w-6 h-6 text-neon-purple animate-pulse" />
+          <h3 className="text-white text-xl font-bold font-orbitron text-gradient">Сервисы</h3>
+          <Zap className="w-6 h-6 text-neon-blue animate-bounce" />
+        </div>
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card
+              <ModernCard
                 key={index}
-                className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer hover:scale-105"
+                variant={feature.variant}
+                glow={index % 2 === 0}
                 onClick={() => navigate(feature.path)}
+                className="animate-fade-in"
+                style={{animationDelay: `${index * 100}ms`}}
               >
-                <div className="p-4 text-center">
-                  <div className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-full flex items-center justify-center mx-auto mb-3`}>
-                    <Icon className="w-6 h-6 text-white" />
+                <div className="p-6 text-center">
+                  <div className={`w-14 h-14 bg-gradient-to-r ${feature.gradient} rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow`}>
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h4 className="text-white font-medium text-sm mb-1">{feature.title}</h4>
-                  <p className="text-purple-300 text-xs">{feature.description}</p>
+                  <h4 className="text-white font-bold text-sm mb-2 font-orbitron">{feature.title}</h4>
+                  <p className="text-gray-300 text-xs">{feature.description}</p>
                 </div>
-              </Card>
+              </ModernCard>
             );
           })}
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Быстрые действия</h3>
-        <div className="space-y-3">
-          <Button
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+      <div className="max-w-md mx-auto px-6 pb-8 relative z-10">
+        <div className="flex items-center space-x-3 mb-6">
+          <Zap className="w-6 h-6 text-neon-green animate-pulse" />
+          <h3 className="text-white text-xl font-bold font-orbitron text-gradient">Быстрые действия</h3>
+        </div>
+        <div className="space-y-4">
+          <NeonButton
+            variant="primary"
+            size="lg"
+            className="w-full"
             onClick={() => navigate('/messenger')}
           >
+            <MessageSquare className="w-5 h-5 mr-2" />
             Новое сообщение
-          </Button>
-          <Button
-            className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
+          </NeonButton>
+          <NeonButton
+            variant="accent"
+            size="lg"
+            className="w-full"
             onClick={() => handleQuickPayment(10, 'Быстрый платеж')}
           >
+            <DollarSign className="w-5 h-5 mr-2" />
             Отправить 10 COSMO
-          </Button>
-          <Button
-            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+          </NeonButton>
+          <NeonButton
+            variant="secondary"
+            size="lg"
+            className="w-full"
             onClick={() => navigate('/marketplace')}
           >
-            Найти товары на маркетплейсе
-          </Button>
+            <Store className="w-5 h-5 mr-2" />
+            Найти товары
+          </NeonButton>
         </div>
       </div>
 
