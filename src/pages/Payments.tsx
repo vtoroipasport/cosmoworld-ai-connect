@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Wallet, Send, Plus, QrCode, DollarSign, Mic, User, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ModernCard from '@/components/ModernCard';
+import NeonButton from '@/components/NeonButton';
 
 const Payments = () => {
   const navigate = useNavigate();
@@ -66,25 +67,25 @@ const Payments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-white font-bold text-xl">Cosmo Pay</h1>
+            <h1 className="text-gray-900 font-bold text-xl">Cosmo Pay</h1>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/10"
+            className="text-gray-700 hover:bg-gray-100"
           >
             <QrCode className="w-5 h-5" />
           </Button>
@@ -93,106 +94,102 @@ const Payments = () => {
 
       {/* Voice Payment */}
       <div className="max-w-md mx-auto px-4 py-6">
-        <Card className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30 backdrop-blur-sm">
-          <div className="p-6 text-center">
-            <div className="mb-4">
-              <Button
-                onClick={handleVoicePayment}
-                className={`w-16 h-16 rounded-full transition-all duration-300 ${
-                  isListening
-                    ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
-                    : 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:scale-110'
-                }`}
-              >
-                <Mic className="w-8 h-8 text-white" />
-              </Button>
-            </div>
-            <h2 className="text-white text-lg font-semibold mb-2">Голосовой платёж</h2>
-            <p className="text-yellow-300 text-sm">
-              {isListening 
-                ? 'Слушаю команду...' 
-                : 'Скажите: "Отправь 100 токенов Анне"'
-              }
-            </p>
+        <ModernCard className="p-6 text-center bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
+          <div className="mb-4">
+            <NeonButton
+              onClick={handleVoicePayment}
+              className={`w-16 h-16 rounded-full transition-all duration-300 ${
+                isListening
+                  ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
+                  : 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:scale-110'
+              }`}
+            >
+              <Mic className="w-8 h-8 text-white" />
+            </NeonButton>
           </div>
-        </Card>
+          <h2 className="text-gray-900 text-lg font-semibold mb-2">Голосовой платёж</h2>
+          <p className="text-yellow-600 text-sm">
+            {isListening 
+              ? 'Слушаю команду...' 
+              : 'Скажите: "Отправь 100 токенов Анне"'
+            }
+          </p>
+        </ModernCard>
       </div>
 
       {/* Balance Card */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <Card className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-blue-500/30 backdrop-blur-sm">
-          <div className="p-6 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <DollarSign className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-white text-2xl font-bold mb-2">{balance.toLocaleString()} COSMO</h2>
-            <p className="text-blue-300 text-lg">≈ ${usdBalance.toLocaleString()} USD</p>
-            <div className="flex space-x-3 mt-6">
-              <Button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                <Send className="w-4 h-4 mr-2" />
-                Отправить
-              </Button>
-              <Button className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                Пополнить
-              </Button>
-            </div>
+        <ModernCard className="p-6 text-center bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <DollarSign className="w-8 h-8 text-white" />
           </div>
-        </Card>
+          <h2 className="text-gray-900 text-2xl font-bold mb-2">{balance.toLocaleString()} COSMO</h2>
+          <p className="text-blue-600 text-lg">≈ ${usdBalance.toLocaleString()} USD</p>
+          <div className="flex space-x-3 mt-6">
+            <NeonButton variant="primary" className="flex-1">
+              <Send className="w-4 h-4 mr-2" />
+              Отправить
+            </NeonButton>
+            <NeonButton variant="secondary" className="flex-1">
+              <Plus className="w-4 h-4 mr-2" />
+              Пополнить
+            </NeonButton>
+          </div>
+        </ModernCard>
       </div>
 
       {/* Wallet Integration */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Подключенные кошельки</h3>
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <div className="p-4 flex items-center space-x-3">
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">Подключенные кошельки</h3>
+        <ModernCard className="p-4 bg-white">
+          <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
               <Wallet className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h4 className="text-white font-medium">Wallet</h4>
-              <p className="text-gray-300 text-sm">0x1234...5678</p>
+              <h4 className="text-gray-900 font-medium">Wallet</h4>
+              <p className="text-gray-600 text-sm">0x1234...5678</p>
             </div>
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
-        </Card>
+        </ModernCard>
       </div>
 
       {/* Quick Send to Contacts */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Быстрая отправка контактам</h3>
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">Быстрая отправка контактам</h3>
         <div className="flex space-x-3 overflow-x-auto pb-2">
           {contacts.map((contact) => (
-            <Card
+            <ModernCard
               key={contact.id}
               onClick={() => handleQuickSend(contact)}
-              className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer min-w-0 flex-shrink-0"
+              className="min-w-0 flex-shrink-0 cursor-pointer hover:shadow-md transition-shadow bg-white"
             >
               <div className="p-3 text-center w-20">
                 <div className="text-2xl mb-2">{contact.avatar}</div>
-                <p className="text-white text-xs truncate">{contact.name}</p>
+                <p className="text-gray-900 text-xs truncate">{contact.name}</p>
                 <div className="mt-2">
-                  <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white w-full">
+                  <NeonButton size="sm" variant="primary" className="w-full">
                     <Send className="w-3 h-3" />
-                  </Button>
+                  </NeonButton>
                 </div>
               </div>
-            </Card>
+            </ModernCard>
           ))}
         </div>
       </div>
 
       {/* Quick Send Form */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Отправить токены</h3>
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">Отправить токены</h3>
         <div className="space-y-3">
           <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
             <Input
               placeholder="@username или адрес кошелька"
               value={recipientInput}
               onChange={(e) => setRecipientInput(e.target.value)}
-              className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+              className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
           <Input
@@ -200,16 +197,16 @@ const Payments = () => {
             type="number"
             value={amountInput}
             onChange={(e) => setAmountInput(e.target.value)}
-            className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+            className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           />
           <div className="flex space-x-2">
-            <Button className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white">
+            <NeonButton variant="primary" className="flex-1">
               <Send className="w-4 h-4 mr-2" />
               Отправить
-            </Button>
+            </NeonButton>
             <Button 
               variant="outline" 
-              className="border-white/20 text-white hover:bg-white/10"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
               onClick={() => navigate('/messenger')}
             >
               <MessageSquare className="w-4 h-4" />
@@ -220,11 +217,11 @@ const Payments = () => {
 
       {/* Transaction History */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">История транзакций</h3>
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">История транзакций</h3>
         <div className="space-y-3">
           {transactions.map((tx) => (
-            <Card key={tx.id} className="bg-white/10 backdrop-blur-sm border-white/20">
-              <div className="p-4 flex items-center space-x-3">
+            <ModernCard key={tx.id} className="p-4 bg-white">
+              <div className="flex items-center space-x-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                   tx.type === 'receive' 
                     ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
@@ -234,19 +231,19 @@ const Payments = () => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h4 className="text-white font-medium">
+                    <h4 className="text-gray-900 font-medium">
                       {tx.type === 'receive' ? `От ${tx.from}` : `К ${tx.to}`}
                     </h4>
                     <span className={`font-bold ${
-                      tx.type === 'receive' ? 'text-green-400' : 'text-red-400'
+                      tx.type === 'receive' ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {tx.type === 'receive' ? '+' : '-'}{tx.amount} COSMO
                     </span>
                   </div>
-                  <p className="text-gray-400 text-sm">{tx.time}</p>
+                  <p className="text-gray-500 text-sm">{tx.time}</p>
                 </div>
               </div>
-            </Card>
+            </ModernCard>
           ))}
         </div>
       </div>

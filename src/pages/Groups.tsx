@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, Plus, Search, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import ModernCard from '@/components/ModernCard';
+import NeonButton from '@/components/NeonButton';
 import CreateGroupModal from '@/components/CreateGroupModal';
 import VoiceAssistant from '@/components/VoiceAssistant';
 
@@ -110,26 +111,26 @@ const Groups = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-white font-bold text-xl">Группы</h1>
+            <h1 className="text-gray-900 font-bold text-xl">Группы</h1>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <Search className="w-5 h-5" />
             </Button>
@@ -137,7 +138,7 @@ const Groups = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowCreateModal(true)}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <Plus className="w-5 h-5" />
             </Button>
@@ -148,70 +149,72 @@ const Groups = () => {
       {/* Search */}
       <div className="max-w-md mx-auto px-4 py-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input
             placeholder="Поиск групп..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+            className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Voice Assistant */}
       <div className="max-w-md mx-auto px-4 pb-4">
-        <VoiceAssistant
-          onCommand={handleVoiceCommand}
-          prompt="Скажите 'создать группу' или найдите нужную"
-          context="Управление группами и сообществами"
-        />
+        <ModernCard className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+          <VoiceAssistant
+            onCommand={handleVoiceCommand}
+            prompt="Скажите 'создать группу' или найдите нужную"
+            context="Управление группами и сообществами"
+          />
+        </ModernCard>
       </div>
 
       {/* Create Group CTA */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <Card className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-indigo-500/30 backdrop-blur-sm">
-          <div className="p-4 text-center">
-            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Plus className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-white font-semibold mb-2">Создать группу</h3>
-            <p className="text-purple-300 text-sm mb-2">
-              Обычные группы: до 10,000 участников
-            </p>
-            <p className="text-purple-300 text-sm mb-4">
-              Супергруппы: до 10 миллионов участников
-            </p>
-            <div className="flex space-x-2">
-              <Button 
-                onClick={() => setShowCreateModal(true)}
-                className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-              >
-                <Users className="w-4 h-4 mr-1" />
-                Обычная
-              </Button>
-              <Button 
-                onClick={() => setShowCreateModal(true)}
-                className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white"
-              >
-                <Crown className="w-4 h-4 mr-1" />
-                Супер
-              </Button>
-            </div>
+        <ModernCard className="p-4 text-center bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+          <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Plus className="w-6 h-6 text-white" />
           </div>
-        </Card>
+          <h3 className="text-gray-900 font-semibold mb-2">Создать группу</h3>
+          <p className="text-purple-600 text-sm mb-2">
+            Обычные группы: до 10,000 участников
+          </p>
+          <p className="text-purple-600 text-sm mb-4">
+            Супергруппы: до 10 миллионов участников
+          </p>
+          <div className="flex space-x-2">
+            <NeonButton 
+              onClick={() => setShowCreateModal(true)}
+              variant="primary"
+              className="flex-1"
+            >
+              <Users className="w-4 h-4 mr-1" />
+              Обычная
+            </NeonButton>
+            <NeonButton 
+              onClick={() => setShowCreateModal(true)}
+              variant="secondary"
+              className="flex-1 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300"
+            >
+              <Crown className="w-4 h-4 mr-1" />
+              Супер
+            </NeonButton>
+          </div>
+        </ModernCard>
       </div>
 
       {/* Groups List */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Мои группы</h3>
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">Мои группы</h3>
         <div className="space-y-3">
           {filteredGroups.map((group) => (
-            <Card
+            <ModernCard
               key={group.id}
-              className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+              className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
               onClick={() => navigate('/messenger')}
             >
-              <div className="p-4 flex items-center space-x-3">
+              <div className="flex items-center space-x-3">
                 <div className="relative">
                   <div className="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-xl">
                     {group.avatar}
@@ -229,80 +232,80 @@ const Groups = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-white font-medium truncate">{group.name}</h3>
-                    <span className="text-gray-400 text-xs">{group.time}</span>
+                    <h3 className="text-gray-900 font-medium truncate">{group.name}</h3>
+                    <span className="text-gray-500 text-xs">{group.time}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-gray-300 text-sm truncate">{group.lastMessage}</p>
+                    <p className="text-gray-600 text-sm truncate">{group.lastMessage}</p>
                     {group.unread > 0 && (
-                      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2">
+                      <div className="bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2">
                         {group.unread}
                       </div>
                     )}
                   </div>
                   <div className="flex items-center mt-1">
-                    <Users className="w-3 h-3 text-gray-400 mr-1" />
-                    <span className="text-gray-400 text-xs">
+                    <Users className="w-3 h-3 text-gray-500 mr-1" />
+                    <span className="text-gray-500 text-xs">
                       {formatMemberCount(group.members)} участников
-                      {group.isSuper && <span className="text-yellow-400 ml-1">• Супергруппа</span>}
+                      {group.isSuper && <span className="text-yellow-600 ml-1">• Супергруппа</span>}
                     </span>
                   </div>
                 </div>
               </div>
-            </Card>
+            </ModernCard>
           ))}
         </div>
       </div>
 
       {/* Suggested Groups */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-white text-lg font-semibold mb-4">Рекомендованные группы</h3>
+        <h3 className="text-gray-900 text-lg font-semibold mb-4">Рекомендованные группы</h3>
         <div className="space-y-3">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <div className="p-4 flex items-center space-x-3">
+          <ModernCard className="p-4 bg-white">
+            <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-lg">
                 🏠
               </div>
               <div className="flex-1">
-                <h4 className="text-white font-medium">Аренда Москва</h4>
+                <h4 className="text-gray-900 font-medium">Аренда Москва</h4>
                 <div className="flex items-center">
-                  <p className="text-gray-400 text-sm">1.2K участников</p>
-                  <Crown className="w-3 h-3 text-yellow-400 ml-2" />
+                  <p className="text-gray-500 text-sm">1.2K участников</p>
+                  <Crown className="w-3 h-3 text-yellow-500 ml-2" />
                 </div>
               </div>
-              <Button 
+              <NeonButton 
                 size="sm" 
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                variant="primary"
                 onClick={() => toast({
                   title: "Присоединились к группе",
                   description: "Добро пожаловать в группу Аренда Москва!",
                 })}
               >
                 Вступить
-              </Button>
+              </NeonButton>
             </div>
-          </Card>
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <div className="p-4 flex items-center space-x-3">
+          </ModernCard>
+          <ModernCard className="p-4 bg-white">
+            <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center text-lg">
                 🚗
               </div>
               <div className="flex-1">
-                <h4 className="text-white font-medium">CosmoRide Водители</h4>
-                <p className="text-gray-400 text-sm">856 участников</p>
+                <h4 className="text-gray-900 font-medium">CosmoRide Водители</h4>
+                <p className="text-gray-500 text-sm">856 участников</p>
               </div>
-              <Button 
+              <NeonButton 
                 size="sm" 
-                className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white"
+                variant="primary"
                 onClick={() => toast({
                   title: "Присоединились к группе",
                   description: "Добро пожаловать в группу CosmoRide Водители!",
                 })}
               >
                 Вступить
-              </Button>
+              </NeonButton>
             </div>
-          </Card>
+          </ModernCard>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, MapPin, Star, Clock, Mic, Briefcase, User } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, Star, Mic, Briefcase, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ModernCard from '@/components/ModernCard';
+import NeonButton from '@/components/NeonButton';
 
 const Jobs = () => {
   const navigate = useNavigate();
@@ -91,60 +92,58 @@ const Jobs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-white font-bold text-xl">CosmoJobs</h1>
+            <h1 className="text-gray-900 font-bold text-xl">CosmoJobs</h1>
           </div>
         </div>
       </div>
 
       {/* Voice Search */}
       <div className="max-w-md mx-auto px-4 py-6">
-        <Card className="bg-gradient-to-r from-emerald-600/20 to-blue-600/20 border-emerald-500/30 backdrop-blur-sm">
-          <div className="p-6 text-center">
-            <div className="mb-4">
-              <Button
-                onClick={handleVoiceSearch}
-                className={`w-16 h-16 rounded-full transition-all duration-300 ${
-                  isListening
-                    ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
-                    : 'bg-gradient-to-r from-emerald-500 to-blue-600 hover:scale-110'
-                }`}
-              >
-                <Mic className="w-8 h-8 text-white" />
-              </Button>
-            </div>
-            <h2 className="text-white text-lg font-semibold mb-2">Голосовой поиск работы</h2>
-            <p className="text-emerald-300 text-sm">
-              {isListening 
-                ? 'Слушаю команду...' 
-                : 'Скажите: "Найди работу курьера рядом"'
-              }
-            </p>
+        <ModernCard className="p-6 text-center bg-gradient-to-r from-emerald-50 to-blue-50 border-emerald-200">
+          <div className="mb-4">
+            <NeonButton
+              onClick={handleVoiceSearch}
+              className={`w-16 h-16 rounded-full transition-all duration-300 ${
+                isListening
+                  ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
+                  : 'bg-gradient-to-r from-emerald-500 to-blue-600 hover:scale-110'
+              }`}
+            >
+              <Mic className="w-8 h-8 text-white" />
+            </NeonButton>
           </div>
-        </Card>
+          <h2 className="text-gray-900 text-lg font-semibold mb-2">Голосовой поиск работы</h2>
+          <p className="text-emerald-600 text-sm">
+            {isListening 
+              ? 'Слушаю команду...' 
+              : 'Скажите: "Найди работу курьера рядом"'
+            }
+          </p>
+        </ModernCard>
       </div>
 
       {/* Search */}
       <div className="max-w-md mx-auto px-4 pb-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input
             placeholder="Поиск работы или исполнителей..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+            className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
       </div>
@@ -152,28 +151,22 @@ const Jobs = () => {
       {/* Tabs */}
       <div className="max-w-md mx-auto px-4 pb-6">
         <div className="flex space-x-2">
-          <Button
+          <NeonButton
             onClick={() => setActiveTab('jobs')}
-            className={`flex-1 ${
-              activeTab === 'jobs'
-                ? 'bg-gradient-to-r from-emerald-600 to-blue-600'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
+            variant={activeTab === 'jobs' ? 'primary' : 'secondary'}
+            className="flex-1"
           >
             <Briefcase className="w-4 h-4 mr-2" />
             Работа
-          </Button>
-          <Button
+          </NeonButton>
+          <NeonButton
             onClick={() => setActiveTab('freelancers')}
-            className={`flex-1 ${
-              activeTab === 'freelancers'
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
+            variant={activeTab === 'freelancers' ? 'primary' : 'secondary'}
+            className="flex-1"
           >
             <User className="w-4 h-4 mr-2" />
             Исполнители
-          </Button>
+          </NeonButton>
         </div>
       </div>
 
@@ -181,72 +174,68 @@ const Jobs = () => {
       <div className="max-w-md mx-auto px-4 pb-6">
         {activeTab === 'jobs' ? (
           <div className="space-y-3">
-            <h3 className="text-white text-lg font-semibold mb-4">Вакансии рядом</h3>
+            <h3 className="text-gray-900 text-lg font-semibold mb-4">Вакансии рядом</h3>
             {jobs.map((job) => (
-              <Card
+              <ModernCard
                 key={job.id}
-                className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+                className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
               >
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="text-white font-medium">{job.title}</h4>
-                        {job.urgent && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                            Срочно
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-emerald-300 text-sm">{job.company}</p>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <h4 className="text-gray-900 font-medium">{job.title}</h4>
+                      {job.urgent && (
+                        <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                          Срочно
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center text-yellow-400">
-                      <Star className="w-4 h-4 mr-1" />
-                      <span className="text-sm">{job.rating}</span>
-                    </div>
+                    <p className="text-emerald-600 text-sm">{job.company}</p>
                   </div>
-                  <p className="text-gray-300 text-sm mb-3">{job.description}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-gray-400 text-sm">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {job.location}
-                    </div>
-                    <span className="text-emerald-400 font-semibold">{job.salary}</span>
+                  <div className="flex items-center text-yellow-500">
+                    <Star className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{job.rating}</span>
                   </div>
                 </div>
-              </Card>
+                <p className="text-gray-600 text-sm mb-3">{job.description}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <MapPin className="w-3 h-3 mr-1" />
+                    {job.location}
+                  </div>
+                  <span className="text-emerald-600 font-semibold">{job.salary}</span>
+                </div>
+              </ModernCard>
             ))}
           </div>
         ) : (
           <div className="space-y-3">
-            <h3 className="text-white text-lg font-semibold mb-4">Исполнители рядом</h3>
+            <h3 className="text-gray-900 text-lg font-semibold mb-4">Исполнители рядом</h3>
             {freelancers.map((freelancer) => (
-              <Card
+              <ModernCard
                 key={freelancer.id}
-                className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+                className="p-4 flex items-center space-x-3 cursor-pointer hover:shadow-md transition-shadow bg-white"
               >
-                <div className="p-4 flex items-center space-x-3">
-                  <div className="text-3xl">{freelancer.avatar}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-white font-medium">{freelancer.name}</h4>
-                      <div className="flex items-center text-yellow-400">
-                        <Star className="w-4 h-4 mr-1" />
-                        <span className="text-sm">{freelancer.rating}</span>
-                      </div>
+                <div className="text-3xl">{freelancer.avatar}</div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="text-gray-900 font-medium">{freelancer.name}</h4>
+                    <div className="flex items-center text-yellow-500">
+                      <Star className="w-4 h-4 mr-1" />
+                      <span className="text-sm">{freelancer.rating}</span>
                     </div>
-                    <p className="text-purple-300 text-sm mb-1">{freelancer.specialty}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-400 text-sm">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        {freelancer.location}
-                      </div>
-                      <span className="text-purple-400 font-semibold">{freelancer.price}</span>
-                    </div>
-                    <p className="text-gray-400 text-xs mt-1">{freelancer.completed} заказов выполнено</p>
                   </div>
+                  <p className="text-purple-600 text-sm mb-1">{freelancer.specialty}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-gray-500 text-sm">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      {freelancer.location}
+                    </div>
+                    <span className="text-purple-600 font-semibold">{freelancer.price}</span>
+                  </div>
+                  <p className="text-gray-500 text-xs mt-1">{freelancer.completed} заказов выполнено</p>
                 </div>
-              </Card>
+              </ModernCard>
             ))}
           </div>
         )}
