@@ -111,9 +111,9 @@ const Marketplace = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+      <div className="glass-card border-b border-gray-300 dark:border-gray-700 sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
@@ -265,10 +265,7 @@ const Marketplace = () => {
                     <NeonButton 
                       size="sm" 
                       variant="primary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedProduct(product);
-                      }}
+                      onClick={() => setSelectedProduct(product)}
                     >
                       <ShoppingCart className="w-3 h-3" />
                     </NeonButton>

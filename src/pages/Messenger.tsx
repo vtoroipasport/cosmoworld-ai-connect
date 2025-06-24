@@ -67,36 +67,36 @@ const Messenger = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="glass-card border-b border-gray-300 dark:border-gray-700 sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-gray-700 hover:bg-gray-100"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <Avatar className="w-10 h-10">
               <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback className="bg-blue-100 text-blue-700">АП</AvatarFallback>
+              <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">АП</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="font-semibold text-gray-900">Анна Петрова</h1>
-              <p className="text-sm text-green-600">в сети</p>
+              <h1 className="font-semibold text-gray-900 dark:text-white">Анна Петрова</h1>
+              <p className="text-sm text-green-600 dark:text-green-400">в сети</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               <Phone className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               <Video className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               <Search className="w-5 h-5" />
             </Button>
           </div>
@@ -110,14 +110,14 @@ const Messenger = () => {
             <div key={msg.id} className={`flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`}>
               <ModernCard className={`max-w-xs px-4 py-2 ${
                 msg.isOwn 
-                  ? 'bg-blue-600 text-white border-blue-600' 
-                  : 'bg-white border-gray-200'
+                  ? 'bg-blue-600 dark:bg-blue-700 text-white border-blue-600 dark:border-blue-700' 
+                  : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
               }`}>
-                <p className={`text-sm ${msg.isOwn ? 'text-white' : 'text-gray-900'}`}>
+                <p className={`text-sm ${msg.isOwn ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
                   {msg.text}
                 </p>
                 <p className={`text-xs mt-1 ${
-                  msg.isOwn ? 'text-blue-100' : 'text-gray-500'
+                  msg.isOwn ? 'text-blue-100 dark:text-blue-200' : 'text-gray-500 dark:text-gray-400'
                 }`}>
                   {msg.time}
                 </p>
@@ -128,9 +128,9 @@ const Messenger = () => {
         </div>
 
         {/* Message Input */}
-        <div className="p-4 bg-white border-t border-gray-200">
+        <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-end space-x-2">
-            <Button variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
               <Paperclip className="w-5 h-5" />
             </Button>
             <div className="flex-1">
@@ -139,10 +139,10 @@ const Messenger = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Напишите сообщение..."
-                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               />
             </div>
-            <Button variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100">
+            <Button variant="ghost" size="sm" className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
               <Smile className="w-5 h-5" />
             </Button>
             <NeonButton 
