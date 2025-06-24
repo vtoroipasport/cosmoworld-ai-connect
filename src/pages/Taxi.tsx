@@ -1,224 +1,141 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, Clock, Mic, CarTaxiFront, Navigation } from 'lucide-react';
+import { ArrowLeft, MapPin, Navigation, Clock, Car, Star, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
 
 const Taxi = () => {
   const navigate = useNavigate();
-  const [isListening, setIsListening] = useState(false);
-  const [fromLocation, setFromLocation] = useState('');
-  const [toLocation, setToLocation] = useState('');
+  const { toast } = useToast();
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [selectedTariff, setSelectedTariff] = useState('comfort');
 
-  const nearbyDrivers = [
-    { id: 1, name: 'Сергей', rating: 4.9, distance: '2 мин', car: 'Toyota Camry', lat: 55.7558, lng: 37.6176 },
-    { id: 2, name: 'Алексей', rating: 4.8, distance: '4 мин', car: 'Hyundai Solaris', lat: 55.7608, lng: 37.6156 },
-    { id: 3, name: 'Михаил', rating: 4.7, distance: '5 мин', car: 'Kia Rio', lat: 55.7528, lng: 37.6206 }
-  ];
-
-  const rideTypes = [
+  const tariffs = [
     {
-      type: 'Эконом',
-      price: 15,
-      time: '5-7 мин',
-      description: 'Доступные поездки',
-      icon: '🚗'
+      id: 'economy',
+      name: 'Эконом',
+      price: 8,
+      time: '3-5',
+      icon: '🚗',
+      description: 'Базовый тариф'
     },
     {
-      type: 'Комфорт',
-      price: 25,
-      time: '3-5 мин',
-      description: 'Больше места и удобства',
-      icon: '🚙'
+      id: 'comfort',
+      name: 'Комфорт',
+      price: 12,
+      time: '2-4',
+      icon: '🚙',
+      description: 'Улучшенные авто'
     },
     {
-      type: 'Премиум',
-      price: 45,
-      time: '2-4 мин',
-      description: 'Автомобили бизнес-класса',
-      icon: '🚘'
+      id: 'business',
+      name: 'Бизнес',
+      price: 20,
+      time: '1-3',
+      icon: '🚗',
+      description: 'Премиум класс'
     }
   ];
 
-  const handleVoiceOrder = () => {
-    setIsListening(!isListening);
-    console.log('Cosmo AI voice taxi order activated: "Закажи такси на девять вечера"');
-    
-    if (!isListening) {
-      setTimeout(() => {
-        setFromLocation('Мой текущий адрес');
-        setToLocation('Аэропорт Домодедово');
-        setIsListening(false);
-      }, 3000);
+  const activeRides = [
+    {
+      id: 1,
+      driver: 'Алексей К.',
+      rating: 4.9,
+      car: 'Toyota Camry',
+      license: 'А123БВ',
+      status: 'В пути к вам',
+      eta: '3 мин',
+      phone: '+7 (999) 123-45-67'
+    }
+  ];
+
+  const handleOrderTaxi = () => {
+    if (from && to) {
+      toast({
+        title: "Заказ оформлен!",
+        description: `Такси ${tariffs.find(t => t.id === selectedTariff)?.name} будет через ${tariffs.find(t => t.id === selectedTariff)?.time} мин`,
+      });
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="glass-card border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-gray-700 hover:bg-gray-100"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-gray-900 font-bold text-xl">CosmoRide</h1>
+            <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoTaxi</h1>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100"
-          >
-            <Navigation className="w-5 h-5" />
-          </Button>
         </div>
-      </div>
-
-      {/* Voice Order */}
-      <div className="max-w-md mx-auto px-4 py-6">
-        <ModernCard className="p-6 text-center bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-          <div className="mb-4">
-            <NeonButton
-              onClick={handleVoiceOrder}
-              className={`w-16 h-16 rounded-full transition-all duration-300 ${
-                isListening
-                  ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-110'
-              }`}
-            >
-              <Mic className="w-8 h-8 text-white" />
-            </NeonButton>
-          </div>
-          <h2 className="text-gray-900 text-lg font-semibold mb-2">Голосовой заказ</h2>
-          <p className="text-gray-600 text-sm">
-            {isListening 
-              ? 'Слушаю команду...' 
-              : 'Скажите: "Закажи такси на девять вечера"'
-            }
-          </p>
-        </ModernCard>
       </div>
 
       {/* Route Input */}
-      <div className="max-w-md mx-auto px-4 pb-4">
-        <ModernCard className="p-4 space-y-3 bg-white">
-          <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 w-4 h-4" />
-            <Input
-              placeholder="Откуда"
-              value={fromLocation}
-              onChange={(e) => setFromLocation(e.target.value)}
-              className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
-          <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-red-500 w-4 h-4" />
-            <Input
-              placeholder="Куда"
-              value={toLocation}
-              onChange={(e) => setToLocation(e.target.value)}
-              className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
-        </ModernCard>
-      </div>
-
-      {/* Interactive Map with Drivers */}
-      <div className="max-w-md mx-auto px-4 pb-4">
-        <ModernCard className="h-48 relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
-          <div className="absolute inset-0">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white animate-pulse"></div>
-              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-700 bg-white px-2 py-1 rounded shadow">
-                Вы здесь
-              </div>
+      <div className="max-w-md mx-auto px-4 py-6">
+        <ModernCard className="p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <div className="space-y-4">
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 w-4 h-4" />
+              <Input
+                placeholder="Откуда"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
             </div>
-
-            {nearbyDrivers.map((driver, index) => (
-              <div
-                key={driver.id}
-                className={`absolute ${
-                  index === 0 ? 'top-1/3 right-1/3' :
-                  index === 1 ? 'bottom-1/3 left-1/4' : 'top-1/4 left-1/2'
-                }`}
-              >
-                <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                  🚗
-                </div>
-                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-700 bg-white px-2 py-1 rounded shadow whitespace-nowrap">
-                  {driver.name} • {driver.distance}
-                </div>
-              </div>
-            ))}
+            <div className="relative">
+              <Navigation className="absolute left-3 top-1/2 transform -translate-y-1/2 text-red-500 w-4 h-4" />
+              <Input
+                placeholder="Куда"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
           </div>
         </ModernCard>
       </div>
 
-      {/* Nearby Drivers List */}
-      <div className="max-w-md mx-auto px-4 pb-4">
-        <h3 className="text-gray-900 text-lg font-semibold mb-3">Водители рядом</h3>
-        <div className="space-y-2">
-          {nearbyDrivers.map((driver) => (
+      {/* Tariffs */}
+      <div className="max-w-md mx-auto px-4 pb-6">
+        <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Выберите тариф</h3>
+        <div className="space-y-3">
+          {tariffs.map((tariff) => (
             <ModernCard
-              key={driver.id}
-              className="p-3 cursor-pointer hover:shadow-md transition-shadow bg-white"
+              key={tariff.id}
+              onClick={() => setSelectedTariff(tariff.id)}
+              className={`p-4 cursor-pointer transition-all ${
+                selectedTariff === tariff.id
+                  ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/20 border-blue-500'
+                  : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:shadow-md'
+              }`}
             >
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
-                  <CarTaxiFront className="w-5 h-5 text-white" />
-                </div>
+                <div className="text-2xl">{tariff.icon}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h4 className="text-gray-900 font-medium">{driver.name}</h4>
-                    <span className="text-blue-600 font-semibold">{driver.distance}</span>
+                    <h4 className="text-gray-900 dark:text-white font-semibold">{tariff.name}</h4>
+                    <span className="text-gray-900 dark:text-white font-bold">{tariff.price} COSMO</span>
                   </div>
-                  <p className="text-gray-600 text-sm">{driver.car}</p>
-                  <div className="flex items-center text-yellow-500 text-sm mt-1">
-                    ⭐ {driver.rating}
-                  </div>
-                </div>
-                <NeonButton
-                  size="sm"
-                  variant="primary"
-                >
-                  Вызвать
-                </NeonButton>
-              </div>
-            </ModernCard>
-          ))}
-        </div>
-      </div>
-
-      {/* Ride Types */}
-      <div className="max-w-md mx-auto px-4 pb-4">
-        <h3 className="text-gray-900 text-lg font-semibold mb-3">Выберите тариф</h3>
-        <div className="space-y-2">
-          {rideTypes.map((ride, index) => (
-            <ModernCard
-              key={index}
-              className="p-3 cursor-pointer hover:shadow-md transition-shadow bg-white"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="text-2xl">{ride.icon}</div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <h4 className="text-gray-900 font-medium">{ride.type}</h4>
-                    <span className="text-gray-900 font-bold">{ride.price} COSMO</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-gray-600 text-sm">{ride.description}</p>
-                    <div className="flex items-center text-gray-500 text-sm">
+                  <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300">
+                    <div className="flex items-center">
                       <Clock className="w-3 h-3 mr-1" />
-                      {ride.time}
+                      {tariff.time} мин
                     </div>
+                    <span>{tariff.description}</span>
                   </div>
                 </div>
               </div>
@@ -229,14 +146,74 @@ const Taxi = () => {
 
       {/* Order Button */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <NeonButton
-          className="w-full py-4"
-          disabled={!fromLocation || !toLocation}
-          variant="primary"
+        <NeonButton 
+          onClick={handleOrderTaxi}
+          className="w-full"
+          disabled={!from || !to}
         >
-          <CarTaxiFront className="w-5 h-5 mr-2" />
+          <Car className="w-4 h-4 mr-2" />
           Заказать такси
         </NeonButton>
+      </div>
+
+      {/* Active Rides */}
+      {activeRides.length > 0 && (
+        <div className="max-w-md mx-auto px-4 pb-6">
+          <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Активные поездки</h3>
+          {activeRides.map((ride) => (
+            <ModernCard key={ride.id} className="p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Car className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-gray-900 dark:text-white font-semibold">{ride.driver}</h4>
+                    <div className="flex items-center text-yellow-500">
+                      <Star className="w-3 h-3 mr-1" />
+                      {ride.rating}
+                    </div>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">{ride.car} • {ride.license}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Phone className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-green-700 dark:text-green-300 font-medium">{ride.status}</span>
+                  <span className="text-green-600 dark:text-green-400 text-sm">{ride.eta}</span>
+                </div>
+              </div>
+            </ModernCard>
+          ))}
+        </div>
+      )}
+
+      {/* Recent Destinations */}
+      <div className="max-w-md mx-auto px-4 pb-6">
+        <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">Частые поездки</h3>
+        <div className="space-y-2">
+          {['Дом • ул. Ленина, 10', 'Работа • БЦ Сити', 'Аэропорт • Шереметьево'].map((destination, index) => (
+            <ModernCard
+              key={index}
+              className="p-3 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                </div>
+                <span className="text-gray-900 dark:text-white text-sm">{destination}</span>
+              </div>
+            </ModernCard>
+          ))}
+        </div>
       </div>
     </div>
   );
