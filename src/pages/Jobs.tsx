@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, MapPin, Clock, DollarSign, Briefcase, Filter, Bookmark, Send } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, Clock, DollarSign, Briefcase, Filter, Bookmark, Send, Star, Play, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -14,58 +14,57 @@ const Jobs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
+  const [isWorkerMode, setIsWorkerMode] = useState(false);
+  const [activeOrder, setActiveOrder] = useState<any>(null);
 
   const categories = [
     { id: 'all', name: 'Все', icon: '💼' },
-    { id: 'tech', name: 'IT', icon: '💻' },
-    { id: 'design', name: 'Дизайн', icon: '🎨' },
-    { id: 'marketing', name: 'Маркетинг', icon: '📊' },
-    { id: 'sales', name: 'Продажи', icon: '💰' },
-    { id: 'remote', name: 'Удаленка', icon: '🏠' }
+    { id: 'cleaning', name: 'Уборка', icon: '🧽' },
+    { id: 'delivery', name: 'Доставка', icon: '🚚' },
+    { id: 'repair', name: 'Ремонт', icon: '🔧' },
+    { id: 'beauty', name: 'Красота', icon: '💅' },
+    { id: 'tutoring', name: 'Репетиторство', icon: '📚' }
   ];
 
-  const jobs = [
+  const hourlyJobs = [
     {
       id: 1,
-      title: 'Frontend React Developer',
-      company: 'TechCorp',
-      location: 'Москва',
-      salary: '150-200k',
-      type: 'Полная занятость',
-      remote: true,
-      category: 'tech',
-      posted: '2 дня назад',
-      description: 'Разработка современных веб-приложений на React',
-      requirements: ['React', 'TypeScript', 'Redux'],
-      featured: true
+      title: 'Уборка квартиры',
+      client: 'Анна П.',
+      location: 'ул. Ленина, 15',
+      rate: 500,
+      duration: '2-3 часа',
+      category: 'cleaning',
+      distance: '0.5 км',
+      rating: 4.8,
+      description: 'Генеральная уборка 2-комнатной квартиры',
+      urgent: true
     },
     {
       id: 2,
-      title: 'UX/UI Designer',
-      company: 'DesignStudio',
-      location: 'СПб',
-      salary: '120-150k',
-      type: 'Полная занятость',
-      remote: false,
-      category: 'design',
-      posted: '1 день назад',
-      description: 'Создание пользовательских интерфейсов',
-      requirements: ['Figma', 'Photoshop', 'UX Research'],
-      featured: false
+      title: 'Доставка документов',
+      client: 'ООО "Бизнес"',
+      location: 'БЦ Сити',
+      rate: 300,
+      duration: '1 час',
+      category: 'delivery',
+      distance: '1.2 км',
+      rating: 4.9,
+      description: 'Срочная доставка документов в банк',
+      urgent: false
     },
     {
       id: 3,
-      title: 'Digital Marketing Manager',
-      company: 'MarketPro',
-      location: 'Удаленно',
-      salary: '100-130k',
-      type: 'Полная занятость',
-      remote: true,
-      category: 'marketing',
-      posted: '3 дня назад',
-      description: 'Управление цифровыми маркетинговыми кампаниями',
-      requirements: ['Google Ads', 'Analytics', 'SMM'],
-      featured: true
+      title: 'Ремонт крана',
+      client: 'Михаил С.',
+      location: 'ул. Победы, 22',
+      rate: 800,
+      duration: '1-2 часа',
+      category: 'repair',
+      distance: '2.1 км',
+      rating: 4.7,
+      description: 'Замена смесителя на кухне',
+      urgent: false
     }
   ];
 
@@ -74,27 +73,58 @@ const Jobs = () => {
       setSavedJobs(savedJobs.filter(id => id !== jobId));
       toast({
         title: "Удалено из сохраненных",
-        description: "Вакансия убрана из избранного",
+        description: "Заказ убран из избранного",
       });
     } else {
       setSavedJobs([...savedJobs, jobId]);
       toast({
         title: "Добавлено в избранное",
-        description: "Вакансия сохранена в избранном",
+        description: "Заказ сохранен в избранном",
       });
     }
   };
 
-  const handleApply = (job: any) => {
+  const handleTakeOrder = (job: any) => {
+    setActiveOrder({ ...job, status: 'accepted', startTime: new Date() });
     toast({
-      title: "Отклик отправлен!",
-      description: `Ваш отклик на позицию "${job.title}" отправлен`,
+      title: "Заказ принят!",
+      description: `Вы взяли заказ "${job.title}"`,
     });
   };
 
-  const filteredJobs = jobs.filter(job => {
+  const handleStartWork = () => {
+    if (activeOrder) {
+      setActiveOrder({ ...activeOrder, status: 'in_progress', workStartTime: new Date() });
+      toast({
+        title: "Работа начата",
+        description: "Время работы засекается",
+      });
+    }
+  };
+
+  const handleCompleteWork = () => {
+    if (activeOrder) {
+      setActiveOrder({ ...activeOrder, status: 'completed', completedTime: new Date() });
+      toast({
+        title: "Работа завершена!",
+        description: "Заказ отправлен клиенту на проверку",
+      });
+    }
+  };
+
+  const handleOrderCompleted = () => {
+    if (activeOrder) {
+      toast({
+        title: "Оплата получена!",
+        description: `${activeOrder.rate} COSMO зачислено на ваш баланс`,
+      });
+      setActiveOrder(null);
+    }
+  };
+
+  const filteredJobs = hourlyJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          job.company.toLowerCase().includes(searchQuery.toLowerCase());
+                          job.client.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || job.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -119,6 +149,7 @@ const Jobs = () => {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => toast({ title: "Фильтры", description: "Функция в разработке" })}
               className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Filter className="w-5 h-5" />
@@ -126,20 +157,95 @@ const Jobs = () => {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => navigate('/saved-jobs')}
               className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Bookmark className="w-5 h-5" />
+              {savedJobs.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {savedJobs.length}
+                </span>
+              )}
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Worker Mode Toggle */}
+      <div className="max-w-md mx-auto px-4 py-4">
+        <div className="flex space-x-2">
+          <NeonButton
+            onClick={() => setIsWorkerMode(false)}
+            variant={!isWorkerMode ? 'primary' : 'secondary'}
+            className="flex-1"
+          >
+            <Briefcase className="w-4 h-4 mr-2" />
+            Найти исполнителя
+          </NeonButton>
+          <NeonButton
+            onClick={() => setIsWorkerMode(true)}
+            variant={isWorkerMode ? 'primary' : 'secondary'}
+            className="flex-1"
+          >
+            <DollarSign className="w-4 h-4 mr-2" />
+            Хочу поработать
+          </NeonButton>
+        </div>
+      </div>
+
+      {/* Active Order Status */}
+      {activeOrder && (
+        <div className="max-w-md mx-auto px-4 pb-4">
+          <ModernCard className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-gray-900 dark:text-white font-semibold">Активный заказ</h3>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                activeOrder.status === 'accepted' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                activeOrder.status === 'in_progress' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+              }`}>
+                {activeOrder.status === 'accepted' ? 'Принят' :
+                 activeOrder.status === 'in_progress' ? 'В работе' : 'Завершен'}
+              </span>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300 mb-2">{activeOrder.title}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{activeOrder.location}</p>
+            
+            {activeOrder.status === 'accepted' && (
+              <NeonButton onClick={handleStartWork} className="w-full">
+                <Play className="w-4 h-4 mr-2" />
+                Приступить к работе
+              </NeonButton>
+            )}
+            
+            {activeOrder.status === 'in_progress' && (
+              <NeonButton onClick={handleCompleteWork} className="w-full">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Заказ выполнен
+              </NeonButton>
+            )}
+            
+            {activeOrder.status === 'completed' && (
+              <div className="space-y-2">
+                <p className="text-center text-gray-700 dark:text-gray-300 text-sm">Ожидание подтверждения клиента...</p>
+                <Button 
+                  className="w-full bg-green-500 hover:bg-green-600"
+                  onClick={handleOrderCompleted}
+                >
+                  Симулировать принятие клиентом
+                </Button>
+              </div>
+            )}
+          </ModernCard>
+        </div>
+      )}
 
       {/* Search */}
       <div className="max-w-md mx-auto px-4 py-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
           <Input
-            placeholder="Поиск вакансий..."
+            placeholder={isWorkerMode ? "Поиск заказов рядом..." : "Поиск исполнителей..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
@@ -165,31 +271,13 @@ const Jobs = () => {
         </div>
       </div>
 
-      {/* AI Career Assistant */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <ModernCard className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200 dark:border-purple-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-gray-900 dark:text-white font-semibold">Карьерный ассистент Cosmo</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Персональные рекомендации вакансий</p>
-            </div>
-            <NeonButton variant="primary" size="sm">
-              Настроить
-            </NeonButton>
-          </div>
-        </ModernCard>
-      </div>
-
       {/* Jobs List */}
       <div className="max-w-md mx-auto px-4 pb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-gray-900 dark:text-white text-lg font-semibold">
-            {selectedCategory === 'all' ? 'Все вакансии' : categories.find(c => c.id === selectedCategory)?.name}
+            {isWorkerMode ? 'Доступные заказы' : 'Найти исполнителя'}
           </h3>
-          <span className="text-gray-600 dark:text-gray-300 text-sm">{filteredJobs.length} вакансий</span>
+          <span className="text-gray-600 dark:text-gray-300 text-sm">{filteredJobs.length} заказов</span>
         </div>
         
         <div className="space-y-4">
@@ -202,26 +290,22 @@ const Jobs = () => {
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-1">
                     <h3 className="text-gray-900 dark:text-white font-semibold">{job.title}</h3>
-                    {job.featured && (
-                      <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs px-2 py-1 rounded">
-                        Топ
-                      </span>
-                    )}
-                    {job.remote && (
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs px-2 py-1 rounded">
-                        Remote
+                    {job.urgent && (
+                      <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded">
+                        Срочно
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">{job.company}</p>
+                  <p className="text-gray-600 dark:text-gray-300 font-medium">{job.client}</p>
+                  <div className="flex items-center space-x-1 mb-1">
+                    <Star className="w-3 h-3 text-yellow-500" />
+                    <span className="text-yellow-600 dark:text-yellow-400 text-sm">{job.rating}</span>
+                  </div>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSaveJob(job.id);
-                  }}
+                  onClick={() => handleSaveJob(job.id)}
                   className="p-1"
                 >
                   <Bookmark 
@@ -241,60 +325,69 @@ const Jobs = () => {
                 </div>
                 <div className="flex items-center">
                   <DollarSign className="w-3 h-3 mr-1" />
-                  {job.salary}
+                  {job.rate} COSMO/час
                 </div>
                 <div className="flex items-center">
                   <Clock className="w-3 h-3 mr-1" />
-                  {job.posted}
+                  {job.duration}
                 </div>
               </div>
 
               <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{job.description}</p>
 
-              <div className="flex flex-wrap gap-2 mb-3">
-                {job.requirements.map((req, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-2 py-1 rounded"
-                  >
-                    {req}
-                  </span>
-                ))}
-              </div>
-
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 dark:text-gray-300 text-sm">{job.type}</span>
-                <NeonButton 
-                  size="sm" 
-                  variant="primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleApply(job);
-                  }}
-                >
-                  <Send className="w-3 h-3 mr-1" />
-                  Откликнуться
-                </NeonButton>
+                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">{job.distance} от вас</span>
+                {isWorkerMode ? (
+                  <NeonButton 
+                    size="sm" 
+                    variant="primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleTakeOrder(job);
+                    }}
+                    disabled={!!activeOrder}
+                  >
+                    <Send className="w-3 h-3 mr-1" />
+                    Взять заказ
+                  </NeonButton>
+                ) : (
+                  <NeonButton 
+                    size="sm" 
+                    variant="primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toast({
+                        title: "Заказ создан!",
+                        description: `Ищем ближайшего исполнителя для "${job.title}"`,
+                      });
+                    }}
+                  >
+                    <Send className="w-3 h-3 mr-1" />
+                    Заказать
+                  </NeonButton>
+                )}
               </div>
             </ModernCard>
           ))}
         </div>
       </div>
 
-      {/* Create Resume CTA */}
-      <div className="max-w-md mx-auto px-4 pb-6">
-        <ModernCard className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-green-200 dark:border-green-700">
-          <div className="text-center">
-            <h3 className="text-gray-900 dark:text-white font-semibold mb-2">Создайте резюме</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
-              Увеличьте шансы найти работу мечты
-            </p>
-            <NeonButton variant="primary" size="sm">
-              Создать резюме
-            </NeonButton>
-          </div>
-        </ModernCard>
-      </div>
+      {/* Balance Warning for Cash Orders */}
+      {isWorkerMode && (
+        <div className="max-w-md mx-auto px-4 pb-6">
+          <ModernCard className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700">
+            <div className="text-center">
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-2">Баланс для наличных заказов</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
+                Для принятия заказов с оплатой наличными необходимо иметь на балансе минимум $10 для оплаты комиссии сервиса (10%)
+              </p>
+              <NeonButton variant="primary" size="sm">
+                Пополнить баланс
+              </NeonButton>
+            </div>
+          </ModernCard>
+        </div>
+      )}
     </div>
   );
 };
