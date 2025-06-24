@@ -95,6 +95,14 @@ const Marketplace = () => {
     });
   };
 
+  const handlePurchase = (product: any) => {
+    toast({
+      title: "Покупка оформлена!",
+      description: `Товар "${product.title}" добавлен в корзину`,
+    });
+    setSelectedProduct(null);
+  };
+
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           product.seller.toLowerCase().includes(searchQuery.toLowerCase());
@@ -103,26 +111,26 @@ const Marketplace = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-gray-700 hover:bg-gray-100"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-gray-900 font-bold text-xl">Маркетплейс</h1>
+            <h1 className="text-gray-900 dark:text-white font-bold text-xl">Маркетплейс</h1>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-700 hover:bg-gray-100"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Filter className="w-5 h-5" />
             </Button>
@@ -130,7 +138,7 @@ const Marketplace = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowCreateModal(true)}
-              className="text-gray-700 hover:bg-gray-100"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Plus className="w-5 h-5" />
             </Button>
@@ -141,12 +149,12 @@ const Marketplace = () => {
       {/* Search */}
       <div className="max-w-md mx-auto px-4 py-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
           <Input
             placeholder="Поиск товаров..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           />
         </div>
       </div>
@@ -171,14 +179,14 @@ const Marketplace = () => {
 
       {/* Create Product CTA */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <ModernCard className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+        <ModernCard className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-green-200 dark:border-green-700">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
               <Plus className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-gray-900 font-semibold">Продавайте на маркетплейсе</h3>
-              <p className="text-gray-600 text-sm">Размещайте товары и получайте COSMO токены</p>
+              <h3 className="text-gray-900 dark:text-white font-semibold">Продавайте на маркетплейсе</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">Размещайте товары и получайте COSMO токены</p>
             </div>
             <NeonButton 
               onClick={() => setShowCreateModal(true)}
@@ -193,23 +201,23 @@ const Marketplace = () => {
 
       {/* Products Grid */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <h3 className="text-gray-900 text-lg font-semibold mb-4">
+        <h3 className="text-gray-900 dark:text-white text-lg font-semibold mb-4">
           {selectedCategory === 'all' ? 'Все товары' : categories.find(c => c.id === selectedCategory)?.name}
         </h3>
         <div className="grid grid-cols-1 gap-4">
           {filteredProducts.map((product) => (
             <ModernCard
               key={product.id}
-              className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white"
+              className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800"
               onClick={() => setSelectedProduct(product)}
             >
               <div className="flex space-x-3">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg flex items-center justify-center text-2xl">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg flex items-center justify-center text-2xl">
                   {product.image}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-1">
-                    <h3 className="text-gray-900 font-semibold truncate">{product.title}</h3>
+                    <h3 className="text-gray-900 dark:text-white font-semibold truncate">{product.title}</h3>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -223,25 +231,25 @@ const Marketplace = () => {
                         className={`w-4 h-4 ${
                           favorites.includes(product.id) 
                             ? 'text-red-500 fill-red-500' 
-                            : 'text-gray-400'
+                            : 'text-gray-400 dark:text-gray-500'
                         }`} 
                       />
                     </Button>
                   </div>
                   
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-lg font-bold text-gray-900">{product.price} COSMO</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">{product.price} COSMO</span>
                     {product.oldPrice && (
-                      <span className="text-sm text-gray-500 line-through">{product.oldPrice} COSMO</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 line-through">{product.oldPrice} COSMO</span>
                     )}
                     {product.premium && (
-                      <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                      <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs px-2 py-1 rounded">
                         Premium
                       </span>
                     )}
                   </div>
                   
-                  <div className="flex items-center space-x-3 text-sm text-gray-600 mb-2">
+                  <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300 mb-2">
                     <div className="flex items-center">
                       <Star className="w-3 h-3 text-yellow-500 mr-1" />
                       {product.rating}
@@ -251,7 +259,7 @@ const Marketplace = () => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                       {product.seller} • {product.location}
                     </span>
                     <NeonButton 
@@ -283,6 +291,7 @@ const Marketplace = () => {
           isOpen={!!selectedProduct}
           onClose={() => setSelectedProduct(null)}
           product={selectedProduct}
+          onPurchase={handlePurchase}
         />
       )}
     </div>

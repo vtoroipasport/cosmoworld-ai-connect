@@ -21,9 +21,9 @@ const NeonButton = ({
   disabled = false
 }: NeonButtonProps) => {
   const variantClasses = {
-    primary: "bg-gray-800 text-white hover:bg-gray-700 border-gray-800",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 border-gray-300",
-    outline: "bg-transparent text-gray-700 hover:bg-gray-100 border-gray-400"
+    primary: "bg-gray-800 dark:bg-gray-700 text-white hover:bg-gray-700 dark:hover:bg-gray-600 border-gray-800 dark:border-gray-700",
+    secondary: "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600",
+    outline: "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-400 dark:border-gray-600"
   };
 
   const sizeClasses = {

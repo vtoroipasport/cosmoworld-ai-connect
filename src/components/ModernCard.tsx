@@ -19,10 +19,10 @@ const ModernCard = ({
   style 
 }: ModernCardProps) => {
   const variantClasses = {
-    default: "bg-white border-gray-300 hover:border-gray-400",
-    glass: "bg-white/90 backdrop-blur-sm border-gray-300/60",
-    neon: "bg-white border-blue-300 hover:border-blue-400",
-    holographic: "bg-gradient-to-br from-white to-gray-100 border-gray-300"
+    default: "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500",
+    glass: "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-gray-300/60 dark:border-gray-600/60",
+    neon: "bg-white dark:bg-gray-800 border-blue-300 dark:border-blue-600 hover:border-blue-400 dark:hover:border-blue-500",
+    holographic: "bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 border-gray-300 dark:border-gray-600"
   };
 
   return (

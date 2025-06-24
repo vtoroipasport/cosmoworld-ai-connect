@@ -102,12 +102,16 @@ const ProfileMenu = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600"
+        >
           <User className="w-5 h-5" />
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border-purple-500/30 text-white max-w-md">
+      <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-800 dark:via-purple-800 dark:to-slate-800 border-purple-500/30 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-xl">Профиль CosmoLife</DialogTitle>
         </DialogHeader>
@@ -122,21 +126,24 @@ const ProfileMenu = () => {
             
             {!wallet ? (
               <div className="space-y-3">
-                <p className="text-sm text-purple-300">Создайте свой Web3 кошелек</p>
+                <p className="text-sm text-purple-300">Создайте свой Web3 кошелек как в MetaMask</p>
                 <Input
                   type="password"
                   placeholder="Пароль для кошелька"
                   value={walletPassword}
                   onChange={(e) => setWalletPassword(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                 />
                 <Button 
                   onClick={createWallet}
                   disabled={isCreatingWallet}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600"
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
                 >
-                  {isCreatingWallet ? 'Создание...' : 'Создать кошелек'}
+                  {isCreatingWallet ? 'Создание кошелька...' : 'Создать кошелек'}
                 </Button>
+                <p className="text-xs text-purple-200">
+                  ⚠️ Сохраните seed-фразу в безопасном месте. Без неё восстановить кошелек будет невозможно!
+                </p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -152,6 +159,7 @@ const ProfileMenu = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => copyToClipboard(wallet.address, 'Адрес')}
+                      className="hover:bg-white/10"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
@@ -169,6 +177,7 @@ const ProfileMenu = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowPrivateKey(!showPrivateKey)}
+                        className="hover:bg-white/10"
                       >
                         {showPrivateKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
@@ -176,6 +185,7 @@ const ProfileMenu = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => copyToClipboard(wallet.privateKey, 'Приватный ключ')}
+                        className="hover:bg-white/10"
                       >
                         <Copy className="w-4 h-4" />
                       </Button>
@@ -188,19 +198,21 @@ const ProfileMenu = () => {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-purple-300">Мнемоника:</span>
+                    <span className="text-xs text-purple-300">Seed-фраза:</span>
                     <div className="flex space-x-1">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowMnemonic(!showMnemonic)}
+                        className="hover:bg-white/10"
                       >
                         {showMnemonic ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(wallet.mnemonic, 'Мнемоника')}
+                        onClick={() => copyToClipboard(wallet.mnemonic, 'Seed-фраза')}
+                        className="hover:bg-white/10"
                       >
                         <Copy className="w-4 h-4" />
                       </Button>
@@ -208,6 +220,9 @@ const ProfileMenu = () => {
                   </div>
                   <p className="text-xs bg-black/20 p-2 rounded">
                     {showMnemonic ? wallet.mnemonic : '•'.repeat(wallet.mnemonic.length)}
+                  </p>
+                  <p className="text-xs text-yellow-300">
+                    ⚠️ Никому не показывайте вашу seed-фразу!
                   </p>
                 </div>
               </div>

@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import VoiceAssistant from '@/components/VoiceAssistant';
 import ProfileMenu from '@/components/ProfileMenu';
+import ThemeToggle from '@/components/ThemeToggle';
 import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
@@ -26,7 +26,7 @@ const Index = () => {
       title: 'Мессенджер',
       description: 'Общение и чаты',
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       path: '/messenger'
     },
     {
@@ -34,7 +34,7 @@ const Index = () => {
       title: 'Cosmo Pay',
       description: 'Платежи',
       color: 'text-green-600',
-      bgColor: 'bg-green-50',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
       path: '/payments'
     },
     {
@@ -42,7 +42,7 @@ const Index = () => {
       title: 'Аренда жилья',
       description: 'Поиск жилья',
       color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
       path: '/housing'
     },
     {
@@ -50,7 +50,7 @@ const Index = () => {
       title: 'Такси',
       description: 'Поездки',
       color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50',
+      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
       path: '/taxi'
     },
     {
@@ -58,7 +58,7 @@ const Index = () => {
       title: 'Доставка еды',
       description: 'Заказ еды',
       color: 'text-red-600',
-      bgColor: 'bg-red-50',
+      bgColor: 'bg-red-50 dark:bg-red-900/20',
       path: '/food'
     },
     {
@@ -66,7 +66,7 @@ const Index = () => {
       title: 'Работа',
       description: 'Поиск работы',
       color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50',
+      bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
       path: '/jobs'
     },
     {
@@ -74,7 +74,7 @@ const Index = () => {
       title: 'Маркетплейс',
       description: 'Покупки',
       color: 'text-pink-600',
-      bgColor: 'bg-pink-50',
+      bgColor: 'bg-pink-50 dark:bg-pink-900/20',
       path: '/marketplace'
     },
     {
@@ -82,7 +82,7 @@ const Index = () => {
       title: 'Группы',
       description: 'Сообщества',
       color: 'text-teal-600',
-      bgColor: 'bg-teal-50',
+      bgColor: 'bg-teal-50 dark:bg-teal-900/20',
       path: '/groups'
     }
   ];
@@ -171,27 +171,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="glass-card border-b border-gray-300 sticky top-0 z-50">
+      <div className="glass-card border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl flex items-center justify-center">
-              <div className="w-6 h-6 bg-white rounded-md"></div>
+            <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 rounded-xl flex items-center justify-center">
+              <div className="w-6 h-6 bg-white dark:bg-gray-300 rounded-md"></div>
             </div>
             <div>
-              <h1 className="text-gray-900 font-bold text-xl">CosmoLife</h1>
-              <p className="text-gray-600 text-sm">Все сервисы в одном приложении</p>
+              <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoLife</h1>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">Все сервисы в одном приложении</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-600 hover:bg-gray-200 rounded-lg"
+              className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
             >
               <Bell className="w-5 h-5" />
             </Button>
+            <ThemeToggle />
             <ProfileMenu />
           </div>
         </div>
@@ -208,7 +209,7 @@ const Index = () => {
 
       {/* Features Grid */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 text-lg font-semibold mb-6">Сервисы</h2>
+        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">Сервисы</h2>
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -223,8 +224,8 @@ const Index = () => {
                   <div className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mx-auto mb-3`}>
                     <Icon className={`w-6 h-6 ${feature.color}`} />
                   </div>
-                  <h3 className="text-gray-800 font-medium text-sm mb-1">{feature.title}</h3>
-                  <p className="text-gray-600 text-xs">{feature.description}</p>
+                  <h3 className="text-gray-800 dark:text-gray-200 font-medium text-sm mb-1">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs">{feature.description}</p>
                 </div>
               </ModernCard>
             );
@@ -234,7 +235,7 @@ const Index = () => {
 
       {/* Quick Actions */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 text-lg font-semibold mb-6">Быстрые действия</h2>
+        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">Быстрые действия</h2>
         <div className="space-y-3">
           <NeonButton
             variant="primary"
