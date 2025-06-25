@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 interface LanguageContextType {
@@ -16,6 +15,7 @@ const translations = {
     'app.subtitle': 'All services in one app',
     
     // Services
+    'services.title': 'Services',
     'services.messenger': 'Messenger',
     'services.messenger.desc': 'Chat and messaging',
     'services.payments': 'Cosmo Pay',
@@ -32,6 +32,27 @@ const translations = {
     'services.marketplace.desc': 'Shopping',
     'services.groups': 'Groups',
     'services.groups.desc': 'Communities',
+    
+    // Quick Actions
+    'quick.actions': 'Quick Actions',
+    'quick.send.message': 'Send Message',
+    'quick.transfer': 'Transfer',
+    'quick.payment': 'Quick payment',
+    'quick.open.store': 'Open Store',
+    
+    // Voice
+    'voice.prompt': 'Voice command',
+    'voice.context': 'App control',
+    
+    // AI Assistant
+    'ai.welcome': 'Hi! I\'m your AI assistant. How can I help?',
+    'ai.placeholder': 'Ask something...',
+    
+    // Payments
+    'payments.wallet.needed': 'Wallet needed',
+    'payments.wallet.create': 'Create wallet in profile',
+    'payments.success': 'Payment completed',
+    'payments.transferred': 'Transferred',
     
     // Common
     'common.back': 'Back',
@@ -114,6 +135,7 @@ const translations = {
     'app.subtitle': 'Все сервисы в одном приложении',
     
     // Services
+    'services.title': 'Сервисы',
     'services.messenger': 'Мессенджер',
     'services.messenger.desc': 'Общение и чаты',
     'services.payments': 'Cosmo Pay',
@@ -130,6 +152,27 @@ const translations = {
     'services.marketplace.desc': 'Покупки',
     'services.groups': 'Группы',
     'services.groups.desc': 'Сообщества',
+    
+    // Quick Actions
+    'quick.actions': 'Быстрые действия',
+    'quick.send.message': 'Написать сообщение',
+    'quick.transfer': 'Перевести',
+    'quick.payment': 'Быстрый платеж',
+    'quick.open.store': 'Открыть магазин',
+    
+    // Voice
+    'voice.prompt': 'Голосовая команда',
+    'voice.context': 'Управление приложением',
+    
+    // AI Assistant
+    'ai.welcome': 'Привет! Я ваш AI-помощник. Чем могу помочь?',
+    'ai.placeholder': 'Спросите что-нибудь...',
+    
+    // Payments
+    'payments.wallet.needed': 'Нужен кошелек',
+    'payments.wallet.create': 'Создайте кошелек в профиле',
+    'payments.success': 'Платеж выполнен',
+    'payments.transferred': 'Переведено',
     
     // Common
     'common.back': 'Назад',

@@ -15,28 +15,33 @@ serve(async (req) => {
   }
 
   try {
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key not found');
+    }
+
     const { prompt, service, context } = await req.json();
+    console.log('AI Assistant request:', { prompt, service, context });
 
     let systemPrompt = '';
     
     switch (service) {
       case 'jobs':
-        systemPrompt = 'Вы AI-помощник CosmoJobs. Помогаете подбирать исполнителей и заказы, даете советы по ценообразованию и качественному выполнению работ.';
+        systemPrompt = 'Вы AI-помощник CosmoJobs. Помогаете подбирать исполнителей и заказы, даете советы по ценообразованию и качественному выполнению работ. Отвечайте кратко и по делу.';
         break;
       case 'housing':
-        systemPrompt = 'Вы AI-помощник для аренды жилья. Работаете как Airbnb - помогаете найти идеальное жилье, консультируете по ценам, районам и условиям.';
+        systemPrompt = 'Вы AI-помощник для аренды жилья. Работаете как Airbnb - помогаете найти идеальное жилье, консультируете по ценам, районам и условиям. Отвечайте кратко и по делу.';
         break;
       case 'food':
-        systemPrompt = 'Вы AI-помощник доставки еды. Работаете как iFood - рекомендуете рестораны, блюда, следите за акциями и временем доставки.';
+        systemPrompt = 'Вы AI-помощник доставки еды. Работаете как iFood - рекомендуете рестораны, блюда, следите за акциями и временем доставки. Отвечайте кратко и по делу.';
         break;
       case 'marketplace':
-        systemPrompt = 'Вы AI-помощник маркетплейса. Работаете как eBay - помогаете с покупками, продажами, оценкой товаров и безопасными сделками.';
+        systemPrompt = 'Вы AI-помощник маркетплейса. Работаете как eBay - помогаете с покупками, продажами, оценкой товаров и безопасными сделками. Отвечайте кратко и по делу.';
         break;
       case 'messenger':
-        systemPrompt = 'Вы AI-помощник мессенджера. Работаете как Telegram - помогаете с общением, переводом, поиском контактов и группами.';
+        systemPrompt = 'Вы AI-помощник мессенджера. Работаете как Telegram - помогаете с общением, переводом, поиском контактов и группами. Отвечайте кратко и по делу.';
         break;
       default:
-        systemPrompt = 'Вы полезный AI-помощник экосистемы Cosmo. Отвечайте кратко и по делу.';
+        systemPrompt = 'Вы полезный AI-помощник экосистемы Cosmo. Отвечайте кратко и по делу на русском языке.';
     }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -56,15 +61,26 @@ serve(async (req) => {
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
+    }
+
     const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
+    console.log('OpenAI response:', data);
+    
+    const aiResponse = data.choices[0]?.message?.content || 'Извините, не удалось получить ответ';
 
     return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in cosmo-ai-assistant function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: 'Извините, произошла ошибка. Попробуйте позже.',
+      details: error.message 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -6,12 +6,14 @@ import { MessageCircle, Send, X, Loader2 } from 'lucide-react';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CosmoAIProps {
   service: 'jobs' | 'housing' | 'food' | 'marketplace' | 'messenger';
 }
 
 const CosmoAI = ({ service }: CosmoAIProps) => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState<Array<{ type: 'user' | 'ai', content: string }>>([]);
@@ -41,7 +43,7 @@ const CosmoAI = ({ service }: CosmoAIProps) => {
       console.error('AI Assistant error:', error);
       setConversation(prev => [...prev, { 
         type: 'ai', 
-        content: 'Извините, произошла ошибка. Попробуйте позже.' 
+        content: t('common.error') + ': ' + (error as Error).message 
       }]);
     } finally {
       setIsLoading(false);
@@ -60,6 +62,7 @@ const CosmoAI = ({ service }: CosmoAIProps) => {
       <Button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
+        title="Cosmo AI"
       >
         <MessageCircle className="w-6 h-6" />
       </Button>
@@ -89,7 +92,7 @@ const CosmoAI = ({ service }: CosmoAIProps) => {
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {conversation.length === 0 && (
             <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
-              Привет! Я ваш AI-помощник. Чем могу помочь?
+              {t('ai.welcome')}
             </div>
           )}
           {conversation.map((msg, index) => (
@@ -118,7 +121,7 @@ const CosmoAI = ({ service }: CosmoAIProps) => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Спросите что-нибудь..."
+              placeholder={t('ai.placeholder')}
               className="flex-1"
               disabled={isLoading}
             />

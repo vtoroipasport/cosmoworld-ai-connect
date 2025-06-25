@@ -151,8 +151,8 @@ const Index = () => {
     const wallet = localStorage.getItem('cosmo_wallet');
     if (!wallet) {
       toast({
-        title: "Нужен кошелек",
-        description: "Создайте кошелек в профиле",
+        title: t('payments.wallet.needed'),
+        description: t('payments.wallet.create'),
         variant: "destructive"
       });
       return;
@@ -168,8 +168,8 @@ const Index = () => {
 
   const handlePaymentConfirm = () => {
     toast({
-      title: "Платеж выполнен",
-      description: `Переведено ${paymentModal.amount} COSMO`,
+      title: t('payments.success'),
+      description: `${t('payments.transferred')} ${paymentModal.amount} COSMO`,
     });
     setPaymentModal({ ...paymentModal, isOpen: false });
   };
@@ -207,14 +207,14 @@ const Index = () => {
       <div className="max-w-md mx-auto px-6 py-6">
         <VoiceAssistant
           onCommand={handleVoiceCommand}
-          prompt="Голосовая команда"
-          context="Управление приложением"
+          prompt={t('voice.prompt')}
+          context={t('voice.context')}
         />
       </div>
 
       {/* Features Grid */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">Сервисы</h2>
+        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">{t('services.title')}</h2>
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -240,7 +240,7 @@ const Index = () => {
 
       {/* Quick Actions */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">Быстрые действия</h2>
+        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">{t('quick.actions')}</h2>
         <div className="space-y-3">
           <NeonButton
             variant="primary"
@@ -249,16 +249,16 @@ const Index = () => {
             onClick={() => navigate('/messenger')}
           >
             <MessageSquare className="w-5 h-5" />
-            <span className="flex-1 text-left">Написать сообщение</span>
+            <span className="flex-1 text-left">{t('quick.send.message')}</span>
           </NeonButton>
           <NeonButton
             variant="secondary"
             size="lg"
             className="w-full"
-            onClick={() => handleQuickPayment(100, 'Быстрый платеж')}
+            onClick={() => handleQuickPayment(100, t('quick.payment'))}
           >
             <DollarSign className="w-5 h-5" />
-            <span className="flex-1 text-left">Перевести 100 COSMO</span>
+            <span className="flex-1 text-left">{t('quick.transfer')} 100 COSMO</span>
           </NeonButton>
           <NeonButton
             variant="outline"
@@ -267,7 +267,7 @@ const Index = () => {
             onClick={() => navigate('/marketplace')}
           >
             <Store className="w-5 h-5" />
-            <span className="flex-1 text-left">Открыть магазин</span>
+            <span className="flex-1 text-left">{t('quick.open.store')}</span>
           </NeonButton>
         </div>
       </div>
