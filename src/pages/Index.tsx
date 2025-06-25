@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
@@ -9,14 +8,16 @@ import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
 import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
 import ModernCard from '@/components/ModernCard';
-import NeonButton from '@/components/NeonButton';
+import TelegramButton from '@/components/TelegramButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { user, showAlert, hapticFeedback } = useTelegramWebApp();
   const [paymentModal, setPaymentModal] = useState({
     isOpen: false,
     amount: 0,
@@ -93,6 +94,7 @@ const Index = () => {
 
   const handleVoiceCommand = (command: string) => {
     console.log('Главная страница - голосовая команда:', command);
+    hapticFeedback('medium');
 
     const lowerCommand = command.toLowerCase();
 
@@ -150,14 +152,11 @@ const Index = () => {
   const handleQuickPayment = (amount: number, description: string) => {
     const wallet = localStorage.getItem('cosmo_wallet');
     if (!wallet) {
-      toast({
-        title: t('payments.wallet.needed'),
-        description: t('payments.wallet.create'),
-        variant: "destructive"
-      });
+      showAlert(t('payments.wallet.needed') + '. ' + t('payments.wallet.create'));
       return;
     }
 
+    hapticFeedback('medium');
     setPaymentModal({
       isOpen: true,
       amount,
@@ -167,6 +166,7 @@ const Index = () => {
   };
 
   const handlePaymentConfirm = () => {
+    hapticFeedback('heavy');
     toast({
       title: t('payments.success'),
       description: `${t('payments.transferred')} ${paymentModal.amount} COSMO`,
@@ -176,7 +176,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
+      {/* Header с информацией о пользователе Telegram */}
       <div className="glass-card border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -185,7 +185,9 @@ const Index = () => {
             </div>
             <div>
               <h1 className="text-gray-900 dark:text-white font-bold text-xl">{t('app.title')}</h1>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('app.subtitle')}</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                {user ? `${t('welcome')}, ${user.first_name}!` : t('app.subtitle')}
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -193,6 +195,7 @@ const Index = () => {
               variant="ghost"
               size="sm"
               className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+              onClick={() => hapticFeedback('light')}
             >
               <Bell className="w-5 h-5" />
             </Button>
@@ -221,7 +224,10 @@ const Index = () => {
             return (
               <ModernCard
                 key={index}
-                onClick={() => navigate(feature.path)}
+                onClick={() => {
+                  hapticFeedback('light');
+                  navigate(feature.path);
+                }}
                 className="animate-fade-in"
                 style={{animationDelay: `${index * 100}ms`}}
               >
@@ -242,33 +248,27 @@ const Index = () => {
       <div className="max-w-md mx-auto px-6 pb-8">
         <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">{t('quick.actions')}</h2>
         <div className="space-y-3">
-          <NeonButton
-            variant="primary"
-            size="lg"
-            className="w-full"
+          <TelegramButton
             onClick={() => navigate('/messenger')}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-start space-x-3 p-4"
           >
             <MessageSquare className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.send.message')}</span>
-          </NeonButton>
-          <NeonButton
-            variant="secondary"
-            size="lg"
-            className="w-full"
+          </TelegramButton>
+          <TelegramButton
             onClick={() => handleQuickPayment(100, t('quick.payment'))}
+            className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-start space-x-3 p-4"
           >
             <DollarSign className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.transfer')} 100 COSMO</span>
-          </NeonButton>
-          <NeonButton
-            variant="outline"
-            size="lg"
-            className="w-full"
+          </TelegramButton>
+          <TelegramButton
             onClick={() => navigate('/marketplace')}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-start space-x-3 p-4"
           >
             <Store className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.open.store')}</span>
-          </NeonButton>
+          </TelegramButton>
         </div>
       </div>
 
