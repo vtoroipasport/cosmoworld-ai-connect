@@ -1,17 +1,18 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Plus, Phone, Video, Settings, Send, Paperclip, Smile, MoreVertical, Users, Edit, Pin, Archive, Mute, Star, Delete, Forward } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Phone, Video, Settings, Send, Paperclip, Smile, MoreVertical, Users, Edit, Pin, Archive, VolumeX, Star, Delete, Forward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
 import CosmoAI from '@/components/CosmoAI';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Messenger = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [selectedChat, setSelectedChat] = useState<any>(null);
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -216,8 +217,8 @@ const Messenger = () => {
                   <h3 className="text-gray-900 dark:text-white font-semibold text-sm">{selectedChat.name}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {selectedChat.type === 'group' 
-                      ? `${selectedChat.members} участников` 
-                      : selectedChat.online ? 'в сети' : 'был(а) недавно'
+                      ? `${selectedChat.members} ${t('messenger.members')}` 
+                      : selectedChat.online ? t('messenger.online') : t('messenger.offline')
                     }
                   </p>
                 </div>
@@ -288,7 +289,7 @@ const Messenger = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Написать сообщение..."
+              placeholder={t('messenger.type')}
               className="flex-1"
             />
             <Button
@@ -326,7 +327,7 @@ const Messenger = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoMessenger</h1>
+            <h1 className="text-gray-900 dark:text-white font-bold text-xl">{t('messenger.title')}</h1>
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -354,7 +355,7 @@ const Messenger = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
           <Input
-            placeholder="Поиск чатов..."
+            placeholder={t('messenger.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -397,7 +398,7 @@ const Messenger = () => {
                   <p className="text-gray-600 dark:text-gray-300 text-sm truncate">{chat.lastMessage}</p>
                   {chat.type === 'group' && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {chat.members} участников
+                      {chat.members} {t('messenger.members')}
                     </p>
                   )}
                 </div>

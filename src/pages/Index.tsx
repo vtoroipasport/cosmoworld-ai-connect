@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
@@ -5,14 +6,17 @@ import { Button } from '@/components/ui/button';
 import VoiceAssistant from '@/components/VoiceAssistant';
 import ProfileMenu from '@/components/ProfileMenu';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [paymentModal, setPaymentModal] = useState({
     isOpen: false,
     amount: 0,
@@ -23,64 +27,64 @@ const Index = () => {
   const features = [
     {
       icon: MessageSquare,
-      title: 'Мессенджер',
-      description: 'Общение и чаты',
+      title: t('services.messenger'),
+      description: t('services.messenger.desc'),
       color: 'text-blue-600',
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       path: '/messenger'
     },
     {
       icon: DollarSign,
-      title: 'Cosmo Pay',
-      description: 'Платежи',
+      title: t('services.payments'),
+      description: t('services.payments.desc'),
       color: 'text-green-600',
       bgColor: 'bg-green-50 dark:bg-green-900/20',
       path: '/payments'
     },
     {
       icon: MapPin,
-      title: 'Аренда жилья',
-      description: 'Поиск жилья',
+      title: t('services.housing'),
+      description: t('services.housing.desc'),
       color: 'text-purple-600',
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
       path: '/housing'
     },
     {
       icon: CarTaxiFront,
-      title: 'Такси',
-      description: 'Поездки',
+      title: t('services.taxi'),
+      description: t('services.taxi.desc'),
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
       path: '/taxi'
     },
     {
       icon: ShoppingCart,
-      title: 'Доставка еды',
-      description: 'Заказ еды',
+      title: t('services.food'),
+      description: t('services.food.desc'),
       color: 'text-red-600',
       bgColor: 'bg-red-50 dark:bg-red-900/20',
       path: '/food'
     },
     {
       icon: Briefcase,
-      title: 'Работа',
-      description: 'Поиск работы',
+      title: t('services.jobs'),
+      description: t('services.jobs.desc'),
       color: 'text-indigo-600',
       bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
       path: '/jobs'
     },
     {
       icon: Store,
-      title: 'Маркетплейс',
-      description: 'Покупки',
+      title: t('services.marketplace'),
+      description: t('services.marketplace.desc'),
       color: 'text-pink-600',
       bgColor: 'bg-pink-50 dark:bg-pink-900/20',
       path: '/marketplace'
     },
     {
       icon: Users,
-      title: 'Группы',
-      description: 'Сообщества',
+      title: t('services.groups'),
+      description: t('services.groups.desc'),
       color: 'text-teal-600',
       bgColor: 'bg-teal-50 dark:bg-teal-900/20',
       path: '/groups'
@@ -180,8 +184,8 @@ const Index = () => {
               <div className="w-6 h-6 bg-white dark:bg-gray-300 rounded-md"></div>
             </div>
             <div>
-              <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoLife</h1>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Все сервисы в одном приложении</p>
+              <h1 className="text-gray-900 dark:text-white font-bold text-xl">{t('app.title')}</h1>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('app.subtitle')}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -192,6 +196,7 @@ const Index = () => {
             >
               <Bell className="w-5 h-5" />
             </Button>
+            <LanguageSelector />
             <ThemeToggle />
             <ProfileMenu />
           </div>
