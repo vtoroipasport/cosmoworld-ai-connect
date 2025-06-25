@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, MapPin, Clock, DollarSign, Briefcase, Filter, Bookmark, Send, Star, Play, CheckCircle } from 'lucide-react';
@@ -158,7 +157,7 @@ const Jobs = () => {
               variant="ghost"
               size="sm"
               onClick={() => navigate('/saved-jobs')}
-              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
             >
               <Bookmark className="w-5 h-5" />
               {savedJobs.length > 0 && (
@@ -305,7 +304,10 @@ const Jobs = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleSaveJob(job.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSaveJob(job.id);
+                  }}
                   className="p-1"
                 >
                   <Bookmark 
@@ -341,10 +343,7 @@ const Jobs = () => {
                   <NeonButton 
                     size="sm" 
                     variant="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleTakeOrder(job);
-                    }}
+                    onClick={() => handleTakeOrder(job)}
                     disabled={!!activeOrder}
                   >
                     <Send className="w-3 h-3 mr-1" />
@@ -354,8 +353,7 @@ const Jobs = () => {
                   <NeonButton 
                     size="sm" 
                     variant="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       toast({
                         title: "Заказ создан!",
                         description: `Ищем ближайшего исполнителя для "${job.title}"`,
