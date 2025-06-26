@@ -9,33 +9,44 @@ const TelegramAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   useEffect(() => {
     if (isReady && WebApp) {
-      // Синхронизируем тему с Telegram
-      const telegramTheme = WebApp.colorScheme;
-      if (telegramTheme) {
-        setTheme(telegramTheme === 'dark' ? 'dark' : 'light');
+      console.log('Telegram WebApp ready, version:', WebApp.version);
+      
+      // Получаем тему из Telegram только если доступно
+      if (WebApp.colorScheme) {
+        console.log('Telegram theme:', WebApp.colorScheme);
+        setTheme(WebApp.colorScheme === 'dark' ? 'dark' : 'light');
       }
 
-      // Обновляем цвета для Telegram WebApp
+      // Устанавливаем цвета только если поддерживается
       const updateTelegramColors = () => {
         const isDark = document.documentElement.classList.contains('dark');
-        if (isDark) {
-          WebApp.setHeaderColor('#1f2937');
-          WebApp.setBackgroundColor('#111827');
-        } else {
-          WebApp.setHeaderColor('#ffffff');
-          WebApp.setBackgroundColor('#f9fafb');
+        console.log('Updating Telegram colors for theme:', isDark ? 'dark' : 'light');
+        
+        try {
+          // Проверяем поддержку функций перед использованием
+          if (WebApp.setHeaderColor && parseFloat(WebApp.version) >= 6.1) {
+            WebApp.setHeaderColor(isDark ? '#1f2937' : '#ffffff');
+          }
+          if (WebApp.setBackgroundColor && parseFloat(WebApp.version) >= 6.1) {
+            WebApp.setBackgroundColor(isDark ? '#111827' : '#f9fafb');
+          }
+        } catch (error) {
+          console.log('Telegram color setting not supported:', error);
         }
       };
 
       updateTelegramColors();
 
-      // Слушаем изменения темы в Telegram
-      WebApp.onEvent('themeChanged', () => {
-        const newTheme = WebApp.colorScheme;
-        if (newTheme) {
-          setTheme(newTheme === 'dark' ? 'dark' : 'light');
-        }
-      });
+      // Слушаем изменения темы в Telegram только если поддерживается
+      if (WebApp.onEvent) {
+        WebApp.onEvent('themeChanged', () => {
+          console.log('Telegram theme changed');
+          const newTheme = WebApp.colorScheme;
+          if (newTheme) {
+            setTheme(newTheme === 'dark' ? 'dark' : 'light');
+          }
+        });
+      }
     }
   }, [isReady, WebApp, setTheme]);
 
