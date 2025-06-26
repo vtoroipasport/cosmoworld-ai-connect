@@ -1,46 +1,43 @@
 
 import React, { useEffect } from 'react';
-import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useTelegramWebApp } from '@/hooks/useTelegramWebApp';
 
-interface TelegramAdapterProps {
-  children: React.ReactNode;
-}
-
-const TelegramAdapter: React.FC<TelegramAdapterProps> = ({ children }) => {
-  const { isReady, WebApp, user } = useTelegramWebApp();
+const TelegramAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { setTheme } = useTheme();
+  const { WebApp, isReady } = useTelegramWebApp();
 
   useEffect(() => {
     if (isReady && WebApp) {
-      // Автоматическая настройка темы на основе Telegram
-      const colorScheme = WebApp.colorScheme;
-      setTheme(colorScheme === 'dark' ? 'dark' : 'light');
+      // Синхронизируем тему с Telegram
+      const telegramTheme = WebApp.colorScheme;
+      if (telegramTheme) {
+        setTheme(telegramTheme === 'dark' ? 'dark' : 'light');
+      }
 
-      // Обработка изменения темы в Telegram
-      const handleThemeChange = () => {
-        setTheme(WebApp.colorScheme === 'dark' ? 'dark' : 'light');
+      // Обновляем цвета для Telegram WebApp
+      const updateTelegramColors = () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark) {
+          WebApp.setHeaderColor('#1f2937');
+          WebApp.setBackgroundColor('#111827');
+        } else {
+          WebApp.setHeaderColor('#ffffff');
+          WebApp.setBackgroundColor('#f9fafb');
+        }
       };
 
-      WebApp.onEvent('themeChanged', handleThemeChange);
+      updateTelegramColors();
 
-      return () => {
-        WebApp.offEvent('themeChanged', handleThemeChange);
-      };
+      // Слушаем изменения темы в Telegram
+      WebApp.onEvent('themeChanged', () => {
+        const newTheme = WebApp.colorScheme;
+        if (newTheme) {
+          setTheme(newTheme === 'dark' ? 'dark' : 'light');
+        }
+      });
     }
   }, [isReady, WebApp, setTheme]);
-
-  // Показываем загрузку пока Telegram WebApp не готов
-  if (!isReady) {
-    return (
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Загрузка Cosmo...</p>
-        </div>
-      </div>
-    );
-  }
 
   return <>{children}</>;
 };

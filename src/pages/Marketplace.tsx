@@ -20,7 +20,7 @@ const Marketplace = () => {
 
   const categories = [
     { id: 'all', name: 'Все', icon: '🛍️' },
-    { id: 'electronics', name: 'Электроника', icon: '📱' },
+    { id: 'electronics', name: 'Техника', icon: '📱' },
     { id: 'fashion', name: 'Одежда', icon: '👕' },
     { id: 'home', name: 'Дом', icon: '🏠' },
     { id: 'books', name: 'Книги', icon: '📚' },
@@ -254,10 +254,10 @@ const Marketplace = () => {
               onClick={() => setSelectedCategory(category.id)}
               variant={selectedCategory === category.id ? 'primary' : 'secondary'}
               size="sm"
-              className="whitespace-nowrap"
+              className="whitespace-nowrap min-w-fit px-3 py-1.5 text-xs"
             >
-              <span className="mr-1">{category.icon}</span>
-              {category.name}
+              <span className="mr-1 text-sm">{category.icon}</span>
+              <span className="text-xs">{category.name}</span>
             </NeonButton>
           ))}
         </div>
@@ -265,12 +265,12 @@ const Marketplace = () => {
 
       {/* Sort Options */}
       <div className="max-w-md mx-auto px-4 pb-4">
-        <div className="flex space-x-2 overflow-x-auto pb-2">
+        <div className="flex space-x-1 overflow-x-auto pb-2">
           {[
-            { id: 'relevance', name: 'По релевантности' },
-            { id: 'price_low', name: 'Сначала дешевые' },
-            { id: 'price_high', name: 'Сначала дорогие' },
-            { id: 'ending_soon', name: 'Скоро заканчиваются' },
+            { id: 'relevance', name: 'Релевантность' },
+            { id: 'price_low', name: 'Дешевле' },
+            { id: 'price_high', name: 'Дороже' },
+            { id: 'ending_soon', name: 'Скоро' },
             { id: 'most_watched', name: 'Популярные' }
           ].map((sort) => (
             <NeonButton
@@ -278,9 +278,9 @@ const Marketplace = () => {
               onClick={() => setSortBy(sort.id)}
               variant={sortBy === sort.id ? 'primary' : 'secondary'}
               size="sm"
-              className="whitespace-nowrap text-xs"
+              className="whitespace-nowrap text-xs px-2 py-1 min-w-fit"
             >
-              {sort.name}
+              <span className="text-xs">{sort.name}</span>
             </NeonButton>
           ))}
         </div>
