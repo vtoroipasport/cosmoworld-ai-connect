@@ -19,45 +19,33 @@ export const useTheme = () => {
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDark, setIsDark] = useState(() => {
-    // Проверяем сначала localStorage, затем системные настройки
     const saved = localStorage.getItem('theme');
     if (saved) {
       return saved === 'dark';
     }
-    // Проверяем системную тему
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   useEffect(() => {
-    const applyTheme = () => {
-      const root = document.documentElement;
-      const body = document.body;
-      
-      // Очищаем предыдущие классы
-      root.classList.remove('dark', 'light');
-      body.classList.remove('dark', 'light');
-      
-      // Применяем новую тему
-      if (isDark) {
-        root.classList.add('dark');
-        body.classList.add('dark');
-        root.style.colorScheme = 'dark';
-      } else {
-        root.classList.add('light');
-        body.classList.add('light');
-        root.style.colorScheme = 'light';
-      }
-      
-      // Сохраняем в localStorage
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      
-      console.log('Theme applied:', isDark ? 'dark' : 'light');
-    };
-
-    // Небольшая задержка для плавного переключения
-    const timer = setTimeout(applyTheme, 10);
+    const root = document.documentElement;
+    const body = document.body;
     
-    return () => clearTimeout(timer);
+    if (isDark) {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      body.classList.add('dark');
+      body.classList.remove('light');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.add('light');
+      root.classList.remove('dark');
+      body.classList.add('light');
+      body.classList.remove('dark');
+      root.style.colorScheme = 'light';
+    }
+    
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    console.log('Theme applied:', isDark ? 'dark' : 'light');
   }, [isDark]);
 
   const toggleTheme = () => {

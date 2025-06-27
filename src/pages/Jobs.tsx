@@ -132,8 +132,8 @@ const Jobs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="glass-card border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95">
-        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
@@ -162,7 +162,7 @@ const Jobs = () => {
             >
               <Bookmark className="w-5 h-5" />
               {savedJobs.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
                   {savedJobs.length}
                 </span>
               )}
@@ -172,12 +172,12 @@ const Jobs = () => {
       </div>
 
       {/* Worker Mode Toggle */}
-      <div className="max-w-md mx-auto px-4 py-4">
+      <div className="max-w-md mx-auto px-4 py-3">
         <div className="flex space-x-2">
           <NeonButton
             onClick={() => setIsWorkerMode(false)}
             variant={!isWorkerMode ? 'primary' : 'secondary'}
-            className="flex-1 text-sm"
+            className="flex-1 text-sm py-2"
           >
             <Briefcase className="w-4 h-4 mr-2" />
             Найти
@@ -185,7 +185,7 @@ const Jobs = () => {
           <NeonButton
             onClick={() => setIsWorkerMode(true)}
             variant={isWorkerMode ? 'primary' : 'secondary'}
-            className="flex-1 text-sm"
+            className="flex-1 text-sm py-2"
           >
             <DollarSign className="w-4 h-4 mr-2" />
             Работать
@@ -195,9 +195,9 @@ const Jobs = () => {
 
       {/* Active Order Status */}
       {activeOrder && (
-        <div className="max-w-md mx-auto px-4 pb-4">
-          <ModernCard className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700">
-            <div className="flex items-center justify-between mb-3">
+        <div className="max-w-md mx-auto px-4 pb-3">
+          <ModernCard className="p-3 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700">
+            <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-900 dark:text-white font-semibold text-sm">Активный заказ</h3>
               <span className={`px-2 py-1 rounded text-xs font-medium ${
                 activeOrder.status === 'accepted' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
@@ -208,18 +208,18 @@ const Jobs = () => {
                  activeOrder.status === 'in_progress' ? 'В работе' : 'Завершен'}
               </span>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm font-medium">{activeOrder.title}</p>
-            <p className="text-gray-600 dark:text-gray-400 text-xs mb-3">{activeOrder.location}</p>
+            <p className="text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">{activeOrder.title}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs mb-2">{activeOrder.location}</p>
             
             {activeOrder.status === 'accepted' && (
-              <NeonButton onClick={handleStartWork} className="w-full text-sm">
+              <NeonButton onClick={handleStartWork} className="w-full text-sm py-2">
                 <Play className="w-4 h-4 mr-2" />
                 Приступить к работе
               </NeonButton>
             )}
             
             {activeOrder.status === 'in_progress' && (
-              <NeonButton onClick={handleCompleteWork} className="w-full text-sm">
+              <NeonButton onClick={handleCompleteWork} className="w-full text-sm py-2">
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Заказ выполнен
               </NeonButton>
@@ -228,12 +228,12 @@ const Jobs = () => {
             {activeOrder.status === 'completed' && (
               <div className="space-y-2">
                 <p className="text-center text-gray-700 dark:text-gray-300 text-xs">Ожидание подтверждения клиента...</p>
-                <Button 
-                  className="w-full bg-green-500 hover:bg-green-600 text-sm"
+                <NeonButton 
+                  className="w-full text-sm py-2"
                   onClick={handleOrderCompleted}
                 >
                   Симулировать принятие клиентом
-                </Button>
+                </NeonButton>
               </div>
             )}
           </ModernCard>
@@ -241,7 +241,7 @@ const Jobs = () => {
       )}
 
       {/* Search */}
-      <div className="max-w-md mx-auto px-4 py-4">
+      <div className="max-w-md mx-auto px-4 py-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
           <Input
@@ -254,7 +254,7 @@ const Jobs = () => {
       </div>
 
       {/* Categories */}
-      <div className="max-w-md mx-auto px-4 pb-4">
+      <div className="max-w-md mx-auto px-4 pb-3">
         <div className="flex space-x-2 overflow-x-auto pb-2">
           {categories.map((category) => (
             <NeonButton
@@ -262,7 +262,7 @@ const Jobs = () => {
               onClick={() => setSelectedCategory(category.id)}
               variant={selectedCategory === category.id ? 'primary' : 'secondary'}
               size="sm"
-              className="whitespace-nowrap text-xs"
+              className="whitespace-nowrap text-xs px-3 py-2"
             >
               <span className="mr-1">{category.icon}</span>
               {category.name}
@@ -273,20 +273,20 @@ const Jobs = () => {
 
       {/* Jobs List */}
       <div className="max-w-md mx-auto px-4 pb-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-gray-900 dark:text-white text-base font-semibold">
             {isWorkerMode ? 'Доступные заказы' : 'Найти исполнителя'}
           </h3>
           <span className="text-gray-600 dark:text-gray-300 text-xs">{filteredJobs.length} заказов</span>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredJobs.map((job) => (
             <ModernCard
               key={job.id}
-              className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+              className="p-3 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             >
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start justify-between mb-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
                     <h3 className="text-gray-900 dark:text-white font-semibold text-sm truncate">{job.title}</h3>
@@ -321,7 +321,7 @@ const Jobs = () => {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-300 mb-3">
+              <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-300 mb-2">
                 <div className="flex items-center">
                   <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
                   <span className="truncate">{job.location}</span>
@@ -336,7 +336,7 @@ const Jobs = () => {
                 </div>
               </div>
 
-              <p className="text-gray-700 dark:text-gray-300 text-xs mb-3 line-clamp-2">{job.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-xs mb-2 line-clamp-2">{job.description}</p>
 
               <div className="flex items-center justify-between">
                 <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">{job.distance} от вас</span>
@@ -346,7 +346,7 @@ const Jobs = () => {
                     variant="primary"
                     onClick={() => handleTakeOrder(job)}
                     disabled={!!activeOrder}
-                    className="text-xs"
+                    className="text-xs px-3 py-2"
                   >
                     <Send className="w-3 h-3 mr-1" />
                     Взять
@@ -361,7 +361,7 @@ const Jobs = () => {
                         description: `Ищем ближайшего исполнителя для "${job.title}"`,
                       });
                     }}
-                    className="text-xs"
+                    className="text-xs px-3 py-2"
                   >
                     <Send className="w-3 h-3 mr-1" />
                     Заказать
@@ -376,13 +376,13 @@ const Jobs = () => {
       {/* Balance Warning */}
       {isWorkerMode && (
         <div className="max-w-md mx-auto px-4 pb-6">
-          <ModernCard className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700">
+          <ModernCard className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700">
             <div className="text-center">
               <h3 className="text-gray-900 dark:text-white font-semibold mb-2 text-sm">Баланс для наличных заказов</h3>
               <p className="text-gray-600 dark:text-gray-300 text-xs mb-3">
                 Для принятия заказов с оплатой наличными необходимо иметь на балансе минимум $10 для оплаты комиссии сервиса (10%)
               </p>
-              <NeonButton variant="primary" size="sm" className="text-xs">
+              <NeonButton variant="primary" size="sm" className="text-xs px-3 py-2">
                 Пополнить баланс
               </NeonButton>
             </div>
