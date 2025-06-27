@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, MapPin, Clock, DollarSign, Briefcase, Filter, Bookmark, Send, Star, Play, CheckCircle } from 'lucide-react';
@@ -22,7 +23,7 @@ const Jobs = () => {
     { id: 'delivery', name: 'Доставка', icon: '🚚' },
     { id: 'repair', name: 'Ремонт', icon: '🔧' },
     { id: 'beauty', name: 'Красота', icon: '💅' },
-    { id: 'tutoring', name: 'Репетиторство', icon: '📚' }
+    { id: 'tutoring', name: 'Обучение', icon: '📚' }
   ];
 
   const hourlyJobs = [
@@ -32,7 +33,7 @@ const Jobs = () => {
       client: 'Анна П.',
       location: 'ул. Ленина, 15',
       rate: 500,
-      duration: '2-3 часа',
+      duration: '2-3 ч',
       category: 'cleaning',
       distance: '0.5 км',
       rating: 4.8,
@@ -45,7 +46,7 @@ const Jobs = () => {
       client: 'ООО "Бизнес"',
       location: 'БЦ Сити',
       rate: 300,
-      duration: '1 час',
+      duration: '1 ч',
       category: 'delivery',
       distance: '1.2 км',
       rating: 4.9,
@@ -58,7 +59,7 @@ const Jobs = () => {
       client: 'Михаил С.',
       location: 'ул. Победы, 22',
       rate: 800,
-      duration: '1-2 часа',
+      duration: '1-2 ч',
       category: 'repair',
       distance: '2.1 км',
       rating: 4.7,
@@ -142,7 +143,7 @@ const Jobs = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoJobs</h1>
+            <h1 className="text-gray-900 dark:text-white font-bold text-lg">Работа</h1>
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -176,18 +177,18 @@ const Jobs = () => {
           <NeonButton
             onClick={() => setIsWorkerMode(false)}
             variant={!isWorkerMode ? 'primary' : 'secondary'}
-            className="flex-1"
+            className="flex-1 text-sm"
           >
             <Briefcase className="w-4 h-4 mr-2" />
-            Найти исполнителя
+            Найти
           </NeonButton>
           <NeonButton
             onClick={() => setIsWorkerMode(true)}
             variant={isWorkerMode ? 'primary' : 'secondary'}
-            className="flex-1"
+            className="flex-1 text-sm"
           >
             <DollarSign className="w-4 h-4 mr-2" />
-            Хочу поработать
+            Работать
           </NeonButton>
         </div>
       </div>
@@ -197,7 +198,7 @@ const Jobs = () => {
         <div className="max-w-md mx-auto px-4 pb-4">
           <ModernCard className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-gray-900 dark:text-white font-semibold">Активный заказ</h3>
+              <h3 className="text-gray-900 dark:text-white font-semibold text-sm">Активный заказ</h3>
               <span className={`px-2 py-1 rounded text-xs font-medium ${
                 activeOrder.status === 'accepted' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
                 activeOrder.status === 'in_progress' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
@@ -207,18 +208,18 @@ const Jobs = () => {
                  activeOrder.status === 'in_progress' ? 'В работе' : 'Завершен'}
               </span>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-2">{activeOrder.title}</p>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{activeOrder.location}</p>
+            <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm font-medium">{activeOrder.title}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs mb-3">{activeOrder.location}</p>
             
             {activeOrder.status === 'accepted' && (
-              <NeonButton onClick={handleStartWork} className="w-full">
+              <NeonButton onClick={handleStartWork} className="w-full text-sm">
                 <Play className="w-4 h-4 mr-2" />
                 Приступить к работе
               </NeonButton>
             )}
             
             {activeOrder.status === 'in_progress' && (
-              <NeonButton onClick={handleCompleteWork} className="w-full">
+              <NeonButton onClick={handleCompleteWork} className="w-full text-sm">
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Заказ выполнен
               </NeonButton>
@@ -226,9 +227,9 @@ const Jobs = () => {
             
             {activeOrder.status === 'completed' && (
               <div className="space-y-2">
-                <p className="text-center text-gray-700 dark:text-gray-300 text-sm">Ожидание подтверждения клиента...</p>
+                <p className="text-center text-gray-700 dark:text-gray-300 text-xs">Ожидание подтверждения клиента...</p>
                 <Button 
-                  className="w-full bg-green-500 hover:bg-green-600"
+                  className="w-full bg-green-500 hover:bg-green-600 text-sm"
                   onClick={handleOrderCompleted}
                 >
                   Симулировать принятие клиентом
@@ -244,10 +245,10 @@ const Jobs = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
           <Input
-            placeholder={isWorkerMode ? "Поиск заказов рядом..." : "Поиск исполнителей..."}
+            placeholder={isWorkerMode ? "Поиск заказов..." : "Поиск исполнителей..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
           />
         </div>
       </div>
@@ -261,7 +262,7 @@ const Jobs = () => {
               onClick={() => setSelectedCategory(category.id)}
               variant={selectedCategory === category.id ? 'primary' : 'secondary'}
               size="sm"
-              className="whitespace-nowrap"
+              className="whitespace-nowrap text-xs"
             >
               <span className="mr-1">{category.icon}</span>
               {category.name}
@@ -273,10 +274,10 @@ const Jobs = () => {
       {/* Jobs List */}
       <div className="max-w-md mx-auto px-4 pb-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-gray-900 dark:text-white text-lg font-semibold">
+          <h3 className="text-gray-900 dark:text-white text-base font-semibold">
             {isWorkerMode ? 'Доступные заказы' : 'Найти исполнителя'}
           </h3>
-          <span className="text-gray-600 dark:text-gray-300 text-sm">{filteredJobs.length} заказов</span>
+          <span className="text-gray-600 dark:text-gray-300 text-xs">{filteredJobs.length} заказов</span>
         </div>
         
         <div className="space-y-4">
@@ -286,19 +287,19 @@ const Jobs = () => {
               className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="text-gray-900 dark:text-white font-semibold">{job.title}</h3>
+                    <h3 className="text-gray-900 dark:text-white font-semibold text-sm truncate">{job.title}</h3>
                     {job.urgent && (
-                      <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded">
+                      <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded whitespace-nowrap">
                         Срочно
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">{job.client}</p>
+                  <p className="text-gray-600 dark:text-gray-300 font-medium text-sm truncate">{job.client}</p>
                   <div className="flex items-center space-x-1 mb-1">
                     <Star className="w-3 h-3 text-yellow-500" />
-                    <span className="text-yellow-600 dark:text-yellow-400 text-sm">{job.rating}</span>
+                    <span className="text-yellow-600 dark:text-yellow-400 text-xs">{job.rating}</span>
                   </div>
                 </div>
                 <Button
@@ -308,7 +309,7 @@ const Jobs = () => {
                     e.stopPropagation();
                     handleSaveJob(job.id);
                   }}
-                  className="p-1"
+                  className="p-1 flex-shrink-0"
                 >
                   <Bookmark 
                     className={`w-4 h-4 ${
@@ -320,34 +321,35 @@ const Jobs = () => {
                 </Button>
               </div>
 
-              <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
+              <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-300 mb-3">
                 <div className="flex items-center">
-                  <MapPin className="w-3 h-3 mr-1" />
-                  {job.location}
+                  <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{job.location}</span>
                 </div>
                 <div className="flex items-center">
-                  <DollarSign className="w-3 h-3 mr-1" />
-                  {job.rate} COSMO/час
+                  <DollarSign className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{job.rate} COSMO</span>
                 </div>
                 <div className="flex items-center">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {job.duration}
+                  <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{job.duration}</span>
                 </div>
               </div>
 
-              <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{job.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-xs mb-3 line-clamp-2">{job.description}</p>
 
               <div className="flex items-center justify-between">
-                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">{job.distance} от вас</span>
+                <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">{job.distance} от вас</span>
                 {isWorkerMode ? (
                   <NeonButton 
                     size="sm" 
                     variant="primary"
                     onClick={() => handleTakeOrder(job)}
                     disabled={!!activeOrder}
+                    className="text-xs"
                   >
                     <Send className="w-3 h-3 mr-1" />
-                    Взять заказ
+                    Взять
                   </NeonButton>
                 ) : (
                   <NeonButton 
@@ -359,6 +361,7 @@ const Jobs = () => {
                         description: `Ищем ближайшего исполнителя для "${job.title}"`,
                       });
                     }}
+                    className="text-xs"
                   >
                     <Send className="w-3 h-3 mr-1" />
                     Заказать
@@ -370,16 +373,16 @@ const Jobs = () => {
         </div>
       </div>
 
-      {/* Balance Warning for Cash Orders */}
+      {/* Balance Warning */}
       {isWorkerMode && (
         <div className="max-w-md mx-auto px-4 pb-6">
           <ModernCard className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700">
             <div className="text-center">
-              <h3 className="text-gray-900 dark:text-white font-semibold mb-2">Баланс для наличных заказов</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-2 text-sm">Баланс для наличных заказов</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-xs mb-3">
                 Для принятия заказов с оплатой наличными необходимо иметь на балансе минимум $10 для оплаты комиссии сервиса (10%)
               </p>
-              <NeonButton variant="primary" size="sm">
+              <NeonButton variant="primary" size="sm" className="text-xs">
                 Пополнить баланс
               </NeonButton>
             </div>

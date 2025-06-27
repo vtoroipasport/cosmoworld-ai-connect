@@ -29,26 +29,40 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    const body = document.body;
+    const applyTheme = () => {
+      const root = document.documentElement;
+      const body = document.body;
+      
+      // Очищаем предыдущие классы
+      root.classList.remove('dark', 'light');
+      body.classList.remove('dark', 'light');
+      
+      // Применяем новую тему
+      if (isDark) {
+        root.classList.add('dark');
+        body.classList.add('dark');
+        root.style.colorScheme = 'dark';
+      } else {
+        root.classList.add('light');
+        body.classList.add('light');
+        root.style.colorScheme = 'light';
+      }
+      
+      // Сохраняем в localStorage
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      console.log('Theme applied:', isDark ? 'dark' : 'light');
+    };
+
+    // Небольшая задержка для плавного переключения
+    const timer = setTimeout(applyTheme, 10);
     
-    if (isDark) {
-      root.classList.add('dark');
-      body.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-      body.classList.remove('dark');
-    }
-    
-    // Сохраняем в localStorage
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
-    console.log('Theme updated:', isDark ? 'dark' : 'light');
+    return () => clearTimeout(timer);
   }, [isDark]);
 
   const toggleTheme = () => {
     console.log('Toggling theme from', isDark ? 'dark' : 'light', 'to', isDark ? 'light' : 'dark');
-    setIsDark(!isDark);
+    setIsDark(prev => !prev);
   };
 
   const setTheme = (theme: 'light' | 'dark') => {
