@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/cosmoworld-ai-connect/' : '/',
+  base: "/cosmoworld-ai-connect/",
   server: {
     host: "::",
     port: 8080,
