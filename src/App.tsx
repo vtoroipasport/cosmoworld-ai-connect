@@ -28,7 +28,7 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter basename={import.meta.env.PROD ? '/cosmoworld-ai-connect' : ''}>
+            <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/messenger" element={<Messenger />} />
