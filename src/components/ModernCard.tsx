@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface ModernCardProps {
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'glass' | 'neon' | 'holographic';
+  variant?: 'default' | 'glass' | 'neomorphism' | 'gradient' | 'floating';
   onClick?: () => void;
   style?: React.CSSProperties;
+  hover?: boolean;
 }
 
 const ModernCard = ({ 
@@ -16,30 +17,44 @@ const ModernCard = ({
   className, 
   variant = 'default',
   onClick,
-  style 
+  style,
+  hover = true
 }: ModernCardProps) => {
   const variantClasses = {
-    default: "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500",
-    glass: "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-gray-300/60 dark:border-gray-600/60",
-    neon: "bg-white dark:bg-gray-800 border-blue-300 dark:border-blue-600 hover:border-blue-400 dark:hover:border-blue-500",
-    holographic: "bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 border-gray-300 dark:border-gray-600"
+    default: "bg-card border-border hover:border-primary/30 transition-all duration-300",
+    glass: "glass-morphism border-0",
+    neomorphism: "neomorphism transition-all duration-300 hover:shadow-lg",
+    gradient: "gradient-border bg-card",
+    floating: "neomorphism floating-element hover:shadow-2xl"
   };
 
   return (
     <Card 
       className={cn(
-        "relative overflow-hidden transition-all duration-200 cursor-pointer group",
-        "modern-shadow hover:modern-shadow-lg",
-        "hover:scale-[1.01] hover:-translate-y-0.5",
+        "relative overflow-hidden cursor-pointer group transition-all duration-300",
+        hover && "hover:scale-[1.02] hover:-translate-y-1",
+        onClick && "micro-bounce",
         variantClasses[variant],
         className
       )}
       onClick={onClick}
       style={style}
     >
+      {variant === 'gradient' && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shimmer" />
+      )}
+      
+      {variant === 'floating' && (
+        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      )}
+      
       <div className="relative z-10">
         {children}
       </div>
+      
+      {hover && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+      )}
     </Card>
   );
 };

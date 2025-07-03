@@ -17,9 +17,10 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Темная тема по умолчанию согласно трендам 2025
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    return saved === 'light' ? false : true; // Темная тема по умолчанию
   });
 
   useEffect(() => {
@@ -30,6 +31,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.classList.remove('dark');
     }
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    
+    // Плавные переходы для темы
+    root.style.transition = 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
   }, [isDark]);
 
   const toggleTheme = () => {

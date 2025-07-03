@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import VoiceAssistant from '@/components/VoiceAssistant';
 import ProfileMenu from '@/components/ProfileMenu';
@@ -10,6 +10,7 @@ import LanguageSelector from '@/components/LanguageSelector';
 import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
+import FloatingActionButton from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -29,65 +30,73 @@ const Index = () => {
       icon: MessageSquare,
       title: t('services.messenger'),
       description: t('services.messenger.desc'),
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-      path: '/messenger'
+      color: 'text-blue-500',
+      gradient: 'from-blue-500 to-purple-600',
+      path: '/messenger',
+      variant: 'glass' as const
     },
     {
       icon: DollarSign,
       title: t('services.payments'),
       description: t('services.payments.desc'),
-      color: 'text-green-600',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      path: '/payments'
+      color: 'text-emerald-500',
+      gradient: 'from-emerald-500 to-teal-600',
+      path: '/payments',
+      variant: 'neomorphism' as const
     },
     {
       icon: MapPin,
       title: t('services.housing'),
       description: t('services.housing.desc'),
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-      path: '/housing'
+      color: 'text-purple-500',
+      gradient: 'from-purple-500 to-pink-600',
+      path: '/housing',
+      variant: 'floating' as const
     },
     {
       icon: CarTaxiFront,
       title: t('services.taxi'),
       description: t('services.taxi.desc'),
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-      path: '/taxi'
+      color: 'text-yellow-500',
+      gradient: 'from-yellow-500 to-orange-600',
+      path: '/taxi',
+      variant: 'gradient' as const
     },
     {
       icon: ShoppingCart,
       title: t('services.food'),
       description: t('services.food.desc'),
-      color: 'text-red-600',
-      bgColor: 'bg-red-50 dark:bg-red-900/20',
-      path: '/food'
+      color: 'text-red-500',
+      gradient: 'from-red-500 to-pink-600',
+      path: '/food',
+      variant: 'glass' as const
     },
     {
       icon: Briefcase,
       title: t('services.jobs'),
       description: t('services.jobs.desc'),
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-      path: '/jobs'
+      color: 'text-indigo-500',
+      gradient: 'from-indigo-500 to-blue-600',
+      path: '/jobs',
+      variant: 'neomorphism' as const
     },
     {
       icon: Store,
       title: t('services.marketplace'),
       description: t('services.marketplace.desc'),
-      color: 'text-pink-600',
-      bgColor: 'bg-pink-50 dark:bg-pink-900/20',
-      path: '/marketplace'
+      color: 'text-pink-500',
+      gradient: 'from-pink-500 to-rose-600',
+      path: '/marketplace',
+      variant: 'floating' as const
     },
     {
       icon: Users,
       title: t('services.groups'),
       description: t('services.groups.desc'),
-      color: 'text-teal-600',
-      bgColor: 'bg-teal-50 dark:bg-teal-900/20',
-      path: '/groups'
+      color: 'text-teal-500',
+      gradient: 'from-teal-500 to-cyan-600',
+      path: '/groups',
+      variant: 'gradient' as const
     }
   ];
 
@@ -175,24 +184,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <div className="glass-card border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95">
+    <div className="min-h-screen bg-background">
+      {/* Modern Header */}
+      <div className="glass-morphism sticky top-0 z-50 border-b border-border/50">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 rounded-xl flex items-center justify-center">
-              <div className="w-6 h-6 bg-white dark:bg-gray-300 rounded-md"></div>
+            <div className="w-12 h-12 neomorphism rounded-2xl flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-primary-foreground" />
+              </div>
             </div>
-            <div>
-              <h1 className="text-gray-900 dark:text-white font-bold text-xl">{t('app.title')}</h1>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">{t('app.subtitle')}</p>
+            <div className="animate-fade-in-blur">
+              <h1 className="text-foreground font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                {t('app.title')}
+              </h1>
+              <p className="text-muted-foreground text-sm">{t('app.subtitle')}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+              className="neomorphism-inset text-muted-foreground hover:text-primary rounded-xl micro-bounce"
             >
               <Bell className="w-5 h-5" />
             </Button>
@@ -203,18 +216,26 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Voice Assistant */}
-      <div className="max-w-md mx-auto px-6 py-6">
-        <VoiceAssistant
-          onCommand={handleVoiceCommand}
-          prompt={t('voice.prompt')}
-          context={t('voice.context')}
-        />
+      {/* Enhanced Voice Assistant */}
+      <div className="max-w-md mx-auto px-6 py-8">
+        <div className="animate-slide-up">
+          <VoiceAssistant
+            onCommand={handleVoiceCommand}
+            prompt={t('voice.prompt')}
+            context={t('voice.context')}
+          />
+        </div>
       </div>
 
-      {/* Features Grid */}
+      {/* Modern Features Grid */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">{t('services.title')}</h2>
+        <div className="mb-8 animate-fade-in-blur">
+          <h2 className="text-foreground text-xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            {t('services.title')}
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full" />
+        </div>
+        
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -222,15 +243,24 @@ const Index = () => {
               <ModernCard
                 key={index}
                 onClick={() => navigate(feature.path)}
-                className="animate-fade-in"
+                variant={feature.variant}
+                className="animate-scale-in group"
                 style={{animationDelay: `${index * 100}ms`}}
               >
-                <div className="p-6 text-center">
-                  <div className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mx-auto mb-3`}>
-                    <Icon className={`w-6 h-6 ${feature.color}`} />
+                <div className="p-6 text-center relative">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-gradient-to-br ${feature.gradient} shadow-lg`}>
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-gray-800 dark:text-gray-200 font-medium text-sm mb-1">{feature.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-xs">{feature.description}</p>
+                  <h3 className="text-foreground font-semibold text-sm mb-2 group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-3 right-3 w-2 h-2 bg-gradient-to-br from-primary/20 to-transparent rounded-full" />
+                  <div className="absolute bottom-3 left-3 w-1 h-1 bg-gradient-to-br from-accent/30 to-transparent rounded-full" />
                 </div>
               </ModernCard>
             );
@@ -238,39 +268,58 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Enhanced Quick Actions */}
       <div className="max-w-md mx-auto px-6 pb-8">
-        <h2 className="text-gray-800 dark:text-gray-200 text-lg font-semibold mb-6">{t('quick.actions')}</h2>
-        <div className="space-y-3">
+        <div className="mb-6 animate-fade-in-blur">
+          <h2 className="text-foreground text-xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            {t('quick.actions')}
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full" />
+        </div>
+        
+        <div className="space-y-4">
           <NeonButton
             variant="primary"
             size="lg"
-            className="w-full"
+            className="w-full animate-slide-up"
             onClick={() => navigate('/messenger')}
+            glow={true}
+            style={{animationDelay: '200ms'}}
           >
             <MessageSquare className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.send.message')}</span>
           </NeonButton>
+          
           <NeonButton
-            variant="secondary"
+            variant="glass"
             size="lg"
-            className="w-full"
+            className="w-full animate-slide-up"
             onClick={() => handleQuickPayment(100, t('quick.payment'))}
+            style={{animationDelay: '300ms'}}
           >
             <DollarSign className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.transfer')} 100 COSMO</span>
           </NeonButton>
+          
           <NeonButton
             variant="outline"
             size="lg"
-            className="w-full"
+            className="w-full animate-slide-up"
             onClick={() => navigate('/marketplace')}
+            style={{animationDelay: '400ms'}}
           >
             <Store className="w-5 h-5" />
             <span className="flex-1 text-left">{t('quick.open.store')}</span>
           </NeonButton>
         </div>
       </div>
+
+      {/* Floating Action Button */}
+      <FloatingActionButton
+        onClick={() => navigate('/messenger')}
+        icon={<MessageSquare className="w-6 h-6" />}
+        variant="primary"
+      />
 
       {/* Payment Confirmation Modal */}
       <PaymentConfirmationModal
