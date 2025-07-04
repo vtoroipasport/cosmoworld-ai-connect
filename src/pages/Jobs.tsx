@@ -1,447 +1,391 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, MapPin, Navigation, Clock, Wrench, Star, Phone, Zap, 
-  Shield, Sparkles, User, UserCheck, DollarSign, Search, Filter,
-  Briefcase, Home, Car as CarIcon, UtensilsCrossed, Hammer, 
-  PaintBucket, Scissors, ShoppingBag, Heart, Baby, GraduationCap
-} from 'lucide-react';
+import { ArrowLeft, Search, MapPin, Clock, DollarSign, Briefcase, Filter, Bookmark, Send, Star, Play, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
-import FloatingActionButton from '@/components/FloatingActionButton';
 
 const Jobs = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('relevance');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isWorkStarted, setIsWorkStarted] = useState(false);
-  const [rideStatus, setRideStatus] = useState<'idle' | 'searching' | 'found' | 'in_work' | 'completed'>('idle');
-  const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        (error) => {
-          console.error('Ошибка геолокации:', error);
-          toast({
-            title: "Геолокация недоступна",
-            description: "Включите доступ к местоположению для лучшего опыта",
-            variant: "destructive"
-          });
-        }
-      );
-    }
-  }, []);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [savedJobs, setSavedJobs] = useState<number[]>([]);
+  const [isWorkerMode, setIsWorkerMode] = useState(false);
+  const [activeOrder, setActiveOrder] = useState<any>(null);
 
   const categories = [
-    { id: 'all', name: 'Все', icon: Briefcase },
-    { id: 'home', name: 'Дом', icon: Home },
-    { id: 'transport', name: 'Транспорт', icon: CarIcon },
-    { id: 'food', name: 'Еда', icon: UtensilsCrossed },
-    { id: 'repair', name: 'Ремонт', icon: Hammer },
-    { id: 'design', name: 'Дизайн', icon: PaintBucket },
-    { id: 'beauty', name: 'Красота', icon: Scissors },
-    { id: 'shopping', name: 'Покупки', icon: ShoppingBag },
-    { id: 'health', name: 'Здоровье', icon: Heart },
-    { id: 'childcare', name: 'Дети', icon: Baby },
-    { id: 'education', name: 'Образование', icon: GraduationCap },
+    { id: 'all', name: 'Все', icon: '💼' },
+    { id: 'cleaning', name: 'Уборка', icon: '🧽' },
+    { id: 'delivery', name: 'Доставка', icon: '🚚' },
+    { id: 'repair', name: 'Ремонт', icon: '🔧' },
+    { id: 'beauty', name: 'Красота', icon: '💅' },
+    { id: 'tutoring', name: 'Репетиторство', icon: '📚' }
   ];
 
-  const jobs = [
+  const hourlyJobs = [
     {
       id: 1,
-      title: 'Сантехник',
-      category: 'home',
-      description: 'Устранение засоров, установка сантехники',
-      price: 1500,
-      location: 'ул. Пушкина, 10',
+      title: 'Уборка квартиры',
+      client: 'Анна П.',
+      location: 'ул. Ленина, 15',
+      rate: 500,
+      duration: '2-3 часа',
+      category: 'cleaning',
+      distance: '0.5 км',
       rating: 4.8,
-      reviews: 25,
-      distance: '1.2 км',
-      skills: ['сантехника', 'устранение засоров', 'установка'],
-      experience: '3 года',
-      worker: {
-        id: 101,
-        name: 'Иван Петров',
-        avatar: 'https://images.unsplash.com/photo-1570295999680-0b9740a8ca86?w=100&h=100&fit=crop&crop=face',
-        rating: 4.9,
-        skill: 'Сантехник',
-        experience: '5 лет'
-      }
+      description: 'Генеральная уборка 2-комнатной квартиры',
+      urgent: true
     },
     {
       id: 2,
-      title: 'Электрик',
-      category: 'home',
-      description: 'Ремонт проводки, установка розеток',
-      price: 2000,
-      location: 'пр. Ленина, 5',
-      rating: 4.5,
-      reviews: 18,
-      distance: '0.8 км',
-      skills: ['электрика', 'ремонт проводки', 'розетки'],
-       experience: '2 года',
-      worker: {
-        id: 102,
-        name: 'Мария Смирнова',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b88360?w=100&h=100&fit=crop&crop=face',
-        rating: 4.7,
-        skill: 'Электрик',
-        experience: '3 года'
-      }
+      title: 'Доставка документов',
+      client: 'ООО "Бизнес"',
+      location: 'БЦ Сити',
+      rate: 300,
+      duration: '1 час',
+      category: 'delivery',
+      distance: '1.2 км',
+      rating: 4.9,
+      description: 'Срочная доставка документов в банк',
+      urgent: false
     },
     {
       id: 3,
-      title: 'Мастер по ремонту',
+      title: 'Ремонт крана',
+      client: 'Михаил С.',
+      location: 'ул. Победы, 22',
+      rate: 800,
+      duration: '1-2 часа',
       category: 'repair',
-      description: 'Мелкий бытовой ремонт',
-      price: 1200,
-      location: 'ул. Гагарина, 22',
-      rating: 4.7,
-      reviews: 32,
       distance: '2.1 км',
-      skills: ['мелкий ремонт', 'бытовой ремонт'],
-       experience: '1 год',
-      worker: {
-        id: 103,
-        name: 'Сергей Иванов',
-        avatar: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936e63?w=100&h=100&fit=crop&crop=face',
-        rating: 4.6,
-        skill: 'Мастер',
-        experience: '4 года'
-      }
-    },
-    {
-      id: 4,
-      title: 'Парикмахер на дом',
-      category: 'beauty',
-      description: 'Стрижки, укладки, окрашивание',
-      price: 1800,
-      location: 'ул. Кирова, 8',
-      rating: 4.9,
-      reviews: 45,
-      distance: '1.5 км',
-      skills: ['стрижки', 'укладки', 'окрашивание'],
-       experience: '4 года',
-      worker: {
-        id: 104,
-        name: 'Елена Кузнецова',
-        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d674c8e?w=100&h=100&fit=crop&crop=face',
-        rating: 4.8,
-        skill: 'Парикмахер',
-        experience: '2 года'
-      }
-    },
+      rating: 4.7,
+      description: 'Замена смесителя на кухне',
+      urgent: false
+    }
   ];
 
-  const filteredJobs = jobs.filter(job => {
-    const searchMatch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        job.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const categoryMatch = categoryFilter === 'all' || job.category === categoryFilter;
-    return searchMatch && categoryMatch;
-  });
-
-  const sortedJobs = [...filteredJobs].sort((a, b) => {
-    if (sortBy === 'price') {
-      return a.price - b.price;
+  const handleSaveJob = (jobId: number) => {
+    if (savedJobs.includes(jobId)) {
+      setSavedJobs(savedJobs.filter(id => id !== jobId));
+      toast({
+        title: "Удалено из сохраненных",
+        description: "Заказ убран из избранного",
+      });
+    } else {
+      setSavedJobs([...savedJobs, jobId]);
+      toast({
+        title: "Добавлено в избранное",
+        description: "Заказ сохранен в избранном",
+      });
     }
-    if (sortBy === 'rating') {
-      return b.rating - a.rating;
-    }
-    return 0;
-  });
-
-  const activeWorker = {
-    id: 101,
-    name: 'Иван Петров',
-    avatar: 'https://images.unsplash.com/photo-1570295999680-0b9740a8ca86?w=100&h=100&fit=crop&crop=face',
-    rating: 4.9,
-    skill: 'Сантехник',
-    experience: '5 лет'
   };
 
-  const handleFindWorker = () => {
-    setRideStatus('searching');
+  const handleTakeOrder = (job: any) => {
+    setActiveOrder({ ...job, status: 'accepted', startTime: new Date() });
     toast({
-      title: "🔍 Ищем исполнителя",
-      description: "Подбираем ближайшего исполнителя...",
+      title: "Заказ принят!",
+      description: `Вы взяли заказ "${job.title}"`,
     });
-
-    setTimeout(() => {
-      setRideStatus('found');
-      toast({
-        title: "✅ Исполнитель найден!",
-        description: `${activeWorker.name} прибудет через 15 минут`,
-      });
-    }, 3000);
   };
 
   const handleStartWork = () => {
-    setRideStatus('in_work');
-    setIsWorkStarted(true);
-    toast({
-      title: "🛠️ Работа началась",
-      description: "Приступаем к выполнению задачи!",
-    });
+    if (activeOrder) {
+      setActiveOrder({ ...activeOrder, status: 'in_progress', workStartTime: new Date() });
+      toast({
+        title: "Работа начата",
+        description: "Время работы засекается",
+      });
+    }
   };
 
   const handleCompleteWork = () => {
-    setRideStatus('completed');
-    toast({
-      title: "🎉 Работа завершена",
-      description: "Задача успешно выполнена!",
-    });
-
-    setTimeout(() => {
-      setRideStatus('idle');
-      setIsWorkStarted(false);
-    }, 3000);
+    if (activeOrder) {
+      setActiveOrder({ ...activeOrder, status: 'completed', completedTime: new Date() });
+      toast({
+        title: "Работа завершена!",
+        description: "Заказ отправлен клиенту на проверку",
+      });
+    }
   };
 
+  const handleOrderCompleted = () => {
+    if (activeOrder) {
+      toast({
+        title: "Оплата получена!",
+        description: `${activeOrder.rate} COSMO зачислено на ваш баланс`,
+      });
+      setActiveOrder(null);
+    }
+  };
+
+  const filteredJobs = hourlyJobs.filter(job => {
+    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          job.client.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || job.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="min-h-screen bg-background cyber-grid relative overflow-hidden">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-40 right-32 w-48 h-48 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-3xl animate-pulse" />
-      </div>
-
-      <div className="max-w-md mx-auto px-6 py-8 relative z-10">
-        <div className="glass-morphism sticky top-0 z-50 border-b border-primary/20 -mx-6 px-6 py-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/')}
-                className="neomorphism-inset text-foreground hover:bg-primary/10 rounded-2xl"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <div>
-                <h1 className="text-foreground font-black text-xl">CosmoJobs</h1>
-                <p className="text-muted-foreground text-sm">Поиск работы и услуг</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="relative flex-1">
-              <Input
-                type="search"
-                placeholder="Поиск работы или услуги..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="glass-morphism border-primary/30 focus:border-primary focus:ring-primary bg-transparent text-foreground rounded-2xl pl-12"
-              />
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      {/* Header */}
+      <div className="glass-card border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 bg-white/95 dark:bg-gray-800/95">
+        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
             <Button
-              variant="secondary"
+              variant="ghost"
               size="sm"
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="rounded-2xl"
+              onClick={() => navigate('/')}
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <Filter className="w-4 h-4 mr-2" />
-              Фильтры
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-gray-900 dark:text-white font-bold text-xl">CosmoJobs</h1>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => toast({ title: "Фильтры", description: "Функция в разработке" })}
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <Filter className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/saved-jobs')}
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+            >
+              <Bookmark className="w-5 h-5" />
+              {savedJobs.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {savedJobs.length}
+                </span>
+              )}
             </Button>
           </div>
+        </div>
+      </div>
 
-          {/* Filter Options */}
-          {isFilterOpen && (
-            <ModernCard variant="glass" className="p-4 mb-4">
-              <div className="space-y-3">
-                <div>
-                  <h4 className="text-foreground font-semibold mb-2">Категория</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map(category => (
-                      <Button
-                        key={category.id}
-                        variant={categoryFilter === category.id ? 'default' : 'outline'}
-                        size="sm"
-                        className="rounded-2xl"
-                        onClick={() => setCategoryFilter(category.id)}
-                      >
-                        <category.icon className="w-4 h-4 mr-2" />
-                        {category.name}
-                      </Button>
-                    ))}
+      {/* Worker Mode Toggle */}
+      <div className="max-w-md mx-auto px-4 py-4">
+        <div className="flex space-x-2">
+          <NeonButton
+            onClick={() => setIsWorkerMode(false)}
+            variant={!isWorkerMode ? 'primary' : 'secondary'}
+            className="flex-1"
+          >
+            <Briefcase className="w-4 h-4 mr-2" />
+            Найти исполнителя
+          </NeonButton>
+          <NeonButton
+            onClick={() => setIsWorkerMode(true)}
+            variant={isWorkerMode ? 'primary' : 'secondary'}
+            className="flex-1"
+          >
+            <DollarSign className="w-4 h-4 mr-2" />
+            Хочу поработать
+          </NeonButton>
+        </div>
+      </div>
+
+      {/* Active Order Status */}
+      {activeOrder && (
+        <div className="max-w-md mx-auto px-4 pb-4">
+          <ModernCard className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-gray-900 dark:text-white font-semibold">Активный заказ</h3>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                activeOrder.status === 'accepted' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                activeOrder.status === 'in_progress' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+              }`}>
+                {activeOrder.status === 'accepted' ? 'Принят' :
+                 activeOrder.status === 'in_progress' ? 'В работе' : 'Завершен'}
+              </span>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300 mb-2">{activeOrder.title}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{activeOrder.location}</p>
+            
+            {activeOrder.status === 'accepted' && (
+              <NeonButton onClick={handleStartWork} className="w-full">
+                <Play className="w-4 h-4 mr-2" />
+                Приступить к работе
+              </NeonButton>
+            )}
+            
+            {activeOrder.status === 'in_progress' && (
+              <NeonButton onClick={handleCompleteWork} className="w-full">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Заказ выполнен
+              </NeonButton>
+            )}
+            
+            {activeOrder.status === 'completed' && (
+              <div className="space-y-2">
+                <p className="text-center text-gray-700 dark:text-gray-300 text-sm">Ожидание подтверждения клиента...</p>
+                <Button 
+                  className="w-full bg-green-500 hover:bg-green-600"
+                  onClick={handleOrderCompleted}
+                >
+                  Симулировать принятие клиентом
+                </Button>
+              </div>
+            )}
+          </ModernCard>
+        </div>
+      )}
+
+      {/* Search */}
+      <div className="max-w-md mx-auto px-4 py-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
+          <Input
+            placeholder={isWorkerMode ? "Поиск заказов рядом..." : "Поиск исполнителей..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="max-w-md mx-auto px-4 pb-4">
+        <div className="flex space-x-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <NeonButton
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              variant={selectedCategory === category.id ? 'primary' : 'secondary'}
+              size="sm"
+              className="whitespace-nowrap"
+            >
+              <span className="mr-1">{category.icon}</span>
+              {category.name}
+            </NeonButton>
+          ))}
+        </div>
+      </div>
+
+      {/* Jobs List */}
+      <div className="max-w-md mx-auto px-4 pb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-gray-900 dark:text-white text-lg font-semibold">
+            {isWorkerMode ? 'Доступные заказы' : 'Найти исполнителя'}
+          </h3>
+          <span className="text-gray-600 dark:text-gray-300 text-sm">{filteredJobs.length} заказов</span>
+        </div>
+        
+        <div className="space-y-4">
+          {filteredJobs.map((job) => (
+            <ModernCard
+              key={job.id}
+              className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h3 className="text-gray-900 dark:text-white font-semibold">{job.title}</h3>
+                    {job.urgent && (
+                      <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded">
+                        Срочно
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 font-medium">{job.client}</p>
+                  <div className="flex items-center space-x-1 mb-1">
+                    <Star className="w-3 h-3 text-yellow-500" />
+                    <span className="text-yellow-600 dark:text-yellow-400 text-sm">{job.rating}</span>
                   </div>
                 </div>
-                <div>
-                  <h4 className="text-foreground font-semibold mb-2">Сортировать</h4>
-                  <div className="flex gap-2">
-                    <Button
-                      variant={sortBy === 'relevance' ? 'default' : 'outline'}
-                      size="sm"
-                      className="rounded-2xl"
-                      onClick={() => setSortBy('relevance')}
-                    >
-                      По релевантности
-                    </Button>
-                    <Button
-                      variant={sortBy === 'price' ? 'default' : 'outline'}
-                      size="sm"
-                      className="rounded-2xl"
-                      onClick={() => setSortBy('price')}
-                    >
-                      По цене
-                    </Button>
-                    <Button
-                      variant={sortBy === 'rating' ? 'default' : 'outline'}
-                      size="sm"
-                      className="rounded-2xl"
-                      onClick={() => setSortBy('rating')}
-                    >
-                      По рейтингу
-                    </Button>
-                  </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSaveJob(job.id);
+                  }}
+                  className="p-1"
+                >
+                  <Bookmark 
+                    className={`w-4 h-4 ${
+                      savedJobs.includes(job.id) 
+                        ? 'text-blue-500 fill-blue-500' 
+                        : 'text-gray-400 dark:text-gray-500'
+                    }`} 
+                  />
+                </Button>
+              </div>
+
+              <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                <div className="flex items-center">
+                  <MapPin className="w-3 h-3 mr-1" />
+                  {job.location}
+                </div>
+                <div className="flex items-center">
+                  <DollarSign className="w-3 h-3 mr-1" />
+                  {job.rate} COSMO/час
+                </div>
+                <div className="flex items-center">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {job.duration}
                 </div>
               </div>
-            </ModernCard>
-          )}
-        </div>
 
-        {/* Job Listings */}
-        {rideStatus === 'idle' && (
-          <div className="space-y-4 mb-6">
-            {sortedJobs.map(job => (
-              <ModernCard key={job.id} variant="glass" className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-foreground font-semibold">{job.title}</h3>
-                    <p className="text-muted-foreground text-sm">{job.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-foreground font-bold">{job.price} ₽</div>
-                    <div className="text-xs text-muted-foreground">{job.distance}</div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-yellow-600 font-bold">{job.rating}</span>
-                    <span className="text-muted-foreground">({job.reviews})</span>
-                  </div>
-                  <NeonButton size="sm" onClick={handleFindWorker}>
-                    Найти исполнителя
-                  </NeonButton>
-                </div>
-              </ModernCard>
-            ))}
-          </div>
-        )}
+              <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{job.description}</p>
 
-        {/* Ride Status */}
-        {rideStatus !== 'idle' && (
-          <ModernCard variant="holographic" className="p-6 mb-6">
-            <div className="text-center">
-              {rideStatus === 'searching' && (
-                <>
-                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                  </div>
-                  <h3 className="text-foreground font-bold text-xl mb-2">Ищем исполнителя</h3>
-                  <p className="text-muted-foreground">Подбираем ближайшего исполнителя...</p>
-                </>
-              )}
-              
-              {rideStatus === 'found' && (
-                <>
-                  <div className="w-20 h-20 rounded-3xl overflow-hidden mx-auto mb-4 border-4 border-green-500">
-                    <img 
-                      src={activeWorker.avatar} 
-                      alt={activeWorker.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-foreground font-bold text-xl mb-1">{activeWorker.name}</h3>
-                  <p className="text-muted-foreground mb-2">{activeWorker.skill} • Опыт {activeWorker.experience}</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-yellow-600 font-bold">{activeWorker.rating}</span>
-                  </div>
-                  <div className="glass-morphism rounded-2xl p-4 border border-green-500/30 mb-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-green-400 font-bold">Исполнитель едет к вам</span>
-                      <span className="text-green-400 font-bold">15 мин</span>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button 
-                      variant="outline" 
-                      className="flex-1 rounded-2xl border-primary/30"
-                      onClick={() => toast({title: "Звонок", description: `Звоним ${activeWorker.name}`})}
-                    >
-                      <Phone className="w-4 h-4 mr-2" />
-                      Позвонить
-                    </Button>
-                    <NeonButton 
-                      onClick={handleStartWork}
-                      className="flex-1"
-                    >
-                      Начать работу
-                    </NeonButton>
-                  </div>
-                </>
-              )}
-
-              {rideStatus === 'in_work' && (
-                <>
-                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                    <Wrench className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-foreground font-bold text-xl mb-2">В процессе</h3>
-                  <p className="text-muted-foreground mb-4">Работа выполняется...</p>
-                  <NeonButton
-                    onClick={handleCompleteWork}
+              <div className="flex items-center justify-between">
+                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">{job.distance} от вас</span>
+                {isWorkerMode ? (
+                  <NeonButton 
+                    size="sm" 
                     variant="primary"
-                    className="w-full"
-                    disabled={!isWorkStarted}
+                    onClick={() => handleTakeOrder(job)}
+                    disabled={!!activeOrder}
                   >
-                    Завершить работу
+                    <Send className="w-3 h-3 mr-1" />
+                    Взять заказ
                   </NeonButton>
-                </>
-              )}
+                ) : (
+                  <NeonButton 
+                    size="sm" 
+                    variant="primary"
+                    onClick={() => {
+                      toast({
+                        title: "Заказ создан!",
+                        description: `Ищем ближайшего исполнителя для "${job.title}"`,
+                      });
+                    }}
+                  >
+                    <Send className="w-3 h-3 mr-1" />
+                    Заказать
+                  </NeonButton>
+                )}
+              </div>
+            </ModernCard>
+          ))}
+        </div>
+      </div>
 
-              {rideStatus === 'completed' && (
-                <>
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-foreground font-bold text-xl mb-2">Работа завершена!</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Оплата: {jobs[0].price} ₽
-                  </p>
-                  <div className="flex gap-3">
-                    <Button variant="outline" className="flex-1 rounded-2xl">
-                      <Star className="w-4 h-4 mr-2" />
-                      Оценить
-                    </Button>
-                    <Button variant="outline" className="flex-1 rounded-2xl">
-                      Повторить заказ
-                    </Button>
-                  </div>
-                </>
-              )}
+      {/* Balance Warning for Cash Orders */}
+      {isWorkerMode && (
+        <div className="max-w-md mx-auto px-4 pb-6">
+          <ModernCard className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700">
+            <div className="text-center">
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-2">Баланс для наличных заказов</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
+                Для принятия заказов с оплатой наличными необходимо иметь на балансе минимум $10 для оплаты комиссии сервиса (10%)
+              </p>
+              <NeonButton variant="primary" size="sm">
+                Пополнить баланс
+              </NeonButton>
             </div>
           </ModernCard>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
