@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store, Sparkles, Zap, Stars, Flame, CreditCard, QrCode, Wallet, TrendingUp, Brain, Activity } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store, Sparkles, Zap, Stars, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import VoiceAssistant from '@/components/VoiceAssistant';
 import ProfileMenu from '@/components/ProfileMenu';
@@ -316,123 +316,61 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Revolutionary Smart Actions Hub */}
+      {/* Premium Quick Actions */}
       <div className="max-w-md mx-auto px-6 pb-8">
         <div className="mb-6 animate-fade-in-blur-bounce">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-gradient-to-r from-accent to-primary rounded-xl flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+              <Zap className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-foreground text-2xl font-black bg-gradient-to-r from-accent via-primary to-accent bg-clip-text text-transparent">
-              Smart Hub
+              {t('quick.actions')}
             </h2>
           </div>
           <div className="w-24 h-1 bg-gradient-to-r from-accent via-primary to-accent rounded-full mb-2" />
           <div className="w-16 h-0.5 bg-gradient-to-r from-primary to-accent rounded-full opacity-60" />
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* AI Insights Card */}
-          <div className="glass-morphism p-4 rounded-3xl border border-primary/20 animate-slide-up-bounce">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-primary font-bold text-sm">AI Insights</span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Активность</span>
-                <span className="text-xs text-green-400 font-bold">+15%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Экономия</span>
-                <span className="text-xs text-blue-400 font-bold">2.3k₽</span>
-              </div>
-              <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" style={{width: '75%'}} />
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Pay Card */}
-          <div className="glass-morphism p-4 rounded-3xl border border-accent/20 animate-slide-up-bounce" style={{animationDelay: '150ms'}}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-accent font-bold text-sm">Quick Pay</span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Баланс</span>
-                <span className="text-xs text-green-400 font-bold">12.5k₽</span>
-              </div>
-              <NeonButton
-                variant="primary"
-                size="sm"
-                className="w-full h-8 text-xs"
-                onClick={() => navigate('/payments')}
-              >
-                <DollarSign className="w-3 h-3" />
-                Перевод
-              </NeonButton>
-            </div>
-          </div>
-        </div>
-
-        {/* Smart Action Buttons */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <NeonButton
             variant="holographic"
             size="lg"
             className="w-full animate-slide-up-bounce group"
             onClick={() => navigate('/messenger')}
             glow={true}
-            style={{animationDelay: '300ms'}}
+            style={{animationDelay: '200ms'}}
           >
             <MessageSquare className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">Умные чаты</div>
-              <div className="text-xs opacity-75">AI-переводчик + голос</div>
-            </div>
-            <div className="px-2 py-1 bg-white/20 rounded-full text-white text-xs font-bold">
-              NEW
-            </div>
+            <span className="flex-1 text-left font-bold">{t('quick.send.message')}</span>
+            <Flame className="w-4 h-4 opacity-75" />
           </NeonButton>
           
           <NeonButton
             variant="glass"
             size="lg"
             className="w-full animate-slide-up-bounce"
-            onClick={() => navigate('/payments')}
-            style={{animationDelay: '400ms'}}
+            onClick={() => handleQuickPayment(100, t('quick.payment'))}
+            style={{animationDelay: '300ms'}}
           >
-            <QrCode className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">QR Платежи</div>
-              <div className="text-xs opacity-75">Мгновенные переводы</div>
-            </div>
+            <DollarSign className="w-6 h-6" />
+            <span className="flex-1 text-left font-bold">{t('quick.transfer')} 100 COSMO</span>
             <div className="px-2 py-1 bg-green-500/20 rounded-full text-green-400 text-xs font-bold">
               INSTANT
             </div>
           </NeonButton>
           
           <NeonButton
-            variant="primary"
+            variant="gradient"
             size="lg"
-            className="w-full animate-slide-up-bounce"
+            className="w-full animate-slide-up-bounce text-white"
             onClick={() => navigate('/marketplace')}
             glow={true}
-            style={{animationDelay: '500ms'}}
+            style={{animationDelay: '400ms'}}
           >
-            <TrendingUp className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">Инвестиции</div>
-              <div className="text-xs opacity-75">Криpto + акции</div>
-            </div>
-            <div className="px-2 py-1 bg-orange-500/20 rounded-full text-orange-400 text-xs font-bold">
-              HOT
+            <Store className="w-6 h-6 text-white" />
+            <span className="flex-1 text-left font-bold text-white">{t('quick.open.store')}</span>
+            <div className="px-2 py-1 bg-white/20 rounded-full text-white text-xs font-bold">
+              NEW
             </div>
           </NeonButton>
         </div>
