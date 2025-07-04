@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, Navigation, Clock, Car, Star, Phone, Zap, Shield, Sparkles, User, UserCheck } from 'lucide-react';
+import { ArrowLeft, MapPin, Navigation, Clock, Car, Star, Phone, Zap, Shield, Sparkles, User, UserCheck, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -482,7 +481,7 @@ const Taxi = () => {
                   <p className="text-muted-foreground mb-4">Время в пути: 12 мин</p>
                   <NeonButton 
                     onClick={handleCompleteRide}
-                    variant="success"
+                    variant="primary"
                     className="w-full"
                   >
                     Завершить поездку
@@ -544,7 +543,7 @@ const Taxi = () => {
                 </div>
 
                 <NeonButton 
-                  variant="danger"
+                  variant="secondary"
                   className="w-full"
                   onClick={() => toast({title: "Статус изменен", description: "Вы офлайн"})}
                 >
