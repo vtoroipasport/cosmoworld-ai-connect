@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { 
   MessageSquare, Wallet, Home, Car, ShoppingBag, Users, Briefcase, 
   UtensilsCrossed, Star, TrendingUp, Zap, Brain, Sparkles, Send, 
-  User, Settings, Bell, Search, MapPin, Clock, DollarSign
+  User, Settings, Bell, Search, MapPin, Clock, DollarSign, 
+  CreditCard, Battery, Wifi, Sun, CloudRain, ThermometerSun
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,14 +13,11 @@ import { useToast } from '@/hooks/use-toast';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
 import VoiceAssistant from '@/components/VoiceAssistant';
-import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [aiInput, setAiInput] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
-  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const services = [
     { 
@@ -52,7 +50,7 @@ const Index = () => {
     },
     { 
       id: 'marketplace', 
-      name: 'Магазин', 
+      name: 'Маркетплейс', 
       icon: ShoppingBag, 
       color: 'from-purple-500 to-pink-500',
       description: 'Покупки онлайн'
@@ -80,40 +78,26 @@ const Index = () => {
     }
   ];
 
-  const handleAiSubmit = async () => {
-    if (!aiInput.trim()) return;
+  const quickActions = [
+    { id: 'pay', name: 'Платеж', icon: CreditCard, action: () => navigate('/payments') },
+    { id: 'taxi', name: 'Такси', icon: Car, action: () => navigate('/taxi') },
+    { id: 'food', name: 'Еда', icon: UtensilsCrossed, action: () => navigate('/food') },
+    { id: 'wallet', name: 'Кошелек', icon: Wallet, action: () => navigate('/payments') }
+  ];
+
+  const weatherData = {
+    temp: 22,
+    condition: 'sunny',
+    location: 'Москва'
+  };
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
     
-    setIsAiLoading(true);
-    try {
-      const response = await fetch(`https://nzrrycacclufrrdvazut.supabase.co/functions/v1/cosmo-ai-assistant`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: aiInput,
-          context: 'CosmoWorld - универсальная платформа для жизни'
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка сервера');
-      }
-
-      const result = await response.json();
-      setAiResponse(result.response || 'Извините, не удалось получить ответ');
-      
-    } catch (error) {
-      console.error('Ошибка Cosmo AI:', error);
-      setAiResponse('Извините, произошла ошибка. Попробуйте позже.');
-      toast({
-        title: "Ошибка Cosmo AI",
-        description: "Не удалось получить ответ от ассистента",
-        variant: "destructive"
-      });
-    } finally {
-      setIsAiLoading(false);
-    }
+    toast({
+      title: "Поиск",
+      description: `Ищем: ${searchQuery}`,
+    });
   };
 
   return (
@@ -142,63 +126,41 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Cosmo AI Assistant */}
-        <ModernCard variant="holographic" className="mb-6 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-foreground font-bold text-lg">Cosmo AI</h3>
-              <p className="text-muted-foreground text-sm">Ваш персональный ассистент</p>
-            </div>
-            <div className="ml-auto">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Спросите что-нибудь у Cosmo AI..."
-                value={aiInput}
-                onChange={(e) => setAiInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAiSubmit()}
-                className="flex-1 glass-morphism border-primary/30 focus:border-primary"
-                disabled={isAiLoading}
-              />
-              <NeonButton
-                onClick={handleAiSubmit}
-                disabled={isAiLoading || !aiInput.trim()}
-                size="sm"
-                className="px-4"
-              >
-                {isAiLoading ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-              </NeonButton>
-            </div>
-            
-            {aiResponse && (
-              <div className="glass-morphism rounded-2xl p-4 border border-primary/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-primary font-medium text-sm">Cosmo AI</span>
-                </div>
-                <p className="text-foreground text-sm leading-relaxed">{aiResponse}</p>
-              </div>
-            )}
+        {/* Quick Search */}
+        <ModernCard variant="glass" className="mb-6 p-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Найти услуги, людей, места..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="flex-1 glass-morphism border-primary/30 focus:border-primary"
+            />
+            <NeonButton
+              onClick={handleSearch}
+              size="sm"
+              className="px-4"
+            >
+              <Search className="w-4 h-4" />
+            </NeonButton>
           </div>
         </ModernCard>
 
-        {/* Voice Assistant */}
-        <div className="mb-6">
-          <VoiceAssistant
-            prompt="Скажите команду Cosmo AI"
-            context="CosmoWorld - универсальная платформа"
-          />
+        {/* Quick Actions */}
+        <div className="grid grid-cols-4 gap-3 mb-6">
+          {quickActions.map((action) => (
+            <ModernCard
+              key={action.id}
+              onClick={action.action}
+              variant="glass"
+              className="p-3 cursor-pointer group text-center"
+            >
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                <action.icon className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xs text-foreground font-medium">{action.name}</span>
+            </ModernCard>
+          ))}
         </div>
 
         {/* Services Grid */}
@@ -220,26 +182,73 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Smart Stats */}
-        <ModernCard variant="glass" className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-foreground font-semibold">Сегодня</h3>
-            <TrendingUp className="w-4 h-4 text-green-500" />
+        {/* Smart Hub */}
+        <ModernCard variant="holographic" className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-foreground font-bold text-lg">Smart Hub</h3>
+              <p className="text-muted-foreground text-sm">Ваш персональный центр</p>
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
+
+          {/* Weather Widget */}
+          <div className="glass-morphism rounded-2xl p-4 mb-4 border border-primary/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                  {weatherData.condition === 'sunny' ? <Sun className="w-6 h-6 text-white" /> : <CloudRain className="w-6 h-6 text-white" />}
+                </div>
+                <div>
+                  <div className="text-foreground font-bold text-xl">{weatherData.temp}°C</div>
+                  <div className="text-muted-foreground text-sm">{weatherData.location}</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-muted-foreground text-sm">Сегодня</div>
+                <div className="text-foreground font-medium">Солнечно</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="text-center glass-morphism rounded-xl p-3">
               <div className="text-2xl font-bold text-foreground">₽2,450</div>
               <div className="text-xs text-muted-foreground">Заработано</div>
             </div>
-            <div className="text-center">
+            <div className="text-center glass-morphism rounded-xl p-3">
               <div className="text-2xl font-bold text-foreground">12</div>
               <div className="text-xs text-muted-foreground">Заказов</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">4.9</div>
-              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                Рейтинг
+            <div className="text-center glass-morphism rounded-xl p-3">
+              <div className="text-2xl font-bold text-foreground flex items-center justify-center gap-1">
+                4.9 <Star className="w-3 h-3 text-yellow-500 fill-current" />
+              </div>
+              <div className="text-xs text-muted-foreground">Рейтинг</div>
+            </div>
+          </div>
+
+          {/* System Status */}
+          <div className="glass-morphism rounded-2xl p-4 border border-green-500/20">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-foreground font-semibold text-sm">Статус системы</span>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            </div>
+            <div className="grid grid-cols-3 gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <Wifi className="w-3 h-3 text-green-500" />
+                <span className="text-muted-foreground">Сеть</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Battery className="w-3 h-3 text-green-500" />
+                <span className="text-muted-foreground">Энергия</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-3 h-3 text-green-500" />
+                <span className="text-muted-foreground">ИИ</span>
               </div>
             </div>
           </div>
