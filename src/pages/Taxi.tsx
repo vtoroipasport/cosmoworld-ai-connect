@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, Navigation, Clock, Car, Star, Phone, Zap, Shield, Sparkles } from 'lucide-react';
+import { ArrowLeft, MapPin, Navigation, Clock, Car, Star, Phone, Zap, Shield, Sparkles, User, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -12,15 +12,63 @@ import FloatingActionButton from '@/components/FloatingActionButton';
 const Taxi = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [userMode, setUserMode] = useState<'select' | 'client' | 'driver'>('select');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [selectedTariff, setSelectedTariff] = useState('comfort');
+  const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [rideStatus, setRideStatus] = useState<'idle' | 'searching' | 'found' | 'in_ride' | 'completed'>('idle');
+  const [driverLocation, setDriverLocation] = useState<{lat: number, lng: number} | null>(null);
+
+  // Получение геолокации
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Ошибка геолокации:', error);
+          toast({
+            title: "Геолокация недоступна",
+            description: "Включите доступ к местоположению для лучшего опыта",
+            variant: "destructive"
+          });
+        }
+      );
+    }
+  }, []);
+
+  // Симуляция движения водителя
+  useEffect(() => {
+    if (rideStatus === 'found' || rideStatus === 'in_ride') {
+      const interval = setInterval(() => {
+        setDriverLocation(prev => {
+          if (!prev || !currentLocation) return prev;
+          
+          // Движение к клиенту
+          const deltaLat = (currentLocation.lat - prev.lat) * 0.1;
+          const deltaLng = (currentLocation.lng - prev.lng) * 0.1;
+          
+          return {
+            lat: prev.lat + deltaLat,
+            lng: prev.lng + deltaLng
+          };
+        });
+      }, 2000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [rideStatus, currentLocation]);
 
   const tariffs = [
     {
       id: 'economy',
       name: 'Эконом',
-      price: 8,
+      price: 150,
       time: '3-5',
       icon: '🚗',
       description: 'Базовый тариф',
@@ -30,7 +78,7 @@ const Taxi = () => {
     {
       id: 'comfort',
       name: 'Комфорт',
-      price: 12,
+      price: 220,
       time: '2-4',
       icon: '🚙',
       description: 'Улучшенные авто',
@@ -40,7 +88,7 @@ const Taxi = () => {
     {
       id: 'business',
       name: 'Бизнес',
-      price: 20,
+      price: 350,
       time: '1-3',
       icon: '🚗',
       description: 'Премиум класс',
@@ -49,53 +97,180 @@ const Taxi = () => {
     }
   ];
 
-  const activeRides = [
-    {
-      id: 1,
-      driver: 'Алексей К.',
-      rating: 4.9,
-      car: 'Tesla Model S',
-      license: 'А123БВ',
-      status: 'В пути к вам',
-      eta: '2 мин',
-      phone: '+7 (999) 123-45-67',
-      avatar: 'photo-1472099645785-5658abf4ff4e'
-    }
-  ];
-
-  const handleOrderTaxi = () => {
-    if (from && to) {
-      toast({
-        title: "🚀 Заказ оформлен!",
-        description: `Quantum Taxi ${tariffs.find(t => t.id === selectedTariff)?.name} прибудет через ${tariffs.find(t => t.id === selectedTariff)?.time} мин`,
-      });
-    }
+  const activeDriver = {
+    id: 1,
+    name: 'Алексей К.',
+    rating: 4.9,
+    car: 'Hyundai Solaris',
+    license: 'А123БВ77',
+    phone: '+7 (999) 123-45-67',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
   };
 
+  const handleOrderTaxi = () => {
+    if (!from || !to) {
+      toast({
+        title: "Заполните маршрут",
+        description: "Укажите точки отправления и назначения",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setRideStatus('searching');
+    toast({
+      title: "🔍 Ищем водителя",
+      description: "Подбираем ближайшего водителя...",
+    });
+
+    // Симуляция поиска водителя
+    setTimeout(() => {
+      setRideStatus('found');
+      setDriverLocation({
+        lat: currentLocation!.lat + 0.01,
+        lng: currentLocation!.lng + 0.01
+      });
+      toast({
+        title: "✅ Водитель найден!",
+        description: `${activeDriver.name} прибудет через 3 минуты`,
+      });
+    }, 3000);
+  };
+
+  const handleStartRide = () => {
+    setRideStatus('in_ride');
+    toast({
+      title: "🚗 Поездка началась",
+      description: "Приятной дороги!",
+    });
+  };
+
+  const handleCompleteRide = () => {
+    setRideStatus('completed');
+    toast({
+      title: "🎉 Поездка завершена",
+      description: `Стоимость: ${tariffs.find(t => t.id === selectedTariff)?.price} ₽`,
+    });
+    
+    setTimeout(() => {
+      setRideStatus('idle');
+      setFrom('');
+      setTo('');
+      setDriverLocation(null);
+    }, 3000);
+  };
+
+  // Экран выбора режима
+  if (userMode === 'select') {
+    return (
+      <div className="min-h-screen bg-background cyber-grid relative overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-40 right-32 w-48 h-48 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-3xl animate-pulse" />
+        </div>
+
+        <div className="max-w-md mx-auto px-6 py-8 relative z-10">
+          <div className="glass-morphism sticky top-0 z-50 border-b border-primary/20 -mx-6 px-6 py-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/')}
+                  className="neomorphism-inset text-foreground hover:bg-primary/10 rounded-2xl"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-foreground font-black text-xl">CosmoTaxi</h1>
+                  <p className="text-muted-foreground text-sm">Выберите режим</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <ModernCard 
+              variant="holographic"
+              onClick={() => setUserMode('client')}
+              className="p-8 cursor-pointer group animate-scale-in-bounce magnetic-element"
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <User className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-foreground font-bold text-2xl mb-3">Пассажир</h2>
+                <p className="text-muted-foreground mb-6">Заказать поездку и добраться до места назначения</p>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-blue-500/10 rounded-xl p-3 text-blue-400">
+                    <MapPin className="w-4 h-4 mx-auto mb-1" />
+                    <div>Быстрая подача</div>
+                  </div>
+                  <div className="bg-green-500/10 rounded-xl p-3 text-green-400">
+                    <Star className="w-4 h-4 mx-auto mb-1" />
+                    <div>Лучшие водители</div>
+                  </div>
+                </div>
+              </div>
+            </ModernCard>
+
+            <ModernCard 
+              variant="holographic"
+              onClick={() => setUserMode('driver')}
+              className="p-8 cursor-pointer group animate-scale-in-bounce magnetic-element"
+              style={{animationDelay: '200ms'}}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <UserCheck className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-foreground font-bold text-2xl mb-3">Водитель</h2>
+                <p className="text-muted-foreground mb-6">Принимать заказы и зарабатывать на поездках</p>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-green-500/10 rounded-xl p-3 text-green-400">
+                    <DollarSign className="w-4 h-4 mx-auto mb-1" />
+                    <div>Хороший доход</div>
+                  </div>
+                  <div className="bg-purple-500/10 rounded-xl p-3 text-purple-400">
+                    <Clock className="w-4 h-4 mx-auto mb-1" />
+                    <div>Гибкий график</div>
+                  </div>
+                </div>
+              </div>
+            </ModernCard>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Основной интерфейс такси
   return (
     <div className="min-h-screen bg-background cyber-grid relative overflow-hidden">
-      {/* Quantum Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl parallax-slow" />
-        <div className="absolute top-60 right-20 w-32 h-32 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-2xl parallax-fast" />
-        <div className="absolute bottom-40 left-32 w-48 h-48 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl parallax-slow" />
+        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-40 right-32 w-48 h-48 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-3xl animate-pulse" />
       </div>
 
-      {/* Neural Header */}
+      {/* Header */}
       <div className="glass-morphism sticky top-0 z-50 border-b border-primary/20">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/')}
-              className="neomorphism-inset text-foreground hover:bg-primary/10 rounded-2xl magnetic-element micro-bounce quantum-focus"
+              onClick={() => setUserMode('select')}
+              className="neomorphism-inset text-foreground hover:bg-primary/10 rounded-2xl"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="animate-fade-in-blur-bounce">
-              <h1 className="text-foreground font-black text-xl neural-text">CosmoTaxi</h1>
-              <p className="text-muted-foreground text-sm font-medium">Quantum Transport</p>
+            <div>
+              <h1 className="text-foreground font-black text-xl">
+                {userMode === 'client' ? 'Заказ такси' : 'Водитель онлайн'}
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                {userMode === 'client' ? 'Quantum Transport' : 'Принимайте заказы'}
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -105,242 +280,317 @@ const Taxi = () => {
         </div>
       </div>
 
-      {/* Quantum Route Input */}
-      <div className="max-w-md mx-auto px-6 py-8">
-        <ModernCard variant="holographic" className="p-6 animate-slide-up-bounce">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center">
-              <Navigation className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-foreground text-lg font-bold neural-text">Маршрут</h2>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="relative">
-              <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-500 w-5 h-5 z-10" />
-              <Input
-                placeholder="Откуда поедем?"
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-                className="pl-12 h-14 glass-morphism border-primary/30 focus:border-primary focus:ring-primary bg-transparent text-foreground placeholder:text-muted-foreground rounded-2xl quantum-focus"
-              />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/5 to-transparent pointer-events-none" />
-            </div>
+      <div className="max-w-md mx-auto px-6 py-6 relative z-10">
+        {/* Карта */}
+        <ModernCard variant="holographic" className="p-4 mb-6">
+          <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl h-64 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
             
-            <div className="relative">
-              <Navigation className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-500 w-5 h-5 z-10" />
-              <Input
-                placeholder="Куда направляемся?"
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                className="pl-12 h-14 glass-morphism border-primary/30 focus:border-primary focus:ring-primary bg-transparent text-foreground placeholder:text-muted-foreground rounded-2xl quantum-focus"
-              />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-red-500/5 to-transparent pointer-events-none" />
+            {/* Моя позиция */}
+            {currentLocation && (
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-lg animate-pulse" />
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-ping" />
+              </div>
+            )}
+            
+            {/* Позиция водителя */}
+            {driverLocation && (
+              <div className="absolute top-1/3 right-1/3 transform translate-x-1/2 -translate-y-1/2">
+                <div className="w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                  <Car className="w-3 h-3 text-white" />
+                </div>
+                <div className="w-12 h-12 bg-green-500/20 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-ping" />
+              </div>
+            )}
+            
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 backdrop-blur-sm">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {currentLocation ? 'Ваше местоположение определено' : 'Определяем местоположение...'}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span className="text-green-600 font-medium">GPS</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </ModernCard>
-      </div>
 
-      {/* Quantum Tariffs */}
-      <div className="max-w-md mx-auto px-6 pb-8">
-        <div className="mb-6 animate-fade-in-blur-bounce">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-accent to-primary rounded-xl flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-foreground text-xl font-black neural-text">Выберите тариф</h2>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {tariffs.map((tariff, index) => (
-            <ModernCard
-              key={tariff.id}
-              onClick={() => setSelectedTariff(tariff.id)}
-              variant={selectedTariff === tariff.id ? "holographic" : "glass"}
-              className={`p-6 cursor-pointer transition-all duration-500 animate-scale-in-bounce magnetic-element ${
-                selectedTariff === tariff.id
-                  ? 'ring-2 ring-primary/50 pulse-glow'
-                  : 'hover:shadow-2xl hover:shadow-primary/20'
-              }`}
-              style={{animationDelay: `${index * 100}ms`}}
-            >
-              <div className="flex items-start space-x-4">
-                <div className={`w-16 h-16 rounded-3xl flex items-center justify-center bg-gradient-to-br ${tariff.gradient} shadow-2xl group-hover:scale-110 transition-transform duration-500 relative`}>
-                  <span className="text-2xl">{tariff.icon}</span>
-                  <div className="absolute inset-0 rounded-3xl bg-white/20 animate-pulse" />
+        {userMode === 'client' && (
+          <>
+            {/* Маршрут */}
+            {rideStatus === 'idle' && (
+              <ModernCard variant="glass" className="p-6 mb-6">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center">
+                    <Navigation className="w-5 h-5 text-white" />
+                  </div>
+                  <h2 className="text-foreground text-lg font-bold">Маршрут</h2>
                 </div>
                 
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-foreground font-bold text-lg">{tariff.name}</h4>
-                    <div className="flex items-center gap-2">
-                      <span className="text-foreground font-black text-xl">{tariff.price}</span>
-                      <span className="text-primary font-bold text-sm">COSMO</span>
-                    </div>
+                <div className="space-y-4">
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-500 w-5 h-5 z-10" />
+                    <Input
+                      placeholder="Откуда поедем?"
+                      value={from}
+                      onChange={(e) => setFrom(e.target.value)}
+                      className="pl-12 h-14 glass-morphism border-primary/30 focus:border-primary focus:ring-primary bg-transparent text-foreground rounded-2xl"
+                    />
                   </div>
                   
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span className="font-medium">{tariff.time} мин</span>
-                    </div>
-                    <span className="text-accent font-medium">{tariff.description}</span>
+                  <div className="relative">
+                    <Navigation className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-500 w-5 h-5 z-10" />
+                    <Input
+                      placeholder="Куда направляемся?"
+                      value={to}
+                      onChange={(e) => setTo(e.target.value)}
+                      className="pl-12 h-14 glass-morphism border-primary/30 focus:border-primary focus:ring-primary bg-transparent text-foreground rounded-2xl"
+                    />
                   </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {tariff.features.map((feature, idx) => (
-                      <div key={idx} className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full border border-primary/20">
-                        {feature}
+                </div>
+              </ModernCard>
+            )}
+
+            {/* Тарифы */}
+            {rideStatus === 'idle' && (
+              <div className="mb-6">
+                <h2 className="text-foreground text-xl font-black mb-4">Выберите тариф</h2>
+                <div className="space-y-4">
+                  {tariffs.map((tariff, index) => (
+                    <ModernCard
+                      key={tariff.id}
+                      onClick={() => setSelectedTariff(tariff.id)}
+                      variant={selectedTariff === tariff.id ? "holographic" : "glass"}
+                      className={`p-6 cursor-pointer transition-all duration-500 magnetic-element ${
+                        selectedTariff === tariff.id
+                          ? 'ring-2 ring-primary/50 pulse-glow'
+                          : 'hover:shadow-2xl hover:shadow-primary/20'
+                      }`}
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className={`w-16 h-16 rounded-3xl flex items-center justify-center bg-gradient-to-br ${tariff.gradient} shadow-2xl`}>
+                          <span className="text-2xl">{tariff.icon}</span>
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-foreground font-bold text-lg">{tariff.name}</h4>
+                            <div className="flex items-center gap-2">
+                              <span className="text-foreground font-black text-xl">{tariff.price}</span>
+                              <span className="text-primary font-bold text-sm">₽</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              <span className="font-medium">{tariff.time} мин</span>
+                            </div>
+                            <span className="text-accent font-medium">{tariff.description}</span>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </ModernCard>
+                  ))}
                 </div>
               </div>
-              
-              {selectedTariff === tariff.id && (
-                <div className="mt-4 p-3 bg-primary/10 rounded-2xl border border-primary/20 animate-slide-up-bounce">
-                  <div className="flex items-center gap-2 text-primary">
-                    <Shield className="w-4 h-4" />
-                    <span className="text-sm font-bold">Выбран • Гарантия качества</span>
+            )}
+
+            {/* Кнопка заказа */}
+            {rideStatus === 'idle' && (
+              <NeonButton 
+                onClick={handleOrderTaxi}
+                variant="holographic"
+                size="xl"
+                className="w-full group"
+                disabled={!from || !to}
+                glow={true}
+              >
+                <Car className="w-6 h-6" />
+                <span className="flex-1 text-left font-black text-lg">Заказать такси</span>
+                <Zap className="w-5 h-5 opacity-75" />
+              </NeonButton>
+            )}
+          </>
+        )}
+
+        {/* Статус поездки */}
+        {rideStatus !== 'idle' && userMode === 'client' && (
+          <ModernCard variant="holographic" className="p-6 mb-6">
+            <div className="text-center">
+              {rideStatus === 'searching' && (
+                <>
+                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
                   </div>
-                </div>
+                  <h3 className="text-foreground font-bold text-xl mb-2">Ищем водителя</h3>
+                  <p className="text-muted-foreground">Подбираем ближайшего водителя...</p>
+                </>
               )}
-            </ModernCard>
-          ))}
-        </div>
-      </div>
-
-      {/* Quantum Order Button */}
-      <div className="max-w-md mx-auto px-6 pb-8">
-        <NeonButton 
-          onClick={handleOrderTaxi}
-          variant="holographic"
-          size="xl"
-          className="w-full animate-slide-up-bounce group quantum-button"
-          disabled={!from || !to}
-          glow={true}
-        >
-          <Car className="w-6 h-6" />
-          <span className="flex-1 text-left font-black text-lg">Заказать Quantum Taxi</span>
-          <Zap className="w-5 h-5 opacity-75" />
-        </NeonButton>
-      </div>
-
-      {/* Active Quantum Rides */}
-      {activeRides.length > 0 && (
-        <div className="max-w-md mx-auto px-6 pb-8">
-          <div className="mb-6 animate-fade-in-blur-bounce">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <Car className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-foreground text-xl font-black neural-text">Активные поездки</h2>
-            </div>
-          </div>
-          
-          {activeRides.map((ride, index) => (
-            <ModernCard key={ride.id} variant="holographic" className="p-6 animate-scale-in-bounce magnetic-element" style={{animationDelay: `${index * 100}ms`}}>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl flex items-center justify-center shadow-2xl">
+              
+              {rideStatus === 'found' && (
+                <>
+                  <div className="w-20 h-20 rounded-3xl overflow-hidden mx-auto mb-4 border-4 border-green-500">
+                    <img 
+                      src={activeDriver.avatar} 
+                      alt={activeDriver.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-foreground font-bold text-xl mb-1">{activeDriver.name}</h3>
+                  <p className="text-muted-foreground mb-2">{activeDriver.car} • {activeDriver.license}</p>
+                  <div className="flex items-center justify-center gap-1 mb-4">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="text-yellow-600 font-bold">{activeDriver.rating}</span>
+                  </div>
+                  <div className="glass-morphism rounded-2xl p-4 border border-green-500/30 mb-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-400 font-bold">Водитель едет к вам</span>
+                      <span className="text-green-400 font-bold">3 мин</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 rounded-2xl border-primary/30"
+                      onClick={() => toast({title: "Звонок", description: `Звоним ${activeDriver.name}`})}
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Позвонить
+                    </Button>
+                    <NeonButton 
+                      onClick={handleStartRide}
+                      className="flex-1"
+                    >
+                      Начать поездку
+                    </NeonButton>
+                  </div>
+                </>
+              )}
+              
+              {rideStatus === 'in_ride' && (
+                <>
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
                     <Car className="w-8 h-8 text-white" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+                  <h3 className="text-foreground font-bold text-xl mb-2">В пути</h3>
+                  <p className="text-muted-foreground mb-4">Время в пути: 12 мин</p>
+                  <NeonButton 
+                    onClick={handleCompleteRide}
+                    variant="success"
+                    className="w-full"
+                  >
+                    Завершить поездку
+                  </NeonButton>
+                </>
+              )}
+              
+              {rideStatus === 'completed' && (
+                <>
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-foreground font-bold text-xl mb-2">Поездка завершена!</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Стоимость: {tariffs.find(t => t.id === selectedTariff)?.price} ₽
+                  </p>
+                  <div className="flex gap-3">
+                    <Button variant="outline" className="flex-1 rounded-2xl">
+                      <Star className="w-4 h-4 mr-2" />
+                      Оценить
+                    </Button>
+                    <Button variant="outline" className="flex-1 rounded-2xl">
+                      Повторить
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </ModernCard>
+        )}
+
+        {/* Интерфейс водителя */}
+        {userMode === 'driver' && (
+          <div className="space-y-6">
+            <ModernCard variant="holographic" className="p-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                  <UserCheck className="w-8 h-8 text-white" />
                 </div>
+                <h3 className="text-foreground font-bold text-xl mb-2">Вы онлайн</h3>
+                <p className="text-muted-foreground mb-4">Ожидаем заказы в вашем районе</p>
                 
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <h4 className="text-foreground font-bold text-lg">{ride.driver}</h4>
-                    <div className="flex items-center text-yellow-500 gap-1">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="font-bold">{ride.rating}</span>
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">₽1,850</div>
+                    <div className="text-xs text-muted-foreground">Сегодня</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">8</div>
+                    <div className="text-xs text-muted-foreground">Поездок</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">4.9</div>
+                    <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                      Рейтинг
                     </div>
                   </div>
-                  <p className="text-muted-foreground text-sm mb-2">{ride.car} • {ride.license}</p>
-                  <div className="flex items-center gap-2">
-                    <div className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full">
-                      PREMIUM
-                    </div>
-                    <div className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-full">
-                      ECO
-                    </div>
-                  </div>
                 </div>
-                
-                <NeonButton
-                  variant="glass"
-                  size="sm"
-                  className="rounded-2xl magnetic-element micro-bounce"
+
+                <NeonButton 
+                  variant="danger"
+                  className="w-full"
+                  onClick={() => toast({title: "Статус изменен", description: "Вы офлайн"})}
                 >
-                  <Phone className="w-4 h-4" />
+                  Завершить смену
                 </NeonButton>
               </div>
-              
-              <div className="glass-morphism rounded-2xl p-4 border border-green-500/30">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-green-400 font-bold">{ride.status}</span>
+            </ModernCard>
+
+            <ModernCard variant="glass" className="p-4">
+              <h3 className="text-foreground font-semibold mb-4">Активные заказы поблизости</h3>
+              <div className="space-y-3">
+                {[
+                  { from: 'ул. Ленина, 15', to: 'БЦ Сити', price: 180, distance: '0.8 км' },
+                  { from: 'ТЦ Мега', to: 'Аэропорт', price: 450, distance: '1.2 км' },
+                ].map((order, index) => (
+                  <div key={index} className="glass-morphism rounded-2xl p-4 border border-primary/20">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 text-sm mb-1">
+                          <MapPin className="w-3 h-3 text-green-500" />
+                          <span className="text-foreground font-medium">{order.from}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Navigation className="w-3 h-3 text-red-500" />
+                          <span className="text-muted-foreground">{order.to}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-foreground font-bold">{order.price} ₽</div>
+                        <div className="text-xs text-muted-foreground">{order.distance}</div>
+                      </div>
+                    </div>
+                    <NeonButton 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => toast({title: "Заказ принят", description: "Едем к клиенту"})}
+                    >
+                      Принять заказ
+                    </NeonButton>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 font-bold">{ride.eta}</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </ModernCard>
-          ))}
-        </div>
-      )}
-
-      {/* Quantum Recent Destinations */}
-      <div className="max-w-md mx-auto px-6 pb-8">
-        <div className="mb-6 animate-fade-in-blur-bounce">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-foreground text-xl font-black neural-text">Частые маршруты</h2>
           </div>
-        </div>
-        
-        <div className="space-y-3">
-          {[
-            { name: 'Дом', address: 'ул. Ленина, 10', icon: '🏠', color: 'from-blue-500 to-cyan-500' },
-            { name: 'Работа', address: 'БЦ Сити', icon: '🏢', color: 'from-purple-500 to-pink-500' },
-            { name: 'Аэропорт', address: 'Шереметьево', icon: '✈️', color: 'from-green-500 to-teal-500' }
-          ].map((destination, index) => (
-            <ModernCard
-              key={index}
-              variant="glass"
-              className="p-4 cursor-pointer animate-scale-in-bounce magnetic-element micro-bounce quantum-button"
-              style={{animationDelay: `${index * 100}ms`}}
-            >
-              <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 bg-gradient-to-r ${destination.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                  <span className="text-xl">{destination.icon}</span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-foreground font-bold">{destination.name}</h4>
-                  <p className="text-muted-foreground text-sm">{destination.address}</p>
-                </div>
-                <div className="text-muted-foreground">
-                  <Navigation className="w-4 h-4" />
-                </div>
-              </div>
-            </ModernCard>
-          ))}
-        </div>
+        )}
       </div>
-
-      {/* Quantum Floating Action Button */}
-      <FloatingActionButton
-        onClick={() => navigate('/')}
-        icon={<ArrowLeft className="w-6 h-6" />}
-        variant="holographic"
-        className="shadow-2xl hover:shadow-primary/50 transition-all duration-500"
-      />
     </div>
   );
 };

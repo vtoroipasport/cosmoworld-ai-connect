@@ -17,6 +17,7 @@ const Housing = () => {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
+  const [activeTab, setActiveTab] = useState('rent');
 
   const propertyTypes = [
     { id: 'all', name: 'Все', icon: '🏠' },
@@ -149,6 +150,26 @@ const Housing = () => {
               <Heart className="w-5 h-5" />
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="max-w-md mx-auto px-4 py-4">
+        <div className="flex space-x-2">
+          <NeonButton
+            onClick={() => setActiveTab('rent')}
+            variant={activeTab === 'rent' ? 'primary' : 'secondary'}
+            className="flex-1 rounded-2xl text-foreground font-bold"
+          >
+            🏠 Аренда
+          </NeonButton>
+          <NeonButton
+            onClick={() => setActiveTab('sale')}
+            variant={activeTab === 'sale' ? 'primary' : 'secondary'}
+            className="flex-1 rounded-2xl text-foreground font-bold"
+          >
+            💰 Продажа
+          </NeonButton>
         </div>
       </div>
 

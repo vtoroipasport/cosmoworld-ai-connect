@@ -1,460 +1,250 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Mic, Bell, Briefcase, Store, Sparkles, Zap, Stars, Flame, CreditCard, QrCode, Wallet, TrendingUp, Brain, Activity } from 'lucide-react';
+import { 
+  MessageSquare, Wallet, Home, Car, ShoppingBag, Users, Briefcase, 
+  UtensilsCrossed, Star, TrendingUp, Zap, Brain, Sparkles, Send, 
+  User, Settings, Bell, Search, MapPin, Clock, DollarSign
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import VoiceAssistant from '@/components/VoiceAssistant';
-import ProfileMenu from '@/components/ProfileMenu';
-import ThemeToggle from '@/components/ThemeToggle';
-import LanguageSelector from '@/components/LanguageSelector';
-import PaymentConfirmationModal from '@/components/PaymentConfirmationModal';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 import ModernCard from '@/components/ModernCard';
 import NeonButton from '@/components/NeonButton';
-import FloatingActionButton from '@/components/FloatingActionButton';
-import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/contexts/LanguageContext';
+import VoiceAssistant from '@/components/VoiceAssistant';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLanguage();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [paymentModal, setPaymentModal] = useState({
-    isOpen: false,
-    amount: 0,
-    recipient: '',
-    description: ''
-  });
+  const [aiInput, setAiInput] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
-  // Magnetic cursor effect
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  const features = [
-    {
-      icon: MessageSquare,
-      title: t('services.messenger'),
-      description: t('services.messenger.desc'),
-      color: 'text-blue-500',
-      gradient: 'from-blue-500 via-purple-500 to-pink-500',
-      path: '/messenger',
-      variant: 'glass' as const,
-      trend: 'AI-Enhanced'
+  const services = [
+    { 
+      id: 'messenger', 
+      name: 'Мессенджер', 
+      icon: MessageSquare, 
+      color: 'from-blue-500 to-cyan-500',
+      description: 'Общение с друзьями'
     },
-    {
-      icon: DollarSign,
-      title: t('services.payments'),
-      description: t('services.payments.desc'),
-      color: 'text-emerald-500',
-      gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
-      path: '/payments',
-      variant: 'neomorphism' as const,
-      trend: 'Crypto-Native'
+    { 
+      id: 'payments', 
+      name: 'Платежи', 
+      icon: Wallet, 
+      color: 'from-green-500 to-emerald-500',
+      description: 'Переводы и оплата'
     },
-    {
-      icon: MapPin,
-      title: t('services.housing'),
-      description: t('services.housing.desc'),
-      color: 'text-purple-500',
-      gradient: 'from-purple-500 via-pink-500 to-rose-500',
-      path: '/housing',
-      variant: 'floating' as const,
-      trend: 'AR-Ready'
+    { 
+      id: 'housing', 
+      name: 'Жилье', 
+      icon: Home, 
+      color: 'from-orange-500 to-red-500',
+      description: 'Аренда и продажа'
     },
-    {
-      icon: CarTaxiFront,
-      title: t('services.taxi'),
-      description: t('services.taxi.desc'),
-      color: 'text-yellow-500',
-      gradient: 'from-yellow-400 via-orange-500 to-red-500',
-      path: '/taxi',
-      variant: 'gradient' as const,
-      trend: 'Autonomous'
+    { 
+      id: 'taxi', 
+      name: 'Такси', 
+      icon: Car, 
+      color: 'from-yellow-500 to-orange-500',
+      description: 'Быстрые поездки'
     },
-    {
-      icon: ShoppingCart,
-      title: t('services.food'),
-      description: t('services.food.desc'),
-      color: 'text-red-500',
-      gradient: 'from-red-500 via-pink-500 to-purple-500',
-      path: '/food',
-      variant: 'glass' as const,
-      trend: 'Voice-First'
+    { 
+      id: 'marketplace', 
+      name: 'Магазин', 
+      icon: ShoppingBag, 
+      color: 'from-purple-500 to-pink-500',
+      description: 'Покупки онлайн'
     },
-    {
-      icon: Briefcase,
-      title: t('services.jobs'),
-      description: t('services.jobs.desc'),
-      color: 'text-indigo-500',
-      gradient: 'from-indigo-500 via-blue-500 to-teal-500',
-      path: '/jobs',
-      variant: 'neomorphism' as const,
-      trend: 'AI-Matched'
+    { 
+      id: 'groups', 
+      name: 'Группы', 
+      icon: Users, 
+      color: 'from-indigo-500 to-purple-500',
+      description: 'Сообщества'
     },
-    {
-      icon: Store,
-      title: t('services.marketplace'),
-      description: t('services.marketplace.desc'),
-      color: 'text-pink-500',
-      gradient: 'from-pink-500 via-rose-500 to-orange-500',
-      path: '/marketplace',
-      variant: 'floating' as const,
-      trend: 'Web3-Native'
+    { 
+      id: 'jobs', 
+      name: 'Работа', 
+      icon: Briefcase, 
+      color: 'from-teal-500 to-green-500',
+      description: 'Поиск заработка'
     },
-    {
-      icon: Users,
-      title: t('services.groups'),
-      description: t('services.groups.desc'),
-      color: 'text-teal-500',
-      gradient: 'from-teal-500 via-cyan-500 to-blue-500',
-      path: '/groups',
-      variant: 'gradient' as const,
-      trend: 'Metaverse'
+    { 
+      id: 'food', 
+      name: 'Еда', 
+      icon: UtensilsCrossed, 
+      color: 'from-red-500 to-pink-500',
+      description: 'Доставка еды'
     }
   ];
 
-  const handleVoiceCommand = (command: string) => {
-    console.log('Главная страница - голосовая команда:', command);
+  const handleAiSubmit = async () => {
+    if (!aiInput.trim()) return;
+    
+    setIsAiLoading(true);
+    try {
+      const response = await fetch(`https://nzrrycacclufrrdvazut.supabase.co/functions/v1/cosmo-ai-assistant`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: aiInput,
+          context: 'CosmoWorld - универсальная платформа для жизни'
+        }),
+      });
 
-    const lowerCommand = command.toLowerCase();
+      if (!response.ok) {
+        throw new Error('Ошибка сервера');
+      }
 
-    if (lowerCommand.includes('мессенджер') || lowerCommand.includes('чат') || lowerCommand.includes('сообщение')) {
-      navigate('/messenger');
+      const result = await response.json();
+      setAiResponse(result.response || 'Извините, не удалось получить ответ');
+      
+    } catch (error) {
+      console.error('Ошибка Cosmo AI:', error);
+      setAiResponse('Извините, произошла ошибка. Попробуйте позже.');
       toast({
-        title: "Переходим в мессенджер",
-        description: "Открываю чаты",
-      });
-    } else if (lowerCommand.includes('платеж') || lowerCommand.includes('оплата') || lowerCommand.includes('деньги')) {
-      navigate('/payments');
-      toast({
-        title: "Открываю Cosmo Pay",
-        description: "Платежная система",
-      });
-    } else if (lowerCommand.includes('такси') || lowerCommand.includes('поездка')) {
-      navigate('/taxi');
-      toast({
-        title: "Вызываю такси",
-        description: "Поиск водителя",
-      });
-    } else if (lowerCommand.includes('еда') || lowerCommand.includes('заказ') || lowerCommand.includes('ресторан')) {
-      navigate('/food');
-      toast({
-        title: "Заказ еды",
-        description: "Выбор ресторана",
-      });
-    } else if (lowerCommand.includes('работа') || lowerCommand.includes('вакансия')) {
-      navigate('/jobs');
-      toast({
-        title: "Поиск работы",
-        description: "Просмотр вакансий",
-      });
-    } else if (lowerCommand.includes('маркетплейс') || lowerCommand.includes('покупка') || lowerCommand.includes('товар')) {
-      navigate('/marketplace');
-      toast({
-        title: "Открываю маркетплейс",
-        description: "Каталог товаров",
-      });
-    } else if (lowerCommand.includes('группа') || lowerCommand.includes('сообщество')) {
-      navigate('/groups');
-      toast({
-        title: "Открываю группы",
-        description: "Ваши сообщества",
-      });
-    } else if (lowerCommand.includes('жилье') || lowerCommand.includes('аренда')) {
-      navigate('/housing');
-      toast({
-        title: "Поиск жилья",
-        description: "Доступные варианты",
-      });
-    }
-  };
-
-  const handleQuickPayment = (amount: number, description: string) => {
-    const wallet = localStorage.getItem('cosmo_wallet');
-    if (!wallet) {
-      toast({
-        title: t('payments.wallet.needed'),
-        description: t('payments.wallet.create'),
+        title: "Ошибка Cosmo AI",
+        description: "Не удалось получить ответ от ассистента",
         variant: "destructive"
       });
-      return;
+    } finally {
+      setIsAiLoading(false);
     }
-
-    setPaymentModal({
-      isOpen: true,
-      amount,
-      recipient: '0x1234567890abcdef1234567890abcdef12345678',
-      description
-    });
-  };
-
-  const handlePaymentConfirm = () => {
-    toast({
-      title: t('payments.success'),
-      description: `${t('payments.transferred')} ${paymentModal.amount} COSMO`,
-    });
-    setPaymentModal({ ...paymentModal, isOpen: false });
   };
 
   return (
-    <div className="min-h-screen bg-background cyber-grid relative overflow-hidden">
-      {/* Parallax Background Elements */}
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Quantum Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl parallax-slow" />
-        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-accent/15 to-primary/15 rounded-full blur-2xl parallax-fast" />
-        <div className="absolute bottom-20 left-32 w-40 h-40 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl parallax-slow" />
+        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-primary/15 to-accent/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-60 right-20 w-32 h-32 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-2xl animate-pulse animation-delay-500" />
+        <div className="absolute bottom-40 left-32 w-48 h-48 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl animate-pulse animation-delay-1000" />
       </div>
 
-      {/* Ultra-Modern Header */}
-      <div className="glass-morphism sticky top-0 z-50 border-b border-primary/10">
-        <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="w-14 h-14 neomorphism rounded-3xl flex items-center justify-center group magnetic-element">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary via-accent to-primary rounded-2xl flex items-center justify-center holographic-button">
-                  <Sparkles className="w-6 h-6 text-white animate-pulse" />
-                </div>
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" />
-            </div>
-            <div className="animate-fade-in-blur-bounce">
-              <h1 className="text-foreground font-black text-xl bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                {t('app.title')}
-              </h1>
-              <p className="text-muted-foreground text-sm font-medium">{t('app.subtitle')}</p>
-            </div>
+      <div className="max-w-md mx-auto px-4 py-6 relative z-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-black text-foreground mb-1">CosmoWorld</h1>
+            <p className="text-muted-foreground">Ваша цифровая вселенная</p>
           </div>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="neomorphism-inset text-muted-foreground hover:text-primary rounded-2xl micro-bounce magnetic-element relative"
-            >
+            <Button variant="ghost" size="sm" className="rounded-2xl">
               <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             </Button>
-            <LanguageSelector />
-            <ThemeToggle />
-            <ProfileMenu />
+            <Button variant="ghost" size="sm" className="rounded-2xl">
+              <User className="w-5 h-5" />
+            </Button>
           </div>
         </div>
-      </div>
 
-      {/* Revolutionary Voice Assistant */}
-      <div className="max-w-md mx-auto px-6 py-8">
-        <div className="animate-slide-up-bounce">
-          <VoiceAssistant
-            onCommand={handleVoiceCommand}
-            prompt={t('voice.prompt')}
-            context={t('voice.context')}
-          />
-        </div>
-      </div>
-
-      {/* Next-Gen Features Grid */}
-      <div className="max-w-md mx-auto px-6 pb-8">
-        <div className="mb-8 animate-fade-in-blur-bounce">
+        {/* Cosmo AI Assistant */}
+        <ModernCard variant="holographic" className="mb-6 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
-              <Stars className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-foreground text-2xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              {t('services.title')}
-            </h2>
-          </div>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full mb-2" />
-          <div className="w-16 h-0.5 bg-gradient-to-r from-accent to-primary rounded-full opacity-60" />
-        </div>
-        
-        <div className="grid grid-cols-2 gap-6">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <ModernCard
-                key={index}
-                onClick={() => navigate(feature.path)}
-                variant={feature.variant}
-                className="animate-scale-in-bounce group magnetic-element holographic-card"
-                style={{animationDelay: `${index * 150}ms`}}
-              >
-                <div className="p-6 text-center relative">
-                  {/* Trend Badge */}
-                  <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-primary to-accent rounded-full text-white text-xs font-bold animate-pulse">
-                    {feature.trend}
-                  </div>
-                  
-                  <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 bg-gradient-to-br ${feature.gradient} shadow-2xl group-hover:scale-110 transition-transform duration-500 magnetic-element relative`}>
-                    <Icon className="w-8 h-8 text-white drop-shadow-lg" />
-                    <div className="absolute inset-0 rounded-3xl bg-white/20 animate-pulse" />
-                  </div>
-                  
-                  <h3 className="text-foreground font-bold text-sm mb-3 group-hover:text-primary transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground text-xs leading-relaxed mb-3">
-                    {feature.description}
-                  </p>
-                  
-                  {/* Status Indicator */}
-                  <div className="flex items-center justify-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-green-500 font-medium">Active</span>
-                  </div>
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-3 h-3 bg-gradient-to-br from-primary/30 to-transparent rounded-full animate-pulse" />
-                  <div className="absolute bottom-4 left-4 w-2 h-2 bg-gradient-to-br from-accent/40 to-transparent rounded-full animate-pulse" />
-                  <div className="absolute top-8 left-6 w-1 h-1 bg-gradient-to-br from-primary/50 to-transparent rounded-full animate-pulse" />
-                </div>
-              </ModernCard>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Revolutionary Smart Actions Hub */}
-      <div className="max-w-md mx-auto px-6 pb-8">
-        <div className="mb-6 animate-fade-in-blur-bounce">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-accent to-primary rounded-xl flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+            <div>
+              <h3 className="text-foreground font-bold text-lg">Cosmo AI</h3>
+              <p className="text-muted-foreground text-sm">Ваш персональный ассистент</p>
             </div>
-            <h2 className="text-foreground text-2xl font-black bg-gradient-to-r from-accent via-primary to-accent bg-clip-text text-transparent">
-              Smart Hub
-            </h2>
-          </div>
-          <div className="w-24 h-1 bg-gradient-to-r from-accent via-primary to-accent rounded-full mb-2" />
-          <div className="w-16 h-0.5 bg-gradient-to-r from-primary to-accent rounded-full opacity-60" />
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* AI Insights Card */}
-          <div className="glass-morphism p-4 rounded-3xl border border-primary/20 animate-slide-up-bounce">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-primary font-bold text-sm">AI Insights</span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Активность</span>
-                <span className="text-xs text-green-400 font-bold">+15%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Экономия</span>
-                <span className="text-xs text-blue-400 font-bold">2.3k₽</span>
-              </div>
-              <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse" style={{width: '75%'}} />
-              </div>
+            <div className="ml-auto">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
             </div>
           </div>
-
-          {/* Quick Pay Card */}
-          <div className="glass-morphism p-4 rounded-3xl border border-accent/20 animate-slide-up-bounce" style={{animationDelay: '150ms'}}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-accent font-bold text-sm">Quick Pay</span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">Баланс</span>
-                <span className="text-xs text-green-400 font-bold">12.5k₽</span>
-              </div>
+          
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Спросите что-нибудь у Cosmo AI..."
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAiSubmit()}
+                className="flex-1 glass-morphism border-primary/30 focus:border-primary"
+                disabled={isAiLoading}
+              />
               <NeonButton
-                variant="primary"
+                onClick={handleAiSubmit}
+                disabled={isAiLoading || !aiInput.trim()}
                 size="sm"
-                className="w-full h-8 text-xs"
-                onClick={() => navigate('/payments')}
+                className="px-4"
               >
-                <DollarSign className="w-3 h-3" />
-                Перевод
+                {isAiLoading ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
               </NeonButton>
             </div>
+            
+            {aiResponse && (
+              <div className="glass-morphism rounded-2xl p-4 border border-primary/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-primary font-medium text-sm">Cosmo AI</span>
+                </div>
+                <p className="text-foreground text-sm leading-relaxed">{aiResponse}</p>
+              </div>
+            )}
           </div>
+        </ModernCard>
+
+        {/* Voice Assistant */}
+        <div className="mb-6">
+          <VoiceAssistant
+            prompt="Скажите команду Cosmo AI"
+            context="CosmoWorld - универсальная платформа"
+          />
         </div>
 
-        {/* Smart Action Buttons */}
-        <div className="space-y-3">
-          <NeonButton
-            variant="holographic"
-            size="lg"
-            className="w-full animate-slide-up-bounce group"
-            onClick={() => navigate('/messenger')}
-            glow={true}
-            style={{animationDelay: '300ms'}}
-          >
-            <MessageSquare className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">Умные чаты</div>
-              <div className="text-xs opacity-75">AI-переводчик + голос</div>
-            </div>
-            <div className="px-2 py-1 bg-white/20 rounded-full text-white text-xs font-bold">
-              NEW
-            </div>
-          </NeonButton>
-          
-          <NeonButton
-            variant="glass"
-            size="lg"
-            className="w-full animate-slide-up-bounce"
-            onClick={() => navigate('/payments')}
-            style={{animationDelay: '400ms'}}
-          >
-            <QrCode className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">QR Платежи</div>
-              <div className="text-xs opacity-75">Мгновенные переводы</div>
-            </div>
-            <div className="px-2 py-1 bg-green-500/20 rounded-full text-green-400 text-xs font-bold">
-              INSTANT
-            </div>
-          </NeonButton>
-          
-          <NeonButton
-            variant="primary"
-            size="lg"
-            className="w-full animate-slide-up-bounce"
-            onClick={() => navigate('/marketplace')}
-            glow={true}
-            style={{animationDelay: '500ms'}}
-          >
-            <TrendingUp className="w-6 h-6" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-sm">Инвестиции</div>
-              <div className="text-xs opacity-75">Криpto + акции</div>
-            </div>
-            <div className="px-2 py-1 bg-orange-500/20 rounded-full text-orange-400 text-xs font-bold">
-              HOT
-            </div>
-          </NeonButton>
+        {/* Services Grid */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {services.map((service, index) => (
+            <ModernCard
+              key={service.id}
+              onClick={() => navigate(`/${service.id}`)}
+              variant="glass"
+              className="p-4 cursor-pointer group animate-scale-in-bounce magnetic-element"
+              style={{animationDelay: `${index * 100}ms`}}
+            >
+              <div className={`w-12 h-12 bg-gradient-to-r ${service.color} rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
+                <service.icon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-foreground font-semibold mb-1 text-base">{service.name}</h3>
+              <p className="text-muted-foreground text-xs leading-tight">{service.description}</p>
+            </ModernCard>
+          ))}
         </div>
+
+        {/* Smart Stats */}
+        <ModernCard variant="glass" className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-foreground font-semibold">Сегодня</h3>
+            <TrendingUp className="w-4 h-4 text-green-500" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">₽2,450</div>
+              <div className="text-xs text-muted-foreground">Заработано</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">12</div>
+              <div className="text-xs text-muted-foreground">Заказов</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">4.9</div>
+              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                Рейтинг
+              </div>
+            </div>
+          </div>
+        </ModernCard>
       </div>
-
-      {/* Ultra-Premium Floating Action Button */}
-      <FloatingActionButton
-        onClick={() => navigate('/messenger')}
-        icon={<MessageSquare className="w-6 h-6" />}
-        variant="primary"
-        className="shadow-2xl hover:shadow-primary/50 transition-all duration-500"
-      />
-
-      {/* Payment Confirmation Modal */}
-      <PaymentConfirmationModal
-        isOpen={paymentModal.isOpen}
-        onClose={() => setPaymentModal({ ...paymentModal, isOpen: false })}
-        amount={paymentModal.amount}
-        recipient={paymentModal.recipient}
-        description={paymentModal.description}
-        onConfirm={handlePaymentConfirm}
-      />
     </div>
   );
 };
