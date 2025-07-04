@@ -360,16 +360,16 @@ const Index = () => {
           </NeonButton>
           
           <NeonButton
-            variant="gradient"
+            variant="neon"
             size="lg"
-            className="w-full animate-slide-up-bounce text-white"
+            className="w-full animate-slide-up-bounce"
             onClick={() => navigate('/marketplace')}
             glow={true}
             style={{animationDelay: '400ms'}}
           >
-            <Store className="w-6 h-6 text-white" />
-            <span className="flex-1 text-left font-bold text-white">{t('quick.open.store')}</span>
-            <div className="px-2 py-1 bg-white/20 rounded-full text-white text-xs font-bold">
+            <Store className="w-6 h-6" />
+            <span className="flex-1 text-left font-bold">{t('quick.open.store')}</span>
+            <div className="px-2 py-1 bg-primary/20 rounded-full text-primary text-xs font-bold">
               NEW
             </div>
           </NeonButton>
