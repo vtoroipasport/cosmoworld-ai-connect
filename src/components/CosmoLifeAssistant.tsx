@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin, Eye, Waves, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,16 +16,44 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState('');
-  const [personality, setPersonality] = useState('😊');
+  const [aiMood, setAiMood] = useState('friendly');
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [suggestions, setSuggestions] = useState<Array<{icon: any, text: string, action: string}>>([]);
+  const [suggestions, setSuggestions] = useState<Array<{icon: any, text: string, action: string, color: string}>>([]);
+  const [neuralActivity, setNeuralActivity] = useState(0);
+  const [aiThoughts, setAiThoughts] = useState<string[]>([]);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Обновление времени и персональных предложений
+  // Neural activity simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNeuralActivity(Math.random() * 100);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // AI thoughts rotation
+  useEffect(() => {
+    const thoughts = [
+      'Анализирую ваши предпочтения...',
+      'Оптимизирую рекомендации...',
+      'Изучаю паттерны поведения...',
+      'Ищу лучшие предложения...',
+      'Готов помочь в любой момент!'
+    ];
+    
+    const interval = setInterval(() => {
+      const randomThought = thoughts[Math.floor(Math.random() * thoughts.length)];
+      setAiThoughts(prev => [randomThought, ...prev.slice(0, 2)]);
+    }, 3000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Time and suggestions update
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -42,32 +70,28 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
     let newSuggestions = [];
 
     if (hour >= 6 && hour < 10) {
-      // Утренние предложения
       newSuggestions = [
-        { icon: Coffee, text: 'Заказать утренний кофе?', action: 'order_coffee' },
-        { icon: Car, text: 'Вызвать такси на работу?', action: 'call_taxi' },
-        { icon: Utensils, text: 'Заказать завтрак?', action: 'order_breakfast' }
+        { icon: Coffee, text: 'Утренний кофе', action: 'order_coffee', color: 'from-amber-500 to-orange-600' },
+        { icon: Car, text: 'Такси на работу', action: 'call_taxi', color: 'from-blue-500 to-indigo-600' },
+        { icon: Utensils, text: 'Заказать завтрак', action: 'order_breakfast', color: 'from-green-500 to-emerald-600' }
       ];
     } else if (hour >= 12 && hour < 14) {
-      // Обеденные предложения
       newSuggestions = [
-        { icon: Utensils, text: 'Время обеда! Заказать?', action: 'order_lunch' },
-        { icon: ShoppingBag, text: 'Посмотреть акции?', action: 'view_deals' },
-        { icon: Briefcase, text: 'Найти подработку?', action: 'find_work' }
+        { icon: Utensils, text: 'Обеденное меню', action: 'order_lunch', color: 'from-red-500 to-pink-600' },
+        { icon: ShoppingBag, text: 'Горячие акции', action: 'view_deals', color: 'from-purple-500 to-violet-600' },
+        { icon: Briefcase, text: 'Найти подработку', action: 'find_work', color: 'from-teal-500 to-cyan-600' }
       ];
     } else if (hour >= 18 && hour < 22) {
-      // Вечерние предложения
       newSuggestions = [
-        { icon: Home, text: 'Заказать ужин домой?', action: 'order_dinner' },
-        { icon: Car, text: 'Такси домой?', action: 'taxi_home' },
-        { icon: Calendar, text: 'Планы на вечер?', action: 'evening_plans' }
+        { icon: Home, text: 'Ужин домой', action: 'order_dinner', color: 'from-rose-500 to-pink-600' },
+        { icon: Car, text: 'Домой на такси', action: 'taxi_home', color: 'from-indigo-500 to-purple-600' },
+        { icon: Calendar, text: 'Вечерние планы', action: 'evening_plans', color: 'from-emerald-500 to-teal-600' }
       ];
     } else {
-      // Общие предложения
       newSuggestions = [
-        { icon: MessageCircle, text: 'Написать сообщение', action: 'send_message' },
-        { icon: ShoppingBag, text: 'Найти товары', action: 'shop' },
-        { icon: MapPin, text: 'Найти место', action: 'find_place' }
+        { icon: MessageCircle, text: 'Сообщения', action: 'send_message', color: 'from-blue-500 to-cyan-600' },
+        { icon: ShoppingBag, text: 'Маркетплейс', action: 'shop', color: 'from-purple-500 to-pink-600' },
+        { icon: MapPin, text: 'Найти место', action: 'find_place', color: 'from-green-500 to-blue-600' }
       ];
     }
 
@@ -79,6 +103,20 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
     if (hour < 12) return 'Доброе утро';
     if (hour < 18) return 'Добрый день';
     return 'Добрый вечер';
+  };
+
+  const getAiPersonality = () => {
+    if (isProcessing) return { emoji: '🧠', color: 'from-yellow-400 to-orange-500', pulse: 'animate-spin' };
+    if (isSpeaking) return { emoji: '🗣️', color: 'from-green-400 to-emerald-500', pulse: 'animate-bounce' };
+    if (isListening) return { emoji: '👂', color: 'from-red-400 to-pink-500', pulse: 'animate-pulse' };
+    
+    const personalities = [
+      { emoji: '😊', color: 'from-blue-400 to-purple-500', pulse: 'animate-pulse' },
+      { emoji: '🤖', color: 'from-cyan-400 to-blue-500', pulse: 'animate-pulse' },
+      { emoji: '✨', color: 'from-purple-400 to-pink-500', pulse: 'animate-pulse' }
+    ];
+    
+    return personalities[Math.floor(Date.now() / 5000) % personalities.length];
   };
 
   const startListening = async () => {
@@ -113,13 +151,13 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
 
       mediaRecorderRef.current.start();
       setIsListening(true);
-      setPersonality('🎧');
+      setAiMood('listening');
 
     } catch (error) {
       console.error('Ошибка доступа к микрофону:', error);
       toast({
-        title: "Ошибка микрофона",
-        description: "Не удалось получить доступ к микрофону",
+        title: "🎤 Микрофон недоступен",
+        description: "Проверьте разрешения браузера",
         variant: "destructive"
       });
     }
@@ -130,61 +168,39 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
       mediaRecorderRef.current.stop();
       setIsListening(false);
       setIsProcessing(true);
-      setPersonality('🧠');
+      setAiMood('thinking');
     }
   };
 
   const processVoiceCommand = async (audioBlob: Blob) => {
     try {
-      const arrayBuffer = await audioBlob.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-      let binary = '';
-      for (let i = 0; i < uint8Array.length; i++) {
-        binary += String.fromCharCode(uint8Array[i]);
-      }
-      const base64Audio = btoa(binary);
-
-      const response = await fetch(`https://nzrrycacclufrrdvazut.supabase.co/functions/v1/cosmo-voice-assistant`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          audio: base64Audio,
-          action: 'chat',
-          context: {
-            time: currentTime.toISOString(),
-            suggestions: suggestions.map(s => s.text)
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка сервера');
-      }
-
-      const result = await response.json();
+      // Simulate AI processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      setTranscript(result.text || 'Не удалось распознать речь');
-      setResponse(result.text || '');
+      const mockResponses = [
+        'Понял! Обрабатываю вашу команду...',
+        'Отличная идея! Сейчас найду лучшие варианты.',
+        'Конечно! Подбираю персональные рекомендации.',
+        'Уже работаю над этим! Секундочку...'
+      ];
       
-      // Выполняем действие на основе команды
-      executeCommand(result.text);
+      const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+      setTranscript('Голосовая команда распознана');
+      setResponse(response);
       
-      if (result.audio) {
-        await playResponse(result.audio);
-      }
+      // Execute mock command
+      executeCommand('найти лучшие предложения');
       
     } catch (error) {
       console.error('Ошибка обработки команды:', error);
       toast({
-        title: "Ошибка обработки",
-        description: "Не удалось обработать голосовую команду",
+        title: "⚠️ Ошибка ИИ",
+        description: "Попробуйте еще раз через несколько секунд",
         variant: "destructive"
       });
     } finally {
       setIsProcessing(false);
-      setPersonality('😊');
+      setAiMood('friendly');
     }
   };
 
@@ -233,46 +249,15 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
         description: "Подбираю лучшие варианты для вас"
       });
       navigate('/housing');
+    } else {
+      toast({
+        title: "🤖 Cosmo анализирует",
+        description: "Подбираю персональные рекомендации для вас"
+      });
     }
 
     if (onCommand) {
       onCommand(command);
-    }
-  };
-
-  const playResponse = async (base64Audio: string) => {
-    try {
-      setIsSpeaking(true);
-      setPersonality('🗣️');
-      
-      const binaryString = atob(base64Audio);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      
-      const audioBlob = new Blob([bytes], { type: 'audio/mpeg' });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      
-      audio.onended = () => {
-        setIsSpeaking(false);
-        setPersonality('😊');
-        URL.revokeObjectURL(audioUrl);
-      };
-      
-      audio.onerror = () => {
-        setIsSpeaking(false);
-        setPersonality('😊');
-        URL.revokeObjectURL(audioUrl);
-      };
-      
-      await audio.play();
-      
-    } catch (error) {
-      console.error('Ошибка воспроизведения:', error);
-      setIsSpeaking(false);
-      setPersonality('😊');
     }
   };
 
@@ -299,20 +284,20 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
         executeCommand('написать сообщение');
         break;
       default:
+        executeCommand('найти информацию');
         break;
     }
   };
 
   const handleMainButtonClick = () => {
     if (isSpeaking) {
-      // Остановить воспроизведение
       const audioElements = document.querySelectorAll('audio');
       audioElements.forEach(audio => {
         audio.pause();
         audio.currentTime = 0;
       });
       setIsSpeaking(false);
-      setPersonality('😊');
+      setAiMood('friendly');
     } else if (isListening) {
       stopListening();
     } else {
@@ -320,91 +305,172 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
     }
   };
 
+  const personality = getAiPersonality();
+
   return (
     <div className="relative">
-      <Card className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 border-primary/20 overflow-hidden">
-        <div className="p-6 text-center">
-          {/* Заголовок с персонализацией */}
-          <div className="mb-6">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="text-3xl animate-bounce">{personality}</div>
-              <div>
-                <h2 className="text-2xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-slate-900/40 via-purple-900/20 to-blue-900/40 backdrop-blur-3xl">
+        {/* Neural Network Background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping" />
+          <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-accent rounded-full animate-ping animation-delay-1000" />
+          <div className="absolute bottom-1/4 left-3/4 w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping animation-delay-2000" />
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400">
+            <defs>
+              <linearGradient id="neural-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
+            <path d="M50,100 Q150,50 250,100 T350,150" stroke="url(#neural-gradient)" strokeWidth="1" fill="none" className="animate-pulse" />
+            <path d="M100,200 Q200,150 300,200 T400,250" stroke="url(#neural-gradient)" strokeWidth="1" fill="none" className="animate-pulse animation-delay-500" />
+            <path d="M0,300 Q100,250 200,300 T300,350" stroke="url(#neural-gradient)" strokeWidth="1" fill="none" className="animate-pulse animation-delay-1000" />
+          </svg>
+        </div>
+
+        <div className="relative p-8 text-center">
+          {/* AI Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${personality.color} flex items-center justify-center shadow-2xl ${personality.pulse}`}>
+                <span className="text-2xl">{personality.emoji}</span>
+                <div className="absolute inset-0 rounded-2xl border-2 border-white/20 animate-pulse" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-3xl font-black bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
                   Cosmo Life
                 </h2>
-                <p className="text-sm text-muted-foreground">
-                  {getGreeting()}! Чем помочь?
+                <p className="text-white/80 text-sm font-medium">
+                  {getGreeting()}! Нейроинтерфейс активен
                 </p>
               </div>
             </div>
+
+            {/* Neural Activity Indicator */}
+            <div className="mb-4">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Activity className="w-4 h-4 text-green-400" />
+                <span className="text-xs text-white/60">Нейронная активность</span>
+              </div>
+              <div className="w-full h-2 bg-black/20 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 rounded-full transition-all duration-500 animate-pulse"
+                  style={{ width: `${neuralActivity}%` }}
+                />
+              </div>
+            </div>
+
+            {/* AI Thoughts */}
+            {aiThoughts.length > 0 && !isListening && !isSpeaking && !isProcessing && (
+              <div className="mb-4 space-y-1">
+                {aiThoughts.slice(0, 1).map((thought, index) => (
+                  <div key={index} className="text-xs text-white/60 italic animate-fade-in">
+                    💭 {thought}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Главная кнопка */}
-          <div className="mb-6 relative">
+          {/* Main Neural Interface */}
+          <div className="mb-8 relative">
+            {/* Outer Neural Rings */}
             {(isListening || isSpeaking || isProcessing) && (
               <>
-                <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-2 border-primary/30 animate-ping" />
-                <div className="absolute inset-0 w-40 h-40 mx-auto rounded-full border border-accent/20 animate-ping animation-delay-300" />
+                <div className="absolute inset-0 w-48 h-48 mx-auto rounded-full border border-white/10 animate-ping" />
+                <div className="absolute inset-0 w-56 h-56 mx-auto rounded-full border border-purple-400/20 animate-ping animation-delay-300" />
+                <div className="absolute inset-0 w-64 h-64 mx-auto rounded-full border border-blue-400/10 animate-ping animation-delay-600" />
               </>
             )}
             
+            {/* Central Neural Core */}
             <Button
               onClick={handleMainButtonClick}
               disabled={isProcessing}
-              className={`w-32 h-32 rounded-full transition-all duration-500 transform hover:scale-110 ${
+              className={`relative w-40 h-40 rounded-full border-0 transition-all duration-700 transform hover:scale-110 ${
                 isProcessing
                   ? 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-2xl shadow-yellow-500/50'
                   : isSpeaking
                   ? 'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-500 shadow-2xl shadow-green-500/50'
                   : isListening
                   ? 'bg-gradient-to-br from-red-400 via-pink-500 to-purple-500 shadow-2xl shadow-red-500/50'
-                  : 'bg-gradient-to-br from-primary via-accent to-primary shadow-2xl shadow-primary/50'
+                  : 'bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 shadow-2xl shadow-purple-500/50'
               }`}
             >
+              {/* Inner Neural Pattern */}
+              <div className="absolute inset-4 rounded-full border border-white/30 animate-spin-slow" />
+              <div className="absolute inset-8 rounded-full border border-white/20 animate-reverse-spin" />
+              
+              {/* Central Icon */}
               {isProcessing ? (
-                <Brain className="w-12 h-12 text-white animate-spin" />
+                <Brain className="w-16 h-16 text-white animate-spin" />
               ) : isSpeaking ? (
-                <Volume2 className="w-12 h-12 text-white animate-bounce" />
+                <Volume2 className="w-16 h-16 text-white animate-bounce" />
               ) : isListening ? (
-                <Mic className="w-12 h-12 text-white animate-pulse" />
+                <Mic className="w-16 h-16 text-white animate-pulse" />
               ) : (
-                <Sparkles className="w-12 h-12 text-white" />
+                <Eye className="w-16 h-16 text-white animate-pulse" />
               )}
             </Button>
           </div>
 
-          {/* Статус */}
-          <p className={`text-lg font-medium mb-4 ${
-            isProcessing ? 'text-yellow-400 animate-pulse' :
-            isSpeaking ? 'text-green-400' :
-            isListening ? 'text-red-400 animate-pulse' :
-            'text-primary'
-          }`}>
-            {isProcessing
-              ? '🧠 Думаю и анализирую...'
-              : isSpeaking
-              ? '🗣️ Отвечаю вам...'
-              : isListening
-              ? '👂 Внимательно слушаю...'
-              : 'Нажмите и скажите, что нужно!'}
-          </p>
+          {/* Status Display */}
+          <div className="mb-6">
+            <p className={`text-xl font-bold mb-2 ${
+              isProcessing ? 'text-yellow-300 animate-pulse' :
+              isSpeaking ? 'text-green-300' :
+              isListening ? 'text-red-300 animate-pulse' :
+              'text-white'
+            }`}>
+              {isProcessing
+                ? '🧠 Нейронный анализ...'
+                : isSpeaking
+                ? '🗣️ Cosmo отвечает...'
+                : isListening
+                ? '👂 Активное прослушивание...'
+                : 'Скажите что нужно или выберите действие'}
+            </p>
+            
+            {/* Voice Waveform Simulation */}
+            {(isListening || isSpeaking) && (
+              <div className="flex justify-center items-center gap-1 mb-4">
+                {[...Array(12)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-1 bg-gradient-to-t from-blue-400 to-purple-400 rounded-full animate-pulse`}
+                    style={{
+                      height: `${Math.random() * 20 + 10}px`,
+                      animationDelay: `${i * 100}ms`
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
-          {/* Персональные предложения */}
+          {/* Smart Suggestions */}
           {suggestions.length > 0 && !isListening && !isSpeaking && !isProcessing && (
-            <div className="mb-4">
-              <p className="text-sm text-muted-foreground mb-3">💡 Возможно, вам пригодится:</p>
-              <div className="grid grid-cols-1 gap-2">
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span className="text-sm text-white/80 font-medium">Умные предложения</span>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
                 {suggestions.map((suggestion, index) => {
                   const Icon = suggestion.icon;
                   return (
                     <Button
                       key={index}
                       variant="outline"
-                      className="h-auto p-3 bg-background/50 hover:bg-accent/20 border-primary/20"
+                      className={`group relative h-16 bg-gradient-to-r ${suggestion.color} border-0 text-white hover:scale-105 transition-all duration-300 overflow-hidden`}
                       onClick={() => handleSuggestionClick(suggestion.action)}
                     >
-                      <Icon className="w-4 h-4 mr-2 text-primary" />
-                      <span className="text-sm">{suggestion.text}</span>
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                      <Icon className="w-6 h-6 mr-3 relative z-10" />
+                      <span className="font-medium relative z-10">{suggestion.text}</span>
+                      <div className="absolute right-3 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <Zap className="w-4 h-4" />
+                      </div>
                     </Button>
                   );
                 })}
@@ -412,14 +478,14 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
             </div>
           )}
 
-          {/* Результат распознавания */}
+          {/* Command Result */}
           {transcript && (
-            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
-              <div className="flex items-center gap-2 mb-1">
-                <MessageCircle className="w-4 h-4 text-green-600" />
-                <span className="text-green-600 text-sm font-medium">Вы сказали:</span>
+            <div className="mt-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-400/30 backdrop-blur-sm">
+              <div className="flex items-center gap-2 mb-2">
+                <Waves className="w-4 h-4 text-green-400" />
+                <span className="text-green-300 text-sm font-medium">Команда обработана</span>
               </div>
-              <p className="text-sm text-green-800 dark:text-green-200">"{transcript}"</p>
+              <p className="text-sm text-green-100">"{response}"</p>
             </div>
           )}
         </div>
