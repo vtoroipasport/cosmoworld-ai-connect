@@ -1,87 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 248 250 252;
-    --foreground: 15 23 42;
+    --background: 250 250 255;
+    --foreground: 8 15 35;
 
     --card: 255 255 255;
-    --card-foreground: 15 23 42;
+    --card-foreground: 8 15 35;
 
     --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
+    --popover-foreground: 8 15 35;
 
-    --primary: 99 102 241;
-    --primary-foreground: 248 250 252;
+    --primary: 147 51 234;
+    --primary-foreground: 255 255 255;
 
     --secondary: 241 245 249;
     --secondary-foreground: 51 65 85;
 
-    --muted: 241 245 249;
+    --muted: 248 250 252;
     --muted-foreground: 100 116 139;
 
-    --accent: 236 254 255;
-    --accent-foreground: 15 23 42;
+    --accent: 99 102 241;
+    --accent-foreground: 255 255 255;
 
-    --destructive: 239 68 68;
-    --destructive-foreground: 248 250 252;
+    --destructive: 248 113 113;
+    --destructive-foreground: 255 255 255;
 
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 99 102 241;
+    --border: 228 228 231;
+    --input: 228 228 231;
+    --ring: 147 51 234;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     --sidebar-background: 255 255 255;
-    --sidebar-foreground: 15 23 42;
-    --sidebar-primary: 99 102 241;
-    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-foreground: 8 15 35;
+    --sidebar-primary: 147 51 234;
+    --sidebar-primary-foreground: 255 255 255;
     --sidebar-accent: 241 245 249;
-    --sidebar-accent-foreground: 15 23 42;
-    --sidebar-border: 226 232 240;
-    --sidebar-ring: 99 102 241;
+    --sidebar-accent-foreground: 8 15 35;
+    --sidebar-border: 228 228 231;
+    --sidebar-ring: 147 51 234;
   }
 
   .dark {
-    --background: 2 6 23;
+    --background: 3 7 18;
     --foreground: 248 250 252;
 
-    --card: 7 14 30;
+    --card: 15 23 42;
     --card-foreground: 248 250 252;
 
-    --popover: 7 14 30;
+    --popover: 15 23 42;
     --popover-foreground: 248 250 252;
 
-    --primary: 124 58 237;
-    --primary-foreground: 255 255 255;
+    --primary: 168 85 247;
+    --primary-foreground: 15 23 42;
 
-    --secondary: 15 23 42;
+    --secondary: 30 41 59;
     --secondary-foreground: 148 163 184;
 
-    --muted: 15 23 42;
+    --muted: 30 41 59;
     --muted-foreground: 100 116 139;
 
-    --accent: 20 83 120;
-    --accent-foreground: 248 250 252;
+    --accent: 129 140 248;
+    --accent-foreground: 15 23 42;
 
     --destructive: 248 113 113;
-    --destructive-foreground: 3 7 18;
+    --destructive-foreground: 15 23 42;
 
-    --border: 30 41 59;
-    --input: 30 41 59;
-    --ring: 124 58 237;
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 168 85 247;
 
-    --sidebar-background: 7 14 30;
+    --sidebar-background: 15 23 42;
     --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 124 58 237;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 15 23 42;
+    --sidebar-primary: 168 85 247;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
     --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 30 41 59;
-    --sidebar-ring: 124 58 237;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 168 85 247;
   }
 }
 
@@ -91,261 +92,206 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    @apply bg-background text-foreground selection:bg-primary/20;
+    font-family: 'Inter', 'system-ui', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     background: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, hsla(250, 100%, 70%, 0.15), transparent),
-      radial-gradient(ellipse 80% 80% at 80% 50%, hsla(300, 100%, 70%, 0.1), transparent),
-      radial-gradient(ellipse 100% 80% at 20% 80%, hsla(200, 100%, 70%, 0.1), transparent),
-      conic-gradient(from 230.29deg at 51.63% 52.16%, rgb(36, 0, 70) 0deg, rgb(0, 135, 255) 67.5deg, rgb(108, 39, 157) 198.75deg, rgb(24, 38, 163) 251.25deg, rgb(54, 103, 196) 301.88deg, rgb(105, 30, 255) 360deg),
-      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background) / 0.8));
+      radial-gradient(ellipse 100% 40% at 50% 0%, hsl(var(--primary) / 0.08), transparent),
+      radial-gradient(ellipse 120% 80% at 80% 50%, hsl(var(--accent) / 0.06), transparent),
+      radial-gradient(ellipse 150% 100% at 20% 80%, hsl(var(--primary) / 0.04), transparent),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background) / 0.95));
     min-height: 100vh;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     overflow-x: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', 'ui-monospace', monospace;
   }
 }
 
 @layer utilities {
-  /* Quantum Glass Morphism */
-  .glass-morphism {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(40px) saturate(200%) brightness(120%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(120%);
+  /* 2025 Bento Box Layout */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .bento-card {
+    @apply relative overflow-hidden rounded-3xl border border-border/50 bg-card/80 backdrop-blur-xl;
+    @apply shadow-sm hover:shadow-xl transition-all duration-500 ease-out;
+    @apply hover:scale-[1.02] hover:-translate-y-1;
+  }
+
+  /* 2025 Glass Morphism Enhanced */
+  .glass-morphism-2025 {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(32px) saturate(180%) brightness(110%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(110%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .dark .glass-morphism-2025 {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 1px 0 rgba(168, 85, 247, 0.2),
+      inset 0 1px 0 rgba(168, 85, 247, 0.1);
+  }
+
+  /* 2025 Neumorphism v2 */
+  .neomorphism-2025 {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    box-shadow: 
+      20px 20px 40px rgba(0, 0, 0, 0.05),
+      -20px -20px 40px rgba(255, 255, 255, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-      0 0 80px rgba(124, 58, 237, 0.15),
-      0 32px 64px -12px rgba(0, 0, 0, 0.15),
-      0 25px 50px -12px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 0 20px rgba(124, 58, 237, 0.05);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .dark .glass-morphism {
-    background: rgba(7, 14, 30, 0.6);
-    border: 1px solid rgba(124, 58, 237, 0.3);
+  .neomorphism-2025:hover {
     box-shadow: 
-      0 0 80px rgba(124, 58, 237, 0.25),
-      0 32px 64px -12px rgba(0, 0, 0, 0.6),
-      0 25px 50px -12px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(124, 58, 237, 0.2),
-      inset 0 0 20px rgba(124, 58, 237, 0.1);
-  }
-  
-  /* Neural Neomorphism */
-  .neomorphism {
-    background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
-    box-shadow: 
-      25px 25px 50px rgba(0, 0, 0, 0.1),
+      25px 25px 50px rgba(0, 0, 0, 0.08),
       -25px -25px 50px rgba(255, 255, 255, 0.9),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-      0 0 50px rgba(124, 58, 237, 0.1);
-    border: none;
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    transform: translateY(-2px);
+  }
+
+  .dark .neomorphism-2025 {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    box-shadow: 
+      20px 20px 40px rgba(0, 0, 0, 0.4),
+      -20px -20px 40px rgba(168, 85, 247, 0.03),
+      inset 0 1px 0 rgba(168, 85, 247, 0.1);
+  }
+
+  .dark .neomorphism-2025:hover {
+    box-shadow: 
+      25px 25px 50px rgba(0, 0, 0, 0.5),
+      -25px -25px 50px rgba(168, 85, 247, 0.05),
+      inset 0 1px 0 rgba(168, 85, 247, 0.15);
+  }
+
+  /* 2025 Holographic Effects */
+  .holographic-2025 {
     position: relative;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .neomorphism::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(45deg, transparent, rgba(124, 58, 237, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .neomorphism:hover::before {
-    opacity: 1;
-  }
-
-  .dark .neomorphism {
-    background: linear-gradient(145deg, #0f172a, #020617);
-    box-shadow: 
-      25px 25px 50px rgba(0, 0, 0, 0.8),
-      -25px -25px 50px rgba(124, 58, 237, 0.05),
-      inset 0 0 0 1px rgba(124, 58, 237, 0.1),
-      0 0 50px rgba(124, 58, 237, 0.2);
-  }
-
-  .neomorphism-inset {
-    background: linear-gradient(145deg, #e2e8f0, #f8fafc);
-    box-shadow: 
-      inset 15px 15px 30px rgba(0, 0, 0, 0.1),
-      inset -15px -15px 30px rgba(255, 255, 255, 0.95),
-      0 0 30px rgba(124, 58, 237, 0.1);
-  }
-
-  .dark .neomorphism-inset {
-    background: linear-gradient(145deg, #020617, #0f172a);
-    box-shadow: 
-      inset 15px 15px 30px rgba(0, 0, 0, 0.7),
-      inset -15px -15px 30px rgba(124, 58, 237, 0.05),
-      0 0 30px rgba(124, 58, 237, 0.15);
-  }
-
-  /* Quantum Holographic Effects */
-  .holographic-button {
-    background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5, #ffbe0b, #ff006e);
+    background: linear-gradient(45deg, 
+      rgba(168, 85, 247, 0.1) 0%,
+      rgba(129, 140, 248, 0.1) 25%,
+      rgba(99, 102, 241, 0.1) 50%,
+      rgba(168, 85, 247, 0.1) 75%,
+      rgba(129, 140, 248, 0.1) 100%);
     background-size: 400% 400%;
-    animation: quantum-gradient-shift 4s ease infinite;
-    position: relative;
+    border: 1px solid transparent;
+    border-radius: 20px;
     overflow: hidden;
+    animation: holographic-shift-2025 8s ease-in-out infinite;
   }
 
-  .holographic-button::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    animation: holographic-scan 3s ease-in-out infinite;
-  }
-
-  .holographic-card {
-    background: linear-gradient(135deg, 
-      rgba(255, 0, 110, 0.1) 0%,
-      rgba(131, 56, 236, 0.1) 25%,
-      rgba(58, 134, 255, 0.1) 50%,
-      rgba(6, 255, 165, 0.1) 75%,
-      rgba(255, 190, 11, 0.1) 100%);
-    border: 1px solid rgba(124, 58, 237, 0.3);
-    backdrop-filter: blur(30px);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .holographic-card::before {
+  .holographic-2025::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent);
+    transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .holographic-card:hover::before {
+  .holographic-2025:hover::before {
     left: 100%;
   }
 
-  /* Quantum Gradient Border */
-  .gradient-border {
+  /* 2025 Gradient Borders */
+  .gradient-border-2025 {
     position: relative;
-    background: conic-gradient(from 0deg, #ff006e, #8338ec, #3a86ff, #06ffa5, #ffbe0b, #ff006e);
-    padding: 3px;
-    border-radius: calc(var(--radius) + 3px);
-    overflow: hidden;
-    animation: quantum-border-rotate 6s linear infinite;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+    padding: 2px;
+    border-radius: 20px;
+    background-size: 200% 200%;
+    animation: gradient-flow-2025 6s ease-in-out infinite;
   }
 
-  .gradient-border::before {
+  .gradient-border-2025::before {
     content: '';
     position: absolute;
     inset: 2px;
     background: hsl(var(--background));
-    border-radius: var(--radius);
+    border-radius: 18px;
     z-index: -1;
   }
 
-  /* Quantum Floating Animation */
-  .floating-element {
-    animation: quantum-float 10s ease-in-out infinite;
+  /* 2025 Floating Elements */
+  .floating-2025 {
+    animation: floating-2025 8s ease-in-out infinite;
   }
 
-  /* Magnetic Quantum Effect */
-  .magnetic-element {
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  /* 2025 Magnetic Hover */
+  .magnetic-2025 {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-style: preserve-3d;
   }
 
-  .magnetic-element:hover {
-    transform: scale(1.05) translateY(-5px) rotateX(5deg) rotateY(5deg);
-    box-shadow: 0 25px 50px rgba(124, 58, 237, 0.3);
+  .magnetic-2025:hover {
+    transform: translateY(-8px) rotateX(2deg) rotateY(2deg) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
 
-  /* Quantum Pulse Glow */
-  .pulse-glow {
-    animation: quantum-pulse-glow 4s ease-in-out infinite alternate;
-  }
-
-  /* Neural Micro Interactions */
-  .micro-bounce {
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .micro-bounce:active {
-    transform: scale(0.92) translateY(2px);
-  }
-
-  /* Quantum Shimmer */
-  .shimmer {
-    background: linear-gradient(
-      110deg,
-      transparent 25%,
-      rgba(124, 58, 237, 0.4) 50%,
-      transparent 75%
-    );
-    background-size: 200% 100%;
-    animation: quantum-shimmer 3s infinite;
-  }
-
-  .dark .shimmer {
-    background: linear-gradient(
-      110deg,
-      transparent 25%,
-      rgba(124, 58, 237, 0.2) 50%,
-      transparent 75%
-    );
-  }
-
-  /* Quantum Ripple Effect */
-  .animate-ripple {
-    animation: quantum-ripple 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  /* Neural Parallax Layers */
-  .parallax-slow {
-    transform: translateZ(0);
-    animation: neural-parallax-slow 25s linear infinite;
-  }
-
-  .parallax-fast {
-    transform: translateZ(0);
-    animation: neural-parallax-fast 18s linear infinite;
-  }
-
-  /* Cyber Grid Enhancement */
-  .cyber-grid {
-    background-image: 
-      linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px),
-      radial-gradient(circle at 25px 25px, rgba(124, 58, 237, 0.1) 2px, transparent 2px);
-    background-size: 50px 50px, 50px 50px, 100px 100px;
-    animation: cyber-grid-move 30s linear infinite;
-  }
-
-  /* Neural Typography */
-  .neural-text {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
-    background-size: 200% 200%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: neural-text-flow 5s ease-in-out infinite;
-  }
-
-  /* Quantum Button States */
-  .quantum-button {
+  /* 2025 Aurora Effects */
+  .aurora-2025 {
     position: relative;
     overflow: hidden;
-    transform-style: preserve-3d;
   }
 
-  .quantum-button::before {
+  .aurora-2025::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      hsl(var(--primary) / 0.1) 0deg,
+      hsl(var(--accent) / 0.1) 60deg,
+      hsl(var(--primary) / 0.05) 120deg,
+      hsl(var(--accent) / 0.1) 180deg,
+      hsl(var(--primary) / 0.1) 240deg,
+      hsl(var(--accent) / 0.05) 300deg,
+      hsl(var(--primary) / 0.1) 360deg
+    );
+    animation: aurora-rotate-2025 20s linear infinite;
+    opacity: 0.6;
+  }
+
+  /* 2025 Modern Buttons */
+  .button-2025 {
+    @apply relative overflow-hidden rounded-2xl px-6 py-3 font-medium transition-all duration-300;
+    @apply bg-primary text-primary-foreground shadow-lg hover:shadow-xl;
+    @apply hover:scale-105 active:scale-95;
+  }
+
+  .button-2025::before {
     content: '';
     position: absolute;
     top: 0;
@@ -353,121 +299,136 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
+    transition: left 0.6s ease;
   }
 
-  .quantum-button:hover::before {
+  .button-2025:hover::before {
     left: 100%;
   }
 
-  .quantum-button::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(45deg, transparent, rgba(124, 58, 237, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  /* 2025 Cards */
+  .card-2025 {
+    @apply relative overflow-hidden rounded-3xl border border-border/30 bg-card/90 backdrop-blur-xl;
+    @apply shadow-sm hover:shadow-2xl transition-all duration-500;
+    @apply hover:scale-[1.01] hover:-translate-y-1;
   }
 
-  .quantum-button:hover::after {
-    opacity: 1;
+  /* 2025 Typography */
+  .heading-2025 {
+    @apply font-bold tracking-tight;
+    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--foreground) / 0.8));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-text-2025 {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-text-flow-2025 4s ease-in-out infinite;
+  }
+
+  /* 2025 Responsive Grid */
+  .grid-2025 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+
+  /* 2025 Status Indicators */
+  .status-online-2025 {
+    @apply relative;
+  }
+
+  .status-online-2025::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(45deg, #10b981, #22c55e);
+    border-radius: 50%;
+    border: 2px solid hsl(var(--background));
+    animation: pulse-glow-2025 2s ease-in-out infinite;
+  }
+
+  /* 2025 Loading States */
+  .loading-2025 {
+    background: linear-gradient(90deg, 
+      hsl(var(--muted)) 25%, 
+      hsl(var(--muted) / 0.5) 50%, 
+      hsl(var(--muted)) 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer-2025 1.5s ease-in-out infinite;
   }
 }
 
-/* Quantum Keyframes */
-@keyframes quantum-float {
+/* 2025 Keyframes */
+@keyframes floating-2025 {
   0%, 100% { 
     transform: translateY(0px) rotateX(0deg) rotateY(0deg);
   }
   25% { 
-    transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+    transform: translateY(-8px) rotateX(1deg) rotateY(1deg);
   }
   50% { 
-    transform: translateY(-20px) rotateX(0deg) rotateY(4deg);
+    transform: translateY(-16px) rotateX(0deg) rotateY(2deg);
   }
   75% { 
-    transform: translateY(-10px) rotateX(-2deg) rotateY(2deg);
+    transform: translateY(-8px) rotateX(-1deg) rotateY(1deg);
   }
 }
 
-@keyframes quantum-pulse-glow {
-  0% { 
-    box-shadow: 
-      0 0 20px hsl(var(--primary) / 0.3),
-      0 0 40px hsl(var(--primary) / 0.1),
-      0 0 60px hsl(var(--primary) / 0.05);
-  }
-  100% { 
-    box-shadow: 
-      0 0 40px hsl(var(--primary) / 0.6), 
-      0 0 80px hsl(var(--primary) / 0.3),
-      0 0 120px hsl(var(--primary) / 0.15),
-      0 0 160px hsl(var(--primary) / 0.1);
-  }
-}
-
-@keyframes quantum-gradient-shift {
-  0% { background-position: 0% 50%; }
+@keyframes holographic-shift-2025 {
+  0%, 100% { background-position: 0% 50%; }
   25% { background-position: 100% 50%; }
   50% { background-position: 100% 100%; }
   75% { background-position: 0% 100%; }
-  100% { background-position: 0% 50%; }
 }
 
-@keyframes quantum-border-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes quantum-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes quantum-ripple {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-@keyframes neural-parallax-slow {
-  from { transform: translateX(-100%) translateY(0%); }
-  to { transform: translateX(100%) translateY(-20%); }
-}
-
-@keyframes neural-parallax-fast {
-  from { transform: translateX(-100%) translateY(-25%) rotate(0deg); }
-  to { transform: translateX(100%) translateY(25%) rotate(360deg); }
-}
-
-@keyframes cyber-grid-move {
-  0% { background-position: 0 0, 0 0, 0 0; }
-  100% { background-position: 50px 50px, -50px -50px, 100px 100px; }
-}
-
-@keyframes neural-text-flow {
+@keyframes gradient-flow-2025 {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 
-@keyframes holographic-scan {
-  0%, 100% { transform: translateX(-100%) rotate(45deg); }
-  50% { transform: translateX(100%) rotate(45deg); }
+@keyframes aurora-rotate-2025 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-@keyframes slide-up-bounce {
+@keyframes gradient-text-flow-2025 {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes pulse-glow-2025 {
+  0%, 100% { 
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); 
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.8); 
+    transform: scale(1.1);
+  }
+}
+
+@keyframes loading-shimmer-2025 {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes slide-up-bounce-2025 {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.9);
+    transform: translateY(40px) scale(0.9);
   }
-  50% {
+  60% {
     opacity: 0.8;
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-8px) scale(1.02);
   }
   100% {
     opacity: 1;
@@ -475,14 +436,14 @@
   }
 }
 
-@keyframes scale-in-bounce {
+@keyframes scale-in-bounce-2025 {
   0% {
     opacity: 0;
-    transform: scale(0.8) rotate(-5deg);
+    transform: scale(0.7) rotate(-3deg);
   }
-  50% {
+  60% {
     opacity: 0.8;
-    transform: scale(1.05) rotate(2deg);
+    transform: scale(1.05) rotate(1deg);
   }
   100% {
     opacity: 1;
@@ -490,27 +451,32 @@
   }
 }
 
-@keyframes fade-in-blur-bounce {
-  0% {
-    opacity: 0;
-    filter: blur(15px);
-    transform: translateY(20px);
+/* 2025 Responsive Design */
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
   }
-  50% {
-    opacity: 0.7;
-    filter: blur(5px);
-    transform: translateY(-5px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
+  
+  .card-2025 {
+    border-radius: 20px;
   }
 }
 
-/* Quantum Scrollbar */
+/* 2025 Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 2025 Modern Scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -519,48 +485,22 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.4));
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.3));
   border-radius: 10px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.2);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, hsl(var(--primary) / 0.6), hsl(var(--accent) / 0.6));
-  background-clip: content-box;
-  box-shadow: 0 0 30px hsl(var(--primary) / 0.4);
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.5), hsl(var(--accent) / 0.5));
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
 }
 
-/* Neural Loading States */
-.neural-loading {
-  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
-  background-size: 200% 100%;
-  animation: neural-loading 1.5s infinite;
+/* Animation utilities */
+.animate-slide-up-bounce-2025 {
+  animation: slide-up-bounce-2025 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes neural-loading {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* Quantum Focus States */
-.quantum-focus:focus-visible {
-  outline: none;
-  box-shadow: 
-    0 0 0 2px hsl(var(--background)),
-    0 0 0 4px hsl(var(--primary)),
-    0 0 20px hsl(var(--primary) / 0.3);
-}
-
-.animate-slide-up-bounce {
-  animation: slide-up-bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.animate-scale-in-bounce {
-  animation: scale-in-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.animate-fade-in-blur-bounce {
-  animation: fade-in-blur-bounce 1s cubic-bezier(0.23, 1, 0.32, 1);
+.animate-scale-in-bounce-2025 {
+  animation: scale-in-bounce-2025 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
