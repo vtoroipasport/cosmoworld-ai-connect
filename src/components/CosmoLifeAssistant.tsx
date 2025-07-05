@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin, Eye, Waves, Activity } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin, Waves, Activity, Eye, Target } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,6 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState('');
-  const [aiMood, setAiMood] = useState('friendly');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [suggestions, setSuggestions] = useState<Array<{icon: any, text: string, action: string, color: string}>>([]);
   const [neuralActivity, setNeuralActivity] = useState(0);
@@ -38,11 +37,11 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
   // AI thoughts rotation
   useEffect(() => {
     const thoughts = [
-      'Анализирую ваши предпочтения...',
+      'Анализирую голосовые команды...',
       'Оптимизирую рекомендации...',
-      'Изучаю паттерны поведения...',
-      'Ищу лучшие предложения...',
-      'Готов помочь в любой момент!'
+      'Изучаю предпочтения пользователя...',
+      'Готов выполнить команды...',
+      'Нейросеть активна и готова помочь'
     ];
     
     const interval = setInterval(() => {
@@ -105,20 +104,6 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
     return 'Добрый вечер';
   };
 
-  const getAiPersonality = () => {
-    if (isProcessing) return { emoji: '🧠', color: 'from-yellow-400 to-orange-500', pulse: 'animate-spin' };
-    if (isSpeaking) return { emoji: '🗣️', color: 'from-green-400 to-emerald-500', pulse: 'animate-bounce' };
-    if (isListening) return { emoji: '👂', color: 'from-red-400 to-pink-500', pulse: 'animate-pulse' };
-    
-    const personalities = [
-      { emoji: '😊', color: 'from-blue-400 to-purple-500', pulse: 'animate-pulse' },
-      { emoji: '🤖', color: 'from-cyan-400 to-blue-500', pulse: 'animate-pulse' },
-      { emoji: '✨', color: 'from-purple-400 to-pink-500', pulse: 'animate-pulse' }
-    ];
-    
-    return personalities[Math.floor(Date.now() / 5000) % personalities.length];
-  };
-
   const startListening = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -151,7 +136,6 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
 
       mediaRecorderRef.current.start();
       setIsListening(true);
-      setAiMood('listening');
 
     } catch (error) {
       console.error('Ошибка доступа к микрофону:', error);
@@ -168,7 +152,6 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
       mediaRecorderRef.current.stop();
       setIsListening(false);
       setIsProcessing(true);
-      setAiMood('thinking');
     }
   };
 
@@ -200,7 +183,6 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
       });
     } finally {
       setIsProcessing(false);
-      setAiMood('friendly');
     }
   };
 
@@ -297,15 +279,12 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
         audio.currentTime = 0;
       });
       setIsSpeaking(false);
-      setAiMood('friendly');
     } else if (isListening) {
       stopListening();
     } else {
       startListening();
     }
   };
-
-  const personality = getAiPersonality();
 
   return (
     <div className="relative">
@@ -332,16 +311,21 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
           {/* AI Header */}
           <div className="mb-8">
             <div className="flex items-center justify-center gap-4 mb-4">
-              <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${personality.color} flex items-center justify-center shadow-2xl ${personality.pulse}`}>
-                <span className="text-2xl">{personality.emoji}</span>
+              <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${
+                isProcessing ? 'from-yellow-400 via-orange-500 to-red-500' :
+                isSpeaking ? 'from-green-400 via-emerald-500 to-teal-500' :
+                isListening ? 'from-red-400 via-pink-500 to-purple-500' :
+                'from-purple-500 via-blue-500 to-cyan-500'
+              } flex items-center justify-center shadow-2xl animate-pulse`}>
+                <Brain className="w-8 h-8 text-white" />
                 <div className="absolute inset-0 rounded-2xl border-2 border-white/20 animate-pulse" />
               </div>
               <div className="text-left">
                 <h2 className="text-3xl font-black bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                  Cosmo Life
+                  Нейроинтерфейс
                 </h2>
                 <p className="text-white/80 text-sm font-medium">
-                  {getGreeting()}! Нейроинтерфейс активен
+                  {getGreeting()}! Готов к работе
                 </p>
               </div>
             </div>
@@ -350,7 +334,7 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
             <div className="mb-4">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Activity className="w-4 h-4 text-green-400" />
-                <span className="text-xs text-white/60">Нейронная активность</span>
+                <span className="text-xs text-white/60">Активность нейросети</span>
               </div>
               <div className="w-full h-2 bg-black/20 rounded-full overflow-hidden">
                 <div 
@@ -403,7 +387,7 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
               
               {/* Central Icon */}
               {isProcessing ? (
-                <Brain className="w-16 h-16 text-white animate-spin" />
+                <Target className="w-16 h-16 text-white animate-spin" />
               ) : isSpeaking ? (
                 <Volume2 className="w-16 h-16 text-white animate-bounce" />
               ) : isListening ? (
@@ -423,12 +407,12 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
               'text-white'
             }`}>
               {isProcessing
-                ? '🧠 Нейронный анализ...'
+                ? '🎯 Обработка команды...'
                 : isSpeaking
                 ? '🗣️ Cosmo отвечает...'
                 : isListening
-                ? '👂 Активное прослушивание...'
-                : 'Скажите что нужно или выберите действие'}
+                ? '🎤 Слушаю команду...'
+                : 'Скажите команду или выберите действие'}
             </p>
             
             {/* Voice Waveform Simulation */}
@@ -453,7 +437,7 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
             <div className="space-y-3">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-white/80 font-medium">Умные предложения</span>
+                <span className="text-sm text-white/80 font-medium">Быстрые команды</span>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 {suggestions.map((suggestion, index) => {
@@ -483,7 +467,7 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
             <div className="mt-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-400/30 backdrop-blur-sm">
               <div className="flex items-center gap-2 mb-2">
                 <Waves className="w-4 h-4 text-green-400" />
-                <span className="text-green-300 text-sm font-medium">Команда обработана</span>
+                <span className="text-green-300 text-sm font-medium">Команда выполнена</span>
               </div>
               <p className="text-sm text-green-100">"{response}"</p>
             </div>

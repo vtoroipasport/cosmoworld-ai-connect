@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Briefcase, Store, Sparkles, Stars, Bell, Zap, Brain, Globe, Mic } from 'lucide-react';
+import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Briefcase, Store, Sparkles, Stars, Bell, Zap, Brain, Globe, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CosmoLifeAssistant from '@/components/CosmoLifeAssistant';
 import SmartHub from '@/components/SmartHub';
@@ -33,8 +33,7 @@ const Index = () => {
       description: 'ИИ-переводчик с голосовыми сообщениями и умными ответами',
       color: 'from-blue-500 to-purple-600',
       path: '/messenger',
-      trend: 'AI-Enhanced',
-      stats: '2.1M+'
+      status: 'Активно'
     },
     {
       icon: DollarSign,
@@ -42,8 +41,7 @@ const Index = () => {
       description: 'Крипто-платежи и мгновенные переводы по всему миру',
       color: 'from-emerald-500 to-teal-600',
       path: '/payments',
-      trend: 'Web3-Native',
-      stats: '€1.5B+'
+      status: 'Активно'
     },
     {
       icon: MapPin,
@@ -51,8 +49,7 @@ const Index = () => {
       description: 'Аренда жилья с AR-просмотром и умным поиском',
       color: 'from-purple-500 to-pink-600',
       path: '/housing',
-      trend: 'AR-Ready',
-      stats: '45K+'
+      status: 'Активно'
     },
     {
       icon: CarTaxiFront,
@@ -60,8 +57,7 @@ const Index = () => {
       description: 'Автономные такси и каршеринг нового поколения',
       color: 'from-yellow-500 to-orange-600',
       path: '/taxi',
-      trend: 'Autonomous',
-      stats: '320K+'
+      status: 'Активно'
     },
     {
       icon: ShoppingCart,
@@ -69,8 +65,7 @@ const Index = () => {
       description: 'Доставка еды с ИИ-рекомендациями и голосовым заказом',
       color: 'from-red-500 to-pink-600',
       path: '/food',
-      trend: 'Voice-First',
-      stats: '1.8M+'
+      status: 'Активно'
     },
     {
       icon: Briefcase,
@@ -78,8 +73,7 @@ const Index = () => {
       description: 'Умный подбор работы и фриланс с ИИ-анализом навыков',
       color: 'from-indigo-500 to-blue-600',
       path: '/jobs',
-      trend: 'AI-Matched',
-      stats: '890K+'
+      status: 'Активно'
     },
     {
       icon: Store,
@@ -87,8 +81,7 @@ const Index = () => {
       description: 'Маркетплейс с поиском лучших цен и умными покупками',
       color: 'from-pink-500 to-rose-600',
       path: '/marketplace',
-      trend: 'Price-AI',
-      stats: '12M+'
+      status: 'Активно'
     },
     {
       icon: Users,
@@ -96,8 +89,7 @@ const Index = () => {
       description: 'Мега-группы до 10М участников с ИИ-модерацией',
       color: 'from-teal-500 to-cyan-600',
       path: '/groups',
-      trend: 'Metaverse',
-      stats: '5.2M+'
+      status: 'Активно'
     }
   ];
 
@@ -133,10 +125,10 @@ const Index = () => {
               <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" />
             </div>
             <div>
-              <h1 className="text-foreground font-black text-lg gradient-text-2025">
+              <h1 className="text-foreground font-black text-lg gradient-text-2025 leading-tight">
                 Cosmo Life
               </h1>
-              <p className="text-muted-foreground text-xs font-medium">Neural OS 2025</p>
+              <p className="text-muted-foreground text-xs font-medium">Neural OS V1.0</p>
             </div>
           </div>
           <div className="flex items-center space-x-1">
@@ -164,21 +156,21 @@ const Index = () => {
           </div>
         )}
 
-        {/* AI Status Panel */}
+        {/* System Status Panel */}
         <div className="card-2025 p-5 holographic-2025">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+                <Activity className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-base gradient-text-2025">AI Status</h3>
-                <p className="text-xs text-muted-foreground">Neural Network Active</p>
+                <h3 className="font-bold text-base gradient-text-2025">Статус системы</h3>
+                <p className="text-xs text-muted-foreground">Все системы работают</p>
               </div>
             </div>
             <div className="text-right">
               <div className="text-xl font-bold text-green-500">{currentTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
-              <div className="text-xs text-muted-foreground">Moscow Time</div>
+              <div className="text-xs text-muted-foreground">Московское время</div>
             </div>
           </div>
           
@@ -186,17 +178,17 @@ const Index = () => {
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Zap className="w-4 h-4 text-yellow-500 mx-auto mb-2" />
               <div className="text-sm font-bold">99.9%</div>
-              <div className="text-xs text-muted-foreground">Uptime</div>
+              <div className="text-xs text-muted-foreground">Аптайм</div>
             </div>
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Globe className="w-4 h-4 text-blue-500 mx-auto mb-2" />
               <div className="text-sm font-bold">12ms</div>
-              <div className="text-xs text-muted-foreground">Latency</div>
+              <div className="text-xs text-muted-foreground">Задержка</div>
             </div>
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Stars className="w-4 h-4 text-purple-500 mx-auto mb-2" />
               <div className="text-sm font-bold">4.9★</div>
-              <div className="text-xs text-muted-foreground">Rating</div>
+              <div className="text-xs text-muted-foreground">Рейтинг</div>
             </div>
           </div>
         </div>
@@ -223,17 +215,7 @@ const Index = () => {
                   style={{animationDelay: `${index * 100}ms`}}
                 >
                   <div className="p-5 relative">
-                    {/* Trend Badge */}
-                    <div className="absolute -top-1 -right-1 px-2 py-0.5 gradient-border-2025 text-xs font-bold text-primary rounded-full">
-                      {service.trend}
-                    </div>
-                    
-                    {/* Stats Badge */}
-                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-full">
-                      {service.stats}
-                    </div>
-                    
-                    <div className="mt-6 text-center">
+                    <div className="text-center">
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 bg-gradient-to-br ${service.color} shadow-xl group-hover:scale-110 transition-transform duration-300`}>
                         <Icon className="w-7 h-7 text-white" />
                       </div>
@@ -248,7 +230,7 @@ const Index = () => {
                       {/* Status */}
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-xs text-green-500 font-medium">Активно</span>
+                        <span className="text-xs text-green-500 font-medium">{service.status}</span>
                       </div>
                     </div>
                   </div>
