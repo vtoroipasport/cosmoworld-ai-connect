@@ -12,7 +12,6 @@ import Payments from "./pages/Payments";
 import Housing from "./pages/Housing";
 import Taxi from "./pages/Taxi";
 import Food from "./pages/Food";
-import Groups from "./pages/Groups";
 import Jobs from "./pages/Jobs";
 import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
@@ -34,7 +33,6 @@ const App = () => (
               <Route path="/housing" element={<Housing />} />
               <Route path="/taxi" element={<Taxi />} />
               <Route path="/food" element={<Food />} />
-              <Route path="/groups" element={<Groups />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="*" element={<NotFound />} />

@@ -1,23 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Users, DollarSign, MapPin, CarTaxiFront, ShoppingCart, Briefcase, Store, Sparkles, Stars, Bell, Zap, Brain, Globe, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CosmoLifeAssistant from '@/components/CosmoLifeAssistant';
-import SmartHub from '@/components/SmartHub';
-import ProfileMenu from '@/components/ProfileMenu';
-import ThemeToggle from '@/components/ThemeToggle';
-import LanguageSelector from '@/components/LanguageSelector';
-import FloatingActionButton from '@/components/FloatingActionButton';
+import { Card } from '@/components/ui/card';
+import { MessageSquare, CreditCard, Home, Car, UtensilsCrossed, Briefcase, ShoppingBag, Brain, Activity, Zap, Globe2, Users, TrendingUp, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/contexts/LanguageContext';
+import FloatingActionButton from '@/components/FloatingActionButton';
+import CosmoLifeAssistant from '@/components/CosmoLifeAssistant';
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const [showAssistant, setShowAssistant] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [showAIInterface, setShowAIInterface] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,229 +23,217 @@ const Index = () => {
 
   const services = [
     {
+      id: 'messenger',
+      name: 'Мессенджер',
+      description: 'ИИ-переводчик и умные чаты',
       icon: MessageSquare,
-      title: t('services.messenger'),
-      description: 'ИИ-переводчик с голосовыми сообщениями и умными ответами',
-      color: 'from-blue-500 to-purple-600',
       path: '/messenger',
-      status: 'Активно'
+      gradient: 'from-blue-500 to-purple-600',
+      bgGradient: 'from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20'
     },
     {
-      icon: DollarSign,
-      title: t('services.payments'),
-      description: 'Крипто-платежи и мгновенные переводы по всему миру',
-      color: 'from-emerald-500 to-teal-600',
+      id: 'payments',
+      name: 'Cosmo Pay',
+      description: 'Мультивалютные платежи',
+      icon: CreditCard,
       path: '/payments',
-      status: 'Активно'
+      gradient: 'from-green-500 to-emerald-600',
+      bgGradient: 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20'
     },
     {
-      icon: MapPin,
-      title: t('services.housing'),
-      description: 'Аренда жилья с AR-просмотром и умным поиском',
-      color: 'from-purple-500 to-pink-600',
+      id: 'housing',
+      name: 'Аренда жилья',
+      description: 'ИИ-подбор недвижимости',
+      icon: Home,
       path: '/housing',
-      status: 'Активно'
+      gradient: 'from-pink-500 to-rose-600',
+      bgGradient: 'from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20'
     },
     {
-      icon: CarTaxiFront,
-      title: t('services.taxi'),
-      description: 'Автономные такси и каршеринг нового поколения',
-      color: 'from-yellow-500 to-orange-600',
+      id: 'taxi',
+      name: 'Такси',
+      description: 'Автономные авто',
+      icon: Car,
       path: '/taxi',
-      status: 'Активно'
+      gradient: 'from-yellow-500 to-orange-600',
+      bgGradient: 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20'
     },
     {
-      icon: ShoppingCart,
-      title: t('services.food'),
-      description: 'Доставка еды с ИИ-рекомендациями и голосовым заказом',
-      color: 'from-red-500 to-pink-600',
+      id: 'food',
+      name: 'Еда',
+      description: 'Доставка дронами',
+      icon: UtensilsCrossed,
       path: '/food',
-      status: 'Активно'
+      gradient: 'from-red-500 to-pink-600',
+      bgGradient: 'from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20'
     },
     {
+      id: 'jobs',
+      name: 'Cosmo Job',
+      description: 'Работа рядом с домом',
       icon: Briefcase,
-      title: t('services.jobs'),
-      description: 'Умный подбор работы и фриланс с ИИ-анализом навыков',
-      color: 'from-indigo-500 to-blue-600',
       path: '/jobs',
-      status: 'Активно'
+      gradient: 'from-indigo-500 to-blue-600',
+      bgGradient: 'from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20'
     },
     {
-      icon: Store,
-      title: t('services.marketplace'),
-      description: 'Маркетплейс с поиском лучших цен и умными покупками',
-      color: 'from-pink-500 to-rose-600',
+      id: 'marketplace',
+      name: 'Маркетплейс',
+      description: 'ИИ-рекомендации товаров',
+      icon: ShoppingBag,
       path: '/marketplace',
-      status: 'Активно'
-    },
-    {
-      icon: Users,
-      title: t('services.groups'),
-      description: 'Мега-группы до 10М участников с ИИ-модерацией',
-      color: 'from-teal-500 to-cyan-600',
-      path: '/groups',
-      status: 'Активно'
+      gradient: 'from-purple-500 to-indigo-600',
+      bgGradient: 'from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20'
     }
   ];
 
-  const handleVoiceCommand = (command: string) => {
-    console.log('Cosmo Life - голосовая команда:', command);
+  const handleServiceClick = (path: string) => {
+    navigate(path);
   };
 
-  const handleAIActivation = () => {
-    setShowAIInterface(!showAIInterface);
-    toast({
-      title: "🧠 Нейроинтерфейс",
-      description: showAIInterface ? "Интерфейс свернут" : "Нейроинтерфейс активирован",
-    });
+  const toggleAssistant = () => {
+    setShowAssistant(!showAssistant);
   };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* 2025 Aurora Background */}
       <div className="fixed inset-0 pointer-events-none aurora-2025">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-60 right-32 w-80 h-80 bg-gradient-to-br from-accent/8 to-primary/8 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
-        <div className="absolute bottom-32 left-48 w-72 h-72 bg-gradient-to-br from-primary/6 to-accent/6 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}} />
+        <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-purple-500/8 to-blue-500/8 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
       </div>
 
-      {/* Modern Minimal Header */}
+      {/* Modern Header */}
       <div className="sticky top-0 z-50 glass-morphism-2025 border-b border-border/10">
-        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary via-accent to-primary rounded-2xl flex items-center justify-center shadow-lg animate-floating-gentle">
-                <Sparkles className="w-5 h-5 text-white" />
+        <div className="max-w-md mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg floating-2025">
+                <Brain className="w-6 h-6 text-white" />
               </div>
-              <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" />
+              <div>
+                <h1 className="text-foreground font-black text-xl leading-tight gradient-text-2025">Cosmo Life</h1>
+                <p className="text-muted-foreground text-xs font-medium">Neural OS V1.0</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-foreground font-black text-lg gradient-text-2025 leading-tight">
-                Cosmo Life
-              </h1>
-              <p className="text-muted-foreground text-xs font-medium">Neural OS V1.0</p>
+            <div className="flex items-center gap-2">
+              <div className="text-right">
+                <div className="text-sm font-bold text-green-500">Онлайн</div>
+                <div className="text-xs text-muted-foreground">
+                  {currentTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              </div>
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
             </div>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground hover:text-primary rounded-xl relative w-8 h-8 p-0"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            </Button>
-            <LanguageSelector />
-            <ThemeToggle />
-            <ProfileMenu />
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-md mx-auto px-4 py-6 space-y-6">
-        {/* Cosmo AI Assistant - Conditional */}
-        {showAIInterface && (
-          <div className="animate-slide-up-bounce-2025">
-            <CosmoLifeAssistant onCommand={handleVoiceCommand} />
-          </div>
-        )}
-
-        {/* System Status Panel */}
+      {/* AI Status Panel */}
+      <div className="max-w-md mx-auto px-4 pt-6">
         <div className="card-2025 p-5 holographic-2025">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
-                <Activity className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                <Brain className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-base gradient-text-2025">Статус системы</h3>
-                <p className="text-xs text-muted-foreground">Все системы работают</p>
+                <h3 className="font-bold text-base gradient-text-2025">ИИ-Статус</h3>
+                <p className="text-xs text-muted-foreground">Нейросеть активна</p>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-green-500">{currentTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
-              <div className="text-xs text-muted-foreground">Московское время</div>
+              <div className="text-sm font-bold text-green-500">Активен</div>
+              <div className="text-xs text-muted-foreground">100%</div>
             </div>
           </div>
           
           <div className="grid grid-cols-3 gap-3 text-center">
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Zap className="w-4 h-4 text-yellow-500 mx-auto mb-2" />
+              <div className="text-sm font-bold">0.2с</div>
+              <div className="text-xs text-muted-foreground">Отклик</div>
+            </div>
+            <div className="neomorphism-2025 p-3 rounded-xl">
+              <Globe2 className="w-4 h-4 text-blue-500 mx-auto mb-2" />
+              <div className="text-sm font-bold">7</div>
+              <div className="text-xs text-muted-foreground">Сервисов</div>
+            </div>
+            <div className="neomorphism-2025 p-3 rounded-xl">
+              <Activity className="w-4 h-4 text-green-500 mx-auto mb-2" />
               <div className="text-sm font-bold">99.9%</div>
-              <div className="text-xs text-muted-foreground">Аптайм</div>
-            </div>
-            <div className="neomorphism-2025 p-3 rounded-xl">
-              <Globe className="w-4 h-4 text-blue-500 mx-auto mb-2" />
-              <div className="text-sm font-bold">12ms</div>
-              <div className="text-xs text-muted-foreground">Задержка</div>
-            </div>
-            <div className="neomorphism-2025 p-3 rounded-xl">
-              <Stars className="w-4 h-4 text-purple-500 mx-auto mb-2" />
-              <div className="text-sm font-bold">4.9★</div>
-              <div className="text-xs text-muted-foreground">Рейтинг</div>
+              <div className="text-xs text-muted-foreground">Время работы</div>
             </div>
           </div>
         </div>
-
-        {/* Services Grid */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-7 h-7 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
-              <Stars className="w-4 h-4 text-white" />
-            </div>
-            <h2 className="text-foreground text-xl font-black gradient-text-2025">
-              {t('services.title')}
-            </h2>
-          </div>
-          
-          <div className="bento-grid">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <div
-                  key={index}
-                  onClick={() => navigate(service.path)}
-                  className="bento-card magnetic-2025 cursor-pointer group animate-scale-in-bounce-2025"
-                  style={{animationDelay: `${index * 100}ms`}}
-                >
-                  <div className="p-5 relative">
-                    <div className="text-center">
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 bg-gradient-to-br ${service.color} shadow-xl group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="w-7 h-7 text-white" />
-                      </div>
-                      
-                      <h3 className="text-foreground font-bold text-base mb-2 heading-2025 leading-tight">
-                        {service.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-3 px-1">
-                        {service.description}
-                      </p>
-                      
-                      {/* Status */}
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-xs text-green-500 font-medium">{service.status}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Enhanced Smart Hub */}
-        <SmartHub />
       </div>
 
-      {/* Neural Interface Activation Button */}
-      <FloatingActionButton
-        onClick={handleAIActivation}
-        icon={<Brain className="w-6 h-6" />}
-        variant="holographic"
-        className="shadow-2xl hover:shadow-primary/50 transition-all duration-500 floating-2025"
-      />
+      {/* Services Grid */}
+      <div className="max-w-md mx-auto px-4 py-6">
+        <div className="bento-grid gap-4">
+          {services.map((service, index) => (
+            <Card
+              key={service.id}
+              className={`bento-card p-4 cursor-pointer transition-all duration-500 hover:scale-105 magnetic-2025 animate-scale-in-bounce-2025 bg-gradient-to-br ${service.bgGradient}`}
+              style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => handleServiceClick(service.path)}
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center shadow-lg`}>
+                    <service.icon className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                
+                <div className="flex-1">
+                  <h3 className="font-bold text-foreground mb-1 text-base leading-tight">{service.name}</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">{service.description}</p>
+                </div>
+                
+                <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/20">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                    <span className="text-xs font-medium text-muted-foreground">4.9</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">Активен</div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Footer */}
+      <div className="max-w-md mx-auto px-4 pb-6">
+        <div className="card-2025 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+          <div className="flex items-center justify-between text-center">
+            <div className="flex-1">
+              <div className="text-lg font-bold text-green-600 dark:text-green-400">1M+</div>
+              <div className="text-xs text-muted-foreground">Пользователей</div>
+            </div>
+            <div className="w-px h-8 bg-border mx-4" />
+            <div className="flex-1">
+              <div className="text-lg font-bold text-blue-600 dark:text-blue-400">24/7</div>
+              <div className="text-xs text-muted-foreground">Поддержка ИИ</div>
+            </div>
+            <div className="w-px h-8 bg-border mx-4" />
+            <div className="flex-1">
+              <div className="text-lg font-bold text-purple-600 dark:text-purple-400">99.9%</div>
+              <div className="text-xs text-muted-foreground">Доступность</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Neural Interface Assistant */}
+      {showAssistant && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-fade-in">
+          <CosmoLifeAssistant onClose={() => setShowAssistant(false)} />
+        </div>
+      )}
+
+      {/* Floating Action Button */}
+      <FloatingActionButton onClick={toggleAssistant} />
     </div>
   );
 };
