@@ -2,58 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  Activity, 
-  DollarSign, 
-  TrendingUp, 
-  MapPin, 
-  Clock, 
-  Battery, 
-  Wifi, 
-  CloudRain,
-  Sun,
-  Thermometer,
-  Wind,
-  Eye,
-  Bell,
-  Calendar,
-  Users,
-  MessageSquare,
-  Coffee,
-  Car,
-  Zap,
-  Brain,
-  Heart,
-  Target,
-  Sparkles
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { Brain, Zap, Globe2, Activity, Thermometer, Cloud, Wind, Sun, Moon, Users, TrendingUp, MessageSquare, CreditCard, Car, UtensilsCrossed } from 'lucide-react';
 
-interface SmartHubProps {
-  className?: string;
-}
-
-const SmartHub = ({ className = "" }: SmartHubProps) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
+const SmartHub = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [weather, setWeather] = useState({
-    temp: 22,
-    condition: 'sunny',
+  const [weatherData] = useState({
+    temperature: 22,
+    condition: 'Солнечно',
     humidity: 65,
-    wind: 12,
-    feels_like: 24
-  });
-  const [stats, setStats] = useState({
-    todayOrders: 3,
-    totalSavings: 2340,
-    activeChats: 5,
-    todayDistance: 12.5,
-    aiInteractions: 47,
-    healthScore: 85,
-    productivity: 92,
-    mood: 'excellent'
+    windSpeed: 12,
+    icon: Sun
   });
 
   useEffect(() => {
@@ -63,219 +21,89 @@ const SmartHub = ({ className = "" }: SmartHubProps) => {
     return () => clearInterval(timer);
   }, []);
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('ru-RU', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    });
-  };
-
-  const getWeatherIcon = () => {
-    switch (weather.condition) {
-      case 'sunny': return <Sun className="w-5 h-5 text-yellow-500" />;
-      case 'rainy': return <CloudRain className="w-5 h-5 text-blue-500" />;
-      default: return <Sun className="w-5 h-5 text-yellow-500" />;
-    }
-  };
-
-  const quickActions = [
-    {
-      icon: Coffee,
-      label: 'Кофе',
-      color: 'from-amber-500 to-orange-600',
-      action: () => {
-        toast({ title: "☕ AI заказывает капучино", description: "Готов через 6 минут • Ваш обычный заказ" });
-        navigate('/food');
-      }
-    },
-    {
-      icon: Car,
-      label: 'Такси',
-      color: 'from-green-500 to-emerald-600',
-      action: () => {
-        toast({ title: "🚗 Автономное такси найдено", description: "Tesla Model S • 2 минуты до подачи" });
-        navigate('/taxi');
-      }
-    },
-    {
-      icon: MessageSquare,
-      label: 'AI Чат',
-      color: 'from-blue-500 to-purple-600',
-      action: () => navigate('/messenger')
-    },
-    {
-      icon: DollarSign,
-      label: 'Крипто',
-      color: 'from-purple-500 to-pink-600',
-      action: () => navigate('/payments')
-    },
+  const aiMetrics = [
+    { label: 'Отклик', value: '0.2с', icon: Zap, color: 'text-yellow-500' },
+    { label: 'Сервисов', value: '7', icon: Globe2, color: 'text-blue-500' },
+    { label: 'Время работы', value: '99.9%', icon: Activity, color: 'text-green-500' }
   ];
 
-  const aiInsights = [
-    { icon: Brain, label: 'AI Insights', value: stats.aiInteractions, unit: 'today', color: 'text-purple-600' },
-    { icon: Heart, label: 'Health Score', value: stats.healthScore, unit: '%', color: 'text-red-500' },
-    { icon: Target, label: 'Productivity', value: stats.productivity, unit: '%', color: 'text-green-600' },
-    { icon: Sparkles, label: 'Mood', value: stats.mood, unit: '', color: 'text-yellow-600' }
+  const quickStats = [
+    { label: 'Пользователи', value: '1M+', icon: Users, color: 'text-purple-500' },
+    { label: 'Транзакции', value: '5.2K', icon: TrendingUp, color: 'text-emerald-500' }
   ];
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className="space-y-4">
       {/* Smart Hub Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-3xl flex items-center justify-center shadow-lg">
-          <Activity className="w-7 h-7 text-white" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-black gradient-text-2025">
-            Smart Hub 2025
-          </h2>
-          <p className="text-sm text-muted-foreground">Your AI-Powered Dashboard</p>
-        </div>
-      </div>
-
-      {/* AI Status & Time */}
-      <div className="card-2025 p-6 holographic-2025">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-primary" />
-              <span className="text-sm text-muted-foreground font-medium">Neural Time</span>
+      <Card className="p-5 holographic-2025 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10" />
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg gradient-text-2025">Smart Hub</h3>
+                <p className="text-sm text-muted-foreground">Your AI-Powered Dashboard</p>
+              </div>
             </div>
-            <p className="text-2xl font-black text-primary gradient-text-2025">{formatTime(currentTime)}</p>
-            <p className="text-xs text-muted-foreground">Moscow • GMT+3</p>
+            <div className="text-right">
+              <div className="text-sm font-bold text-green-500">Активен</div>
+              <div className="text-xs text-muted-foreground">100%</div>
+            </div>
           </div>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              {getWeatherIcon()}
-              <span className="text-sm text-muted-foreground font-medium">Weather AI</span>
-            </div>
-            <p className="text-2xl font-black text-primary">{weather.temp}°C</p>
-            <p className="text-xs text-muted-foreground">Feels like {weather.feels_like}°C</p>
+
+          {/* AI Metrics */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            {aiMetrics.map((metric, index) => (
+              <div key={index} className="neomorphism-2025 p-3 rounded-xl text-center">
+                <metric.icon className={`w-4 h-4 ${metric.color} mx-auto mb-2`} />
+                <div className="text-sm font-bold">{metric.value}</div>
+                <div className="text-xs text-muted-foreground">{metric.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 gap-3">
+            {quickStats.map((stat, index) => (
+              <div key={index} className="neomorphism-2025 p-3 rounded-xl text-center">
+                <stat.icon className={`w-4 h-4 ${stat.color} mx-auto mb-2`} />
+                <div className="text-sm font-bold">{stat.value}</div>
+                <div className="text-xs text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Weather Intelligence */}
+      <Card className="p-4 bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <weatherData.icon className="w-5 h-5 text-orange-500" />
+            <h4 className="font-semibold text-base">Weather Intelligence</h4>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold">{weatherData.temperature}°C</div>
+            <div className="text-xs text-muted-foreground">{weatherData.condition}</div>
           </div>
         </div>
         
-        <div className="mt-6 pt-4 border-t border-border/20">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2 text-green-500">
-              <Wifi className="w-4 h-4" />
-              <span className="font-medium">5G Ultra</span>
-            </div>
-            <div className="flex items-center gap-2 text-blue-500">
-              <Battery className="w-4 h-4" />
-              <span className="font-medium">89%</span>
-            </div>
-            <div className="flex items-center gap-2 text-purple-500">
-              <Eye className="w-4 h-4" />
-              <span className="font-medium">AI Active</span>
-            </div>
+        <div className="grid grid-cols-2 gap-3 text-center">
+          <div className="bg-white/50 dark:bg-gray-800/50 p-2 rounded-lg">
+            <Cloud className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <div className="text-xs font-medium">{weatherData.humidity}%</div>
+            <div className="text-xs text-muted-foreground">Влажность</div>
+          </div>
+          <div className="bg-white/50 dark:bg-gray-800/50 p-2 rounded-lg">
+            <Wind className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <div className="text-xs font-medium">{weatherData.windSpeed} км/ч</div>
+            <div className="text-xs text-muted-foreground">Ветер</div>
           </div>
         </div>
-      </div>
-
-      {/* AI Insights Grid */}
-      <div className="bento-grid">
-        {aiInsights.map((insight, index) => {
-          const Icon = insight.icon;
-          return (
-            <div key={index} className="bento-card neomorphism-2025 p-4 text-center magnetic-2025">
-              <Icon className={`w-6 h-6 ${insight.color} mx-auto mb-3`} />
-              <p className="text-xl font-bold text-foreground">
-                {typeof insight.value === 'string' ? insight.value : insight.value}
-                {insight.unit && <span className="text-sm text-muted-foreground ml-1">{insight.unit}</span>}
-              </p>
-              <p className="text-xs text-muted-foreground font-medium mt-1">{insight.label}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Enhanced Stats */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="card-2025 p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-3 mb-3">
-            <TrendingUp className="w-5 h-5 text-green-600" />
-            <span className="text-sm text-green-600 font-bold">AI Savings</span>
-          </div>
-          <p className="text-2xl font-black text-green-700 dark:text-green-300">{stats.totalSavings}₽</p>
-          <p className="text-xs text-green-600 mt-1">+{Math.round(stats.totalSavings * 0.15)}₽ this week</p>
-        </div>
-
-        <div className="card-2025 p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
-          <div className="flex items-center gap-3 mb-3">
-            <Calendar className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-blue-600 font-bold">Orders</span>
-          </div>
-          <p className="text-2xl font-black text-blue-700 dark:text-blue-300">{stats.todayOrders}</p>
-          <p className="text-xs text-blue-600 mt-1">Smart automation</p>
-        </div>
-
-        <div className="card-2025 p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800">
-          <div className="flex items-center gap-3 mb-3">
-            <Users className="w-5 h-5 text-purple-600" />
-            <span className="text-sm text-purple-600 font-bold">Chats</span>
-          </div>
-          <p className="text-2xl font-black text-purple-700 dark:text-purple-300">{stats.activeChats}</p>
-          <p className="text-xs text-purple-600 mt-1">AI-Enhanced</p>
-        </div>
-
-        <div className="card-2025 p-4 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800">
-          <div className="flex items-center gap-3 mb-3">
-            <MapPin className="w-5 h-5 text-orange-600" />
-            <span className="text-sm text-orange-600 font-bold">Distance</span>
-          </div>
-          <p className="text-2xl font-black text-orange-700 dark:text-orange-300">{stats.todayDistance} km</p>
-          <p className="text-xs text-orange-600 mt-1">Green routes</p>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="card-2025 p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Bell className="w-5 h-5 text-accent" />
-          <span className="text-lg font-bold text-accent">AI Quick Actions</span>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          {quickActions.map((action, index) => {
-            const Icon = action.icon;
-            return (
-              <button
-                key={index}
-                onClick={action.action}
-                className="button-2025 h-16 flex-col gap-2 group relative overflow-hidden magnetic-2025"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-r ${action.color} opacity-90 rounded-2xl`} />
-                <div className="relative z-10 flex flex-col items-center gap-1 text-white">
-                  <Icon className="w-5 h-5" />
-                  <span className="text-xs font-medium">{action.label}</span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Detailed Weather */}
-      <div className="card-2025 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
-        <div className="flex items-center gap-3 mb-4">
-          <Thermometer className="w-5 h-5 text-blue-600" />
-          <span className="text-lg font-bold text-blue-600">Weather Intelligence</span>
-        </div>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="neomorphism-2025 p-4 rounded-2xl">
-            <p className="text-xl font-black text-blue-700 dark:text-blue-300">{weather.temp}°</p>
-            <p className="text-xs text-blue-600 mt-1">Temperature</p>
-          </div>
-          <div className="neomorphism-2025 p-4 rounded-2xl">
-            <p className="text-xl font-black text-blue-700 dark:text-blue-300">{weather.humidity}%</p>
-            <p className="text-xs text-blue-600 mt-1">Humidity</p>
-          </div>
-          <div className="neomorphism-2025 p-4 rounded-2xl">
-            <p className="text-xl font-black text-blue-700 dark:text-blue-300">{weather.wind}</p>
-            <p className="text-xs text-blue-600 mt-1">Wind m/s</p>
-          </div>
-        </div>
-      </div>
+      </Card>
     </div>
   );
 };
