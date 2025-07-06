@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { User, Wallet, Settings, LogOut, Copy, Eye, EyeOff, Shield, History, CreditCard, Coins } from 'lucide-react';
+import { Wallet, Settings, LogOut, Copy, Eye, EyeOff, Shield, History, CreditCard, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Wallet {
@@ -107,13 +107,13 @@ const ProfileMenu = () => {
           size="sm" 
           className="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600"
         >
-          <User className="w-5 h-5" />
+          <Wallet className="w-5 h-5" />
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-800 dark:via-purple-800 dark:to-slate-800 border-purple-500/30 text-white max-w-md">
+      <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-800 dark:via-purple-800 dark:to-slate-800 border-purple-500/30 text-white max-w-sm mx-4 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">Профиль CosmoLife</DialogTitle>
+          <DialogTitle className="text-center text-xl">Cosmo Кошелек</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -121,12 +121,12 @@ const ProfileMenu = () => {
           <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-4">
             <div className="flex items-center space-x-3 mb-3">
               <Wallet className="w-6 h-6 text-purple-400" />
-              <h3 className="text-lg font-semibold">Cosmo Кошелек</h3>
+              <h3 className="text-lg font-semibold">Web3 Кошелек</h3>
             </div>
             
             {!wallet ? (
               <div className="space-y-3">
-                <p className="text-sm text-purple-300">Создайте свой Web3 кошелек как в MetaMask</p>
+                <p className="text-sm text-purple-300">Создайте свой Web3 кошелек</p>
                 <Input
                   type="password"
                   placeholder="Пароль для кошелька"
@@ -138,18 +138,19 @@ const ProfileMenu = () => {
                   onClick={createWallet}
                   disabled={isCreatingWallet}
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                  size="sm"
                 >
-                  {isCreatingWallet ? 'Создание кошелька...' : 'Создать кошелек'}
+                  {isCreatingWallet ? 'Создание...' : 'Создать кошелек'}
                 </Button>
                 <p className="text-xs text-purple-200">
-                  ⚠️ Сохраните seed-фразу в безопасном месте. Без неё восстановить кошелек будет невозможно!
+                  ⚠️ Сохраните seed-фразу в безопасном месте!
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-purple-300">Баланс:</span>
-                  <span className="font-bold">{wallet.balance} COSMO</span>
+                  <span className="font-bold text-sm">{wallet.balance} COSMO</span>
                 </div>
                 
                 <div className="space-y-2">
@@ -159,12 +160,12 @@ const ProfileMenu = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => copyToClipboard(wallet.address, 'Адрес')}
-                      className="hover:bg-white/10"
+                      className="hover:bg-white/10 h-6 w-6 p-0"
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-3 h-3" />
                     </Button>
                   </div>
-                  <p className="text-xs font-mono bg-black/20 p-2 rounded break-all">
+                  <p className="text-xs font-mono bg-black/20 p-2 rounded break-all leading-tight">
                     {wallet.address}
                   </p>
                 </div>
@@ -177,22 +178,22 @@ const ProfileMenu = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowPrivateKey(!showPrivateKey)}
-                        className="hover:bg-white/10"
+                        className="hover:bg-white/10 h-6 w-6 p-0"
                       >
-                        {showPrivateKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showPrivateKey ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => copyToClipboard(wallet.privateKey, 'Приватный ключ')}
-                        className="hover:bg-white/10"
+                        className="hover:bg-white/10 h-6 w-6 p-0"
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-3 h-3" />
                       </Button>
                     </div>
                   </div>
-                  <p className="text-xs font-mono bg-black/20 p-2 rounded break-all">
-                    {showPrivateKey ? wallet.privateKey : '•'.repeat(64)}
+                  <p className="text-xs font-mono bg-black/20 p-2 rounded break-all leading-tight">
+                    {showPrivateKey ? wallet.privateKey : '•'.repeat(32)}
                   </p>
                 </div>
 
@@ -204,25 +205,25 @@ const ProfileMenu = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowMnemonic(!showMnemonic)}
-                        className="hover:bg-white/10"
+                        className="hover:bg-white/10 h-6 w-6 p-0"
                       >
-                        {showMnemonic ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showMnemonic ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => copyToClipboard(wallet.mnemonic, 'Seed-фраза')}
-                        className="hover:bg-white/10"
+                        className="hover:bg-white/10 h-6 w-6 p-0"
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-3 h-3" />
                       </Button>
                     </div>
                   </div>
-                  <p className="text-xs bg-black/20 p-2 rounded">
-                    {showMnemonic ? wallet.mnemonic : '•'.repeat(wallet.mnemonic.length)}
+                  <p className="text-xs bg-black/20 p-2 rounded leading-tight">
+                    {showMnemonic ? wallet.mnemonic : '•'.repeat(Math.min(wallet.mnemonic.length, 48))}
                   </p>
                   <p className="text-xs text-yellow-300">
-                    ⚠️ Никому не показывайте вашу seed-фразу!
+                    ⚠️ Никому не показывайте seed-фразу!
                   </p>
                 </div>
               </div>
@@ -231,34 +232,35 @@ const ProfileMenu = () => {
 
           {/* Меню действий */}
           <div className="space-y-2">
-            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10">
-              <CreditCard className="w-5 h-5 mr-3" />
-              История транзакций
+            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 h-10" size="sm">
+              <CreditCard className="w-4 h-4 mr-3" />
+              <span className="text-sm">История транзакций</span>
             </Button>
             
-            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10">
-              <Coins className="w-5 h-5 mr-3" />
-              Пополнить баланс
+            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 h-10" size="sm">
+              <Coins className="w-4 h-4 mr-3" />
+              <span className="text-sm">Пополнить баланс</span>
             </Button>
             
-            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10">
-              <Settings className="w-5 h-5 mr-3" />
-              Настройки
+            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 h-10" size="sm">
+              <Settings className="w-4 h-4 mr-3" />
+              <span className="text-sm">Настройки</span>
             </Button>
             
-            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10">
-              <Shield className="w-5 h-5 mr-3" />
-              Безопасность
+            <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 h-10" size="sm">
+              <Shield className="w-4 h-4 mr-3" />
+              <span className="text-sm">Безопасность</span>
             </Button>
             
             {wallet && (
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-red-400 hover:bg-red-500/10"
+                className="w-full justify-start text-red-400 hover:bg-red-500/10 h-10"
                 onClick={deleteWallet}
+                size="sm"
               >
-                <LogOut className="w-5 h-5 mr-3" />
-                Удалить кошелек
+                <LogOut className="w-4 h-4 mr-3" />
+                <span className="text-sm">Удалить кошелек</span>
               </Button>
             )}
           </div>

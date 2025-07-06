@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MessageSquare, CreditCard, Home, Car, UtensilsCrossed, Briefcase, ShoppingBag, Brain, Activity, Zap, Globe2, Users, TrendingUp, Star, Settings, Menu } from 'lucide-react';
+import { MessageSquare, CreditCard, Home, Car, UtensilsCrossed, Briefcase, ShoppingBag, Brain, Activity, Zap, Globe2, Users, TrendingUp, Star, Settings, Menu, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import FloatingActionButton from '@/components/FloatingActionButton';
@@ -96,7 +96,10 @@ const Index = () => {
     { id: 5, title: 'Найти работу', icon: Briefcase, action: () => navigate('/jobs') },
     { id: 6, title: 'Снять жилье', icon: Home, action: () => navigate('/housing') },
     { id: 7, title: 'Покупки', icon: ShoppingBag, action: () => navigate('/marketplace') },
-    { id: 8, title: 'Настройки', icon: Settings, action: () => toast({ title: "Настройки", description: "Откроется скоро" }) }
+    { id: 8, title: 'Мой кошелек', icon: Wallet, action: () => toast({ title: "Кошелек", description: "Откроется скоро" }) },
+    { id: 9, title: 'Группы', icon: Users, action: () => navigate('/groups') },
+    { id: 10, title: 'Аналитика', icon: TrendingUp, action: () => toast({ title: "Аналитика", description: "Откроется скоро" }) },
+    { id: 11, title: 'Настройки', icon: Settings, action: () => toast({ title: "Настройки", description: "Откроется скоро" }) }
   ];
 
   const handleServiceClick = (path: string) => {
@@ -140,7 +143,39 @@ const Index = () => {
                     <Menu className="w-5 h-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => navigate('/messenger')}>
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Мессенджер
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/payments')}>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Платежи
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/housing')}>
+                    <Home className="w-4 h-4 mr-2" />
+                    Аренда жилья
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/taxi')}>
+                    <Car className="w-4 h-4 mr-2" />
+                    Такси
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/food')}>
+                    <UtensilsCrossed className="w-4 h-4 mr-2" />
+                    Еда
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/jobs')}>
+                    <Briefcase className="w-4 h-4 mr-2" />
+                    Работа
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/marketplace')}>
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    Маркетплейс
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/groups')}>
+                    <Users className="w-4 h-4 mr-2" />
+                    Группы
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/settings')}>
                     <Settings className="w-4 h-4 mr-2" />
                     Настройки
