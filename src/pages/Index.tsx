@@ -152,7 +152,7 @@ const Index = () => {
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Zap className="w-4 h-4 text-yellow-500 mx-auto mb-2" />
               <div className="text-sm font-bold">0.2с</div>
-              <div className="text-xs text-muted-foreground">Отклик</div>
+              <div className="text-xs text--foreground">Отклик</div>
             </div>
             <div className="neomorphism-2025 p-3 rounded-xl">
               <Globe2 className="w-4 h-4 text-blue-500 mx-auto mb-2" />
