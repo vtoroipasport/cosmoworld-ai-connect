@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -14,7 +13,7 @@ const Taxi = () => {
   const [showAI, setShowAI] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [fromLocation, setFromLocation] = useState('');
-  const [toLocation, setToLocation('');
+  const [toLocation, setToLocation] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedTaxi, setSelectedTaxi] = useState<number | null>(null);
 
