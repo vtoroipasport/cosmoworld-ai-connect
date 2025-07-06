@@ -1,16 +1,16 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin, Waves, Activity, Eye, Target } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Brain, Sparkles, Zap, MessageCircle, Coffee, Car, ShoppingBag, Briefcase, Home, Utensils, Calendar, MapPin, Waves, Activity, Eye, Target, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
 interface CosmoLifeAssistantProps {
   onCommand?: (command: string) => void;
+  onClose?: () => void;
 }
 
-const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
+const CosmoLifeAssistant = ({ onCommand, onClose }: CosmoLifeAssistantProps) => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -289,6 +289,18 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
   return (
     <div className="relative">
       <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-slate-900/40 via-purple-900/20 to-blue-900/40 backdrop-blur-3xl">
+        {/* Close Button */}
+        {onClose && (
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            className="absolute top-4 right-4 z-10 text-white/60 hover:text-white hover:bg-white/10"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        )}
+
         {/* Neural Network Background */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping" />
@@ -349,7 +361,7 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
               <div className="mb-4 space-y-1">
                 {aiThoughts.slice(0, 1).map((thought, index) => (
                   <div key={index} className="text-xs text-white/60 italic animate-fade-in">
-                    💭 {thought}
+                    {thought}
                   </div>
                 ))}
               </div>
@@ -407,11 +419,11 @@ const CosmoLifeAssistant = ({ onCommand }: CosmoLifeAssistantProps) => {
               'text-white'
             }`}>
               {isProcessing
-                ? '🎯 Обработка команды...'
+                ? 'Обработка команды...'
                 : isSpeaking
-                ? '🗣️ Cosmo отвечает...'
+                ? 'Cosmo отвечает...'
                 : isListening
-                ? '🎤 Слушаю команду...'
+                ? 'Слушаю команду...'
                 : 'Скажите команду или выберите действие'}
             </p>
             
