@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import CosmoLifeAssistant from '@/components/CosmoLifeAssistant';
+import SmartHub from '@/components/SmartHub';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -129,43 +130,9 @@ const Index = () => {
         </div>
       </div>
 
-      {/* AI Status Panel */}
-      <div className="max-w-md mx-auto px-4 pt-6">
-        <div className="card-2025 p-5 holographic-2025">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-base gradient-text-2025">ИИ-Статус</h3>
-                <p className="text-xs text-muted-foreground">Нейросеть активна</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-bold text-green-500">Активен</div>
-              <div className="text-xs text-muted-foreground">100%</div>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="neomorphism-2025 p-3 rounded-xl">
-              <Zap className="w-4 h-4 text-yellow-500 mx-auto mb-2" />
-              <div className="text-sm font-bold">0.2с</div>
-              <div className="text-xs text--foreground">Отклик</div>
-            </div>
-            <div className="neomorphism-2025 p-3 rounded-xl">
-              <Globe2 className="w-4 h-4 text-blue-500 mx-auto mb-2" />
-              <div className="text-sm font-bold">7</div>
-              <div className="text-xs text-muted-foreground">Сервисов</div>
-            </div>
-            <div className="neomorphism-2025 p-3 rounded-xl">
-              <Activity className="w-4 h-4 text-green-500 mx-auto mb-2" />
-              <div className="text-sm font-bold">99.9%</div>
-              <div className="text-xs text-muted-foreground">Время работы</div>
-            </div>
-          </div>
-        </div>
+      {/* Smart Hub Component */}
+      <div className="max-w-md mx-auto px-4 py-6">
+        <SmartHub />
       </div>
 
       {/* Services Grid */}
