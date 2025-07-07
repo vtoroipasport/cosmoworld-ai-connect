@@ -162,12 +162,11 @@ const Payments = () => {
 
         <PaymentConfirmationModal
           isOpen={showConfirmation}
-          amount={amount}
-          currency={currency}
+          onClose={cancelPayment}
+          amount={parseFloat(amount) || 0}
           recipient={recipient}
-          paymentMethod={paymentMethod}
+          description={`Платеж в ${currency} через ${paymentMethod}`}
           onConfirm={confirmPayment}
-          onCancel={cancelPayment}
         />
       </div>
     </ServicePageLayout>

@@ -196,13 +196,18 @@ const Marketplace = () => {
         </div>
 
         {/* Create Product Modal */}
-        <CreateProductModal open={createModalOpen} setOpen={setCreateModalOpen} />
+        <CreateProductModal 
+          isOpen={createModalOpen} 
+          onClose={() => setCreateModalOpen(false)}
+          onCreate={(product) => console.log('Created:', product)}
+        />
 
         {/* Purchase Modal */}
         <PurchaseModal
-          open={purchaseModalOpen}
-          setOpen={setPurchaseModalOpen}
+          isOpen={purchaseModalOpen}
+          onClose={() => setPurchaseModalOpen(false)}
           product={selectedProduct}
+          onPurchase={(details) => console.log('Purchased:', details)}
         />
       </div>
     </ServicePageLayout>

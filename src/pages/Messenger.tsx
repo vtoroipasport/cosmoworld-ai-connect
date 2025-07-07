@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Send, Search, Users, Zap, Globe, MessageCircle, Bot, Sparkles, Languages } from 'lucide-react';
+import { ArrowLeft, Send, Search, Users, Zap, Globe, MessageCircle, Bot, Sparkles, Languages, Mic, Star, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import VoiceAssistant from '@/components/VoiceAssistant';
@@ -244,7 +244,7 @@ const Messenger = () => {
           {/* Quick Actions */}
           <div className="card-2025 p-5">
             <div className="flex items-center gap-3 mb-4">
-              <Stars className="w-5 h-5 text-accent" />
+              <Star className="w-5 h-5 text-accent" />
               <h3 className="font-bold text-base gradient-text-2025">Быстрые действия</h3>
             </div>
             <div className="grid grid-cols-2 gap-3">
