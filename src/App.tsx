@@ -16,6 +16,7 @@ import Jobs from "./pages/Jobs";
 import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (

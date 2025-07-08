@@ -13,10 +13,10 @@ L.Icon.Default.mergeOptions({
 
 interface MapProps {
   onLocationSelect?: (location: { lat: number; lng: number; address: string }) => void;
-  userLocation?: { lat: number; lng: number };
+  userLocation?: { lat: number; lng: number } | null;
   drivers?: Array<{ id: string; lat: number; lng: number; name: string; rating: number; distance: string }>;
-  isDriverMode?: boolean;
   specialists?: Array<{ id: string; lat: number; lng: number; name: string; specialty: string; rating: number }>;
+  isDriverMode?: boolean;
 }
 
 // Custom driver icon
@@ -78,6 +78,17 @@ const Map = ({ onLocationSelect, userLocation, drivers = [], specialists = [], i
     onLocationSelect?.(location);
   };
 
+  // Guard against null userLocation
+  if (!userLocation) {
+    return (
+      <div className="w-full h-64 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-500 dark:text-gray-400">Загрузка карты...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-64 rounded-lg overflow-hidden">
       <MapContainer
@@ -118,7 +129,7 @@ const Map = ({ onLocationSelect, userLocation, drivers = [], specialists = [], i
         ))}
         
         {/* Specialist markers */}
-        {specialists.map((specialist) => (
+        {specialists && specialists.map((specialist) => (
           <Marker 
             key={specialist.id} 
             position={[specialist.lat, specialist.lng]} 
