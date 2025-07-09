@@ -13,10 +13,8 @@ import Housing from "./pages/Housing";
 import Taxi from "./pages/Taxi";
 import Food from "./pages/Food";
 import Jobs from "./pages/Jobs";
-import Groups from "./pages/Groups";
 import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
-
 
 const queryClient = new QueryClient();
 
@@ -36,7 +34,6 @@ const App = () => (
               <Route path="/taxi" element={<Taxi />} />
               <Route path="/food" element={<Food />} />
               <Route path="/jobs" element={<Jobs />} />
-              <Route path="/groups" element={<Groups />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
